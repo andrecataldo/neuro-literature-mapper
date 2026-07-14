@@ -1,0 +1,8 @@
+[project]
+name = "neuro-literature-mapper"
+version = "0.1.0"
+description = "Pipeline semi-automatizado para mapeamento exploratório da literatura sobre BMI/BCI, LLMs, neuroengenharia, vieses, segurança e governança."
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["src"]

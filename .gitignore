@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+ENV/
+
+# Conda / Python local
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Generated outputs
+outputs/*.csv
+outputs/*.xlsx
+outputs/*.json
+outputs/*.bib
+
+# VS Code
+.vscode/
+
+# Variáveis de ambiente e segredos
+.env
+*.env
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs e temporários
+*.log
+*.tmp
+*.bak
+
+# Arquivos grandes ou locais
+data/raw/
+data/external/
+EOF

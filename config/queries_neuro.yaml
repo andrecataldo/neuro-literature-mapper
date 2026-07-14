@@ -1,0 +1,335 @@
+project:
+  name: "BMI/BCI, LLMs, Neurotecnologia e Vieses"
+  description: "Mapeamento exploratório estruturado sobre BMI/BCI, LLMs, neuroengenharia, neurotecnologia, vieses, segurança, privacidade e governança."
+
+settings:
+  per_page: 20
+  year_min: 2000
+  language: "en"
+
+api_layers:
+  - name: "01 - BMI/BCI + LLMs"
+    queries:
+      - '"brain-computer interface" "large language model"'
+      - '"brain-computer interface" LLM'
+      - '"brain-machine interface" "large language model"'
+      - '"brain-machine interface" LLM'
+      - '"BCI" "large language models"'
+      - '"BMI" "large language models"'
+
+  - name: "02 - Neuroengenharia + decodificação neural"
+    queries:
+      - '"neural decoding" "language"'
+      - '"neural decoding" "speech"'
+      - '"brain-to-text"'
+      - '"imagined speech" "brain-computer interface"'
+      - '"speech decoding" "brain-computer interface"'
+      - '"EEG" "language decoding"'
+      - '"ECoG" "speech decoding"'
+
+  - name: "03 - BMI/BCI + NLP / modelos de linguagem"
+    queries:
+      - '"brain-computer interface" "natural language processing"'
+      - '"brain-machine interface" "natural language processing"'
+      - '"BCI" "NLP"'
+      - '"neural interface" "language model"'
+      - '"assistive communication" "language model"'
+      - '"brain-computer interface" "text generation"'
+
+  - name: "04 - Vieses, confiança e vulnerabilidades em IA"
+    queries:
+      - '"cognitive bias" "large language models"'
+      - '"confirmation bias" "large language models"'
+      - '"anchoring bias" "large language models"'
+      - '"automation bias" "generative AI"'
+      - '"overreliance" "large language models"'
+      - '"trust" "large language models" "decision making"'
+      - '"hallucination" "large language models" "safety"'
+
+  - name: "05 - Neurotecnologia, privacidade e governança"
+    queries:
+      - '"neurotechnology" "governance"'
+      - '"neurotechnology" "privacy"'
+      - '"neural data" "privacy"'
+      - '"brain-computer interface" "privacy"'
+      - '"brain-computer interface" "ethics"'
+      - '"brain-computer interface" "safety"'
+      - '"neurorights" "artificial intelligence"'
+
+venue_search_layers:
+  - venue_group: "Journal of Neural Engineering"
+    base_site: "iopscience.iop.org/journal/1741-2552"
+    queries:
+      - '"brain-computer interface" "language"'
+      - '"brain-machine interface" "language"'
+      - '"neural decoding" "language"'
+      - '"brain-to-text"'
+      - '"large language model"'
+      - '"LLM"'
+
+  - venue_group: "IEEE Neural Engineering / Biomedical Engineering"
+    base_site: "ieeexplore.ieee.org"
+    queries:
+      - '"brain-computer interface" "large language model"'
+      - '"brain-machine interface" "large language model"'
+      - '"neural decoding" "speech"'
+      - '"imagined speech" "BCI"'
+      - '"assistive communication" "BCI"'
+      - '"neural interface" "language model"'
+
+  - venue_group: "Journal of NeuroEngineering and Rehabilitation"
+    base_site: "jneuroengrehab.biomedcentral.com"
+    queries:
+      - '"brain-computer interface"'
+      - '"brain-machine interface"'
+      - '"assistive communication"'
+      - '"neural decoding"'
+      - '"speech decoding"'
+      - '"language model"'
+
+  - venue_group: "Frontiers in Neuroscience / Human Neuroscience"
+    base_site: "frontiersin.org"
+    queries:
+      - '"brain-computer interface" "language"'
+      - '"neural decoding" "language"'
+      - '"imagined speech"'
+      - '"neurotechnology" "ethics"'
+      - '"neural data" "privacy"'
+
+  - venue_group: "NeuroImage / ScienceDirect"
+    base_site: "sciencedirect.com"
+    queries:
+      - '"neural decoding" "language"'
+      - '"speech decoding" "brain"'
+      - '"brain-computer interface" "language"'
+      - '"EEG" "language decoding"'
+      - '"ECoG" "speech decoding"'
+
+  - venue_group: "Nature portfolio"
+    base_site: "nature.com"
+    queries:
+      - '"brain-computer interface" "speech"'
+      - '"brain-machine interface" "neural decoding"'
+      - '"brain-to-text"'
+      - '"neurotechnology" "privacy"'
+      - '"neurotechnology" "ethics"'
+
+  - venue_group: "ACL Anthology"
+    base_site: "aclanthology.org"
+    queries:
+      - '"large language models" "cognitive bias"'
+      - '"large language models" "decision making"'
+      - '"overreliance" "large language models"'
+      - '"human-AI interaction" "large language models"'
+      - '"language model" "neural decoding"'
+
+  - venue_group: "ACM HCI / FAccT / AIES"
+    base_site: "dl.acm.org"
+    queries:
+      - '"human-AI interaction" "large language models"'
+      - '"overreliance" "AI"'
+      - '"trust" "AI" "decision making"'
+      - '"cognitive bias" "AI"'
+      - '"neurotechnology" "privacy"'
+      - '"brain-computer interface" "ethics"'
+
+  - venue_group: "AI / ML conferences"
+    base_site: ""
+    queries:
+      - '"large language models" "cognitive bias" "NeurIPS"'
+      - '"large language models" "human-AI interaction" "ICLR"'
+      - '"large language models" "decision making" "ICML"'
+      - '"neural decoding" "language model" "NeurIPS"'
+      - '"brain-computer interface" "large language model" "NeurIPS"'
+
+classification:
+  primary_venues:
+    - "Journal of Neural Engineering"
+    - "IEEE Transactions on Neural Systems and Rehabilitation Engineering"
+    - "IEEE Transactions on Biomedical Engineering"
+    - "Journal of NeuroEngineering and Rehabilitation"
+    - "Brain-Computer Interfaces"
+    - "Frontiers in Neuroscience"
+    - "Frontiers in Human Neuroscience"
+    - "NeuroImage"
+    - "Nature Biomedical Engineering"
+    - "Nature Neuroscience"
+    - "International IEEE EMBS Conference on Neural Engineering"
+    - "IEEE Engineering in Medicine and Biology Society"
+    - "BCI Meeting"
+    - "Brain-Computer Interface Conference"
+
+  support_venues:
+    - "ACL Anthology"
+    - "EMNLP"
+    - "NAACL"
+    - "COLING"
+    - "NeurIPS"
+    - "ICLR"
+    - "ICML"
+    - "AAAI"
+    - "ACM CHI"
+    - "ACM CSCW"
+    - "ACM FAccT"
+    - "ACM AIES"
+    - "ACM Transactions on Computer-Human Interaction"
+    - "AI and Ethics"
+
+  caution_sources:
+    - "SSRN"
+    - "arXiv"
+    - "bioRxiv"
+    - "medRxiv"
+    - "preprint"
+
+tags:
+  BMI-BCI:
+    - "brain-computer interface"
+    - "brain computer interface"
+    - "brain-machine interface"
+    - "brain machine interface"
+    - "bci"
+    - "bmi"
+    - "neural interface"
+
+  neuroengineering:
+    - "neuroengineering"
+    - "neural engineering"
+    - "biomedical engineering"
+    - "signal processing"
+    - "neural signal"
+
+  neurotechnology:
+    - "neurotechnology"
+    - "neurotechnologies"
+    - "neural device"
+    - "neural implant"
+    - "wearable eeg"
+
+  neural-decoding:
+    - "neural decoding"
+    - "brain-to-text"
+    - "brain to text"
+    - "speech decoding"
+    - "language decoding"
+    - "imagined speech"
+    - "silent speech"
+    - "neural speech"
+
+  signal-type:
+    - "eeg"
+    - "ecog"
+    - "fmri"
+    - "meg"
+    - "single-unit"
+    - "local field potential"
+    - "invasive bci"
+    - "non-invasive bci"
+
+  LLM:
+    - "large language model"
+    - "large language models"
+    - "llm"
+    - "chatgpt"
+    - "gpt"
+    - "language model"
+
+  NLP:
+    - "natural language processing"
+    - "nlp"
+    - "text generation"
+    - "language generation"
+    - "speech-to-text"
+
+  generative-ai:
+    - "generative ai"
+    - "genai"
+    - "ia generativa"
+    - "generative artificial intelligence"
+
+  human-AI:
+    - "human-ai"
+    - "human ai"
+    - "human artificial intelligence"
+    - "human-ai interaction"
+    - "human-computer interaction"
+
+  decision-making:
+    - "decision making"
+    - "decision-making"
+    - "judgment"
+    - "judgement"
+    - "tomada de decisão"
+    - "decision support"
+
+  trust:
+    - "trust"
+    - "reliance"
+    - "overreliance"
+    - "calibrated trust"
+    - "confiança"
+
+  cognitive-bias:
+    - "cognitive bias"
+    - "cognitive biases"
+    - "vieses cognitivos"
+    - "viés cognitivo"
+
+  confirmation-bias:
+    - "confirmation bias"
+    - "viés de confirmação"
+
+  anchoring-bias:
+    - "anchoring bias"
+    - "viés de ancoragem"
+
+  automation-bias:
+    - "automation bias"
+
+  algorithmic-bias:
+    - "algorithmic bias"
+    - "model bias"
+    - "bias in ai"
+    - "fairness"
+
+  hallucination:
+    - "hallucination"
+    - "hallucinations"
+    - "fabrication"
+    - "factuality"
+
+  safety:
+    - "safety"
+    - "user safety"
+    - "risk"
+    - "risk assessment"
+
+  privacy:
+    - "privacy"
+    - "neural privacy"
+    - "mental privacy"
+    - "neural data"
+    - "brain data"
+
+  governance:
+    - "governance"
+    - "governança"
+    - "accountability"
+    - "traceability"
+    - "auditability"
+    - "human validation"
+    - "human oversight"
+
+  neuroethics:
+    - "neuroethics"
+    - "ethics"
+    - "neurorights"
+    - "consent"
+    - "autonomy"
+
+  assistive-communication:
+    - "assistive communication"
+    - "communication aid"
+    - "speech prosthesis"
+    - "rehabilitation"
+    - "clinical application"
