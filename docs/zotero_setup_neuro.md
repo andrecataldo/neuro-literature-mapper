@@ -1,4 +1,4 @@
-# Configuração do Zotero — BMI/BCI, LLMs, Neurotecnologia e Vieses
+# Configuração do Zotero - BMI/BCI, LLMs, Neurotecnologia e Vieses
 
 ## 1. Objetivo
 
@@ -234,8 +234,8 @@ Incluir:
 Trabalhos focados em:
 
 - acurácia;
-- Word Error Rate — WER;
-- Information Transfer Rate — ITR;
+- Word Error Rate - WER;
+- Information Transfer Rate - ITR;
 - latência;
 - robustez;
 - generalização;
@@ -478,7 +478,7 @@ As cores devem ser usadas apenas para sinalização rápida. A informação prin
 
 ## 6. Fluxo de triagem no Zotero
 
-### Etapa 1 — Importação
+### Etapa 1 - Importação
 
 Ao importar um item:
 
@@ -488,7 +488,7 @@ Ao importar um item:
 4. anexar o PDF, quando disponível;
 5. corrigir metadados básicos.
 
-### Etapa 2 — Triagem por título e resumo
+### Etapa 2 - Triagem por título e resumo
 
 Avaliar:
 
@@ -508,7 +508,7 @@ Depois:
 - retirar `status:inbox`;
 - aplicar `status:screened`.
 
-### Etapa 3 — Leitura integral
+### Etapa 3 - Leitura integral
 
 Para itens prioritários:
 
@@ -519,7 +519,7 @@ Para itens prioritários:
 5. relacionar o estudo às subquestões do protocolo;
 6. decidir pela inclusão ou exclusão.
 
-### Etapa 4 — Decisão
+### Etapa 4 - Decisão
 
 Para itens incluídos:
 

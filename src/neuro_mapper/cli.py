@@ -12,10 +12,15 @@ from neuro_mapper.venue_search import generate_venue_searches
 
 
 def cmd_search(args: argparse.Namespace) -> None:
-    load_dotenv()
+    project_root = Path(__file__).resolve().parents[2]
+    env_path = project_root / ".env"
+
+    load_dotenv(dotenv_path=env_path)
+
     config = load_config(args.config)
     records = run_api_search(config)
     export_records_csv(records, args.output)
+
     print(f"Arquivo gerado: {args.output}")
     print(f"Registros únicos: {len(records)}")
 

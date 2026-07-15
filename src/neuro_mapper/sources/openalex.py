@@ -1,67 +1,136 @@
 from __future__ import annotations
 
 import os
-from urllib.parse import quote
-
-import requests
 
 from neuro_mapper.models import WorkRecord
-from neuro_mapper.tagging import suggest_tags, suggest_priority, infer_corrente
+from neuro_mapper.sources.common import request_json
 
 
-def reconstruct_abstract(inverted_index: dict | None) -> str:
+def reconstruct_abstract(
+    inverted_index: dict | None,
+) -> str:
+    """Reconstrói o abstract retornado pelo OpenAlex."""
+
     if not inverted_index:
         return ""
 
-    positions = []
+    positions: list[tuple[int, str]] = []
+
     for word, indexes in inverted_index.items():
         for index in indexes:
             positions.append((index, word))
 
-    return " ".join(word for _, word in sorted(positions))
+    return " ".join(
+        word
+        for _, word in sorted(positions)
+    )
 
 
-def search_openalex(query: str, layer_name: str, config: dict, per_page: int = 20) -> list[WorkRecord]:
-    contact_email = os.getenv("CONTACT_EMAIL", "").strip()
+def search_openalex(
+    query: str,
+    layer_name: str,
+    config: dict,
+    per_page: int = 20,
+) -> list[WorkRecord]:
+    """Executa uma busca de trabalhos no OpenAlex."""
 
-    params = {
+    api_key = os.getenv(
+        "OPENALEX_API_KEY",
+        "",
+    ).strip()
+
+    contact_email = os.getenv(
+        "OPENALEX_CONTACT_EMAIL",
+        "",
+    ).strip()
+
+    source_settings = (
+        config
+        .get("settings", {})
+        .get("sources", {})
+        .get("openalex", {})
+    )
+
+    minimum_interval = float(
+        source_settings.get(
+            "minimum_interval_seconds",
+            0.2,
+        )
+    )
+
+    max_retries = int(
+        source_settings.get(
+            "max_retries",
+            2,
+        )
+    )
+
+    params: dict[str, object] = {
         "search": query,
-        "per-page": per_page,
+        "per-page": min(per_page, 100),
     }
+
+    if api_key:
+        params["api_key"] = api_key
 
     if contact_email:
         params["mailto"] = contact_email
 
-    response = requests.get(
-        "https://api.openalex.org/works",
+    payload = request_json(
+        source="OpenAlex",
+        url="https://api.openalex.org/works",
         params=params,
-        timeout=30,
+        minimum_interval_seconds=minimum_interval,
+        max_retries=max_retries,
+
+        # Não repetimos automaticamente um 429 do OpenAlex.
+        # Ele pode representar esgotamento do orçamento diário.
+        retry_statuses=(500, 502, 503, 504),
     )
-    response.raise_for_status()
-    results = response.json().get("results", [])
+
+    results = payload.get("results", [])
+
+    if not isinstance(results, list):
+        return []
 
     records: list[WorkRecord] = []
 
     for work in results:
+        if not isinstance(work, dict):
+            continue
+
         title = work.get("title") or ""
         year = work.get("publication_year")
         doi = work.get("doi") or ""
         url = work.get("id") or ""
 
-        primary_location = work.get("primary_location") or {}
-        source_info = primary_location.get("source") or {}
-        venue = source_info.get("display_name") or ""
+        primary_location = (
+            work.get("primary_location")
+            or {}
+        )
 
-        authors = []
+        source_info = (
+            primary_location.get("source")
+            or {}
+        )
+
+        venue = (
+            source_info.get("display_name")
+            or ""
+        )
+
+        authors: list[str] = []
+
         for authorship in work.get("authorships", [])[:8]:
             author = authorship.get("author") or {}
-            if author.get("display_name"):
-                authors.append(author["display_name"])
+            display_name = author.get("display_name")
 
-        abstract = reconstruct_abstract(work.get("abstract_inverted_index"))
-        tags = suggest_tags(config, title, venue, abstract, query)
-        priority = suggest_priority(config, title, venue, query, "OpenAlex")
-        corrente = infer_corrente(title, venue, abstract, query)
+            if display_name:
+                authors.append(display_name)
+
+        abstract = reconstruct_abstract(
+            work.get("abstract_inverted_index")
+        )
 
         records.append(
             WorkRecord(
@@ -75,10 +144,15 @@ def search_openalex(query: str, layer_name: str, config: dict, per_page: int = 2
                 doi=doi,
                 url=url,
                 abstract=abstract,
-                cited_by_count=work.get("cited_by_count"),
-                suggested_priority=priority,
-                suggested_tags="; ".join(tags),
-                corrente=corrente,
+                cited_by_count=work.get(
+                    "cited_by_count"
+                ),
+
+                # A classificação será realizada depois,
+                # pelo pipeline, após a deduplicação.
+                suggested_priority="",
+                suggested_tags="",
+                corrente="",
             )
         )
 

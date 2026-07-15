@@ -1,11 +1,11 @@
-# Protocolo exploratório — BMI/BCI, LLMs, Neurotecnologia e Vieses
+# Protocolo exploratório - BMI/BCI, LLMs, Neurotecnologia e Vieses
 
 ## 1. Tipo de estudo
 
 Levantamento exploratório estruturado da literatura científica sobre a integração entre:
 
-- Brain-Computer Interfaces — BCI;
-- Brain-Machine Interfaces — BMI;
+- Brain-Computer Interfaces - BCI;
+- Brain-Machine Interfaces - BMI;
 - decodificação neural;
 - modelos de linguagem;
 - geração e reconstrução de linguagem;
@@ -83,7 +83,7 @@ Como a literatura científica tem tratado a integração entre BMI/BCI e modelos
 
 A busca é organizada em formato de funil, combinando quatro blocos conceituais.
 
-### 6.1 Bloco A — Interfaces neurais
+### 6.1 Bloco A - Interfaces neurais
 
 Termos relacionados a BMI, BCI e neurotecnologia:
 
@@ -98,7 +98,7 @@ neurotechnology
 neuroengineering
 ```
 
-### 6.2 Bloco B — Decodificação e linguagem
+### 6.2 Bloco B - Decodificação e linguagem
 
 Termos relacionados à interpretação de sinais neurais e produção de linguagem:
 
@@ -114,7 +114,7 @@ Termos relacionados à interpretação de sinais neurais e produção de linguag
 "neural speech prosthesis"
 ```
 
-### 6.3 Bloco C — Modelos de linguagem e IA
+### 6.3 Bloco C - Modelos de linguagem e IA
 
 Termos relacionados a modelos de linguagem e processamento de linguagem natural:
 
@@ -130,7 +130,7 @@ GPT
 transformer
 ```
 
-### 6.4 Bloco D — Riscos e dimensão humana
+### 6.4 Bloco D - Riscos e dimensão humana
 
 Termos relacionados a vieses, segurança e governança:
 

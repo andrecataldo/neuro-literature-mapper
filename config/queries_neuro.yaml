@@ -11,11 +11,24 @@ settings:
   year_min: 2018
   language: en
   enforce_year_filter: true
-  request_delay_seconds: 1
+
   enabled_sources:
-  - openalex
-  - crossref
-  - semantic_scholar
+    - openalex
+    - crossref
+    - semantic_scholar
+
+  sources:
+    openalex:
+      minimum_interval_seconds: 0.2
+      max_retries: 2
+
+    semantic_scholar:
+      minimum_interval_seconds: 1.05
+      max_retries: 3
+
+    crossref:
+      minimum_interval_seconds: 0.25
+      max_retries: 3
 
 api_layers:
 - name: 01 - Integração BMI/BCI + LLMs

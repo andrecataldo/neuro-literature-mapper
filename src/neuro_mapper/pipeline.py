@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import re
-import time
 import unicodedata
 from copy import deepcopy
 from typing import Iterable
 
 from neuro_mapper.models import WorkRecord
+from neuro_mapper.sources.common import ApiRequestError
 from neuro_mapper.sources.crossref import search_crossref
 from neuro_mapper.sources.openalex import search_openalex
 from neuro_mapper.sources.semantic_scholar import search_semantic_scholar
@@ -29,24 +29,29 @@ SOURCE_HANDLERS = [
     ),
 ]
 
-
-def run_api_search(config: dict) -> list[WorkRecord]:
+def run_api_search(
+    config: dict,
+) -> list[WorkRecord]:
     """
     Executa buscas, filtra por ano, deduplica e classifica.
 
-    `settings.enabled_sources` permite controlar as APIs utilizadas.
-    Após um erro 429, a fonte é suspensa pelo restante da execução para
-    evitar dezenas de chamadas repetidas sob rate limit.
+    Cada adaptador controla seu próprio intervalo de chamadas,
+    tentativas e tratamento de rate limit.
     """
+
     settings = config.get("settings", {})
     per_page = int(settings.get("per_page", 20))
     layers = config.get("api_layers", [])
-    delay = float(settings.get("request_delay_seconds", 1))
 
     configured_sources = settings.get(
         "enabled_sources",
-        ["openalex", "crossref", "semantic_scholar"],
+        [
+            "openalex",
+            "crossref",
+            "semantic_scholar",
+        ],
     )
+
     enabled_sources = {
         str(source).strip().lower()
         for source in configured_sources
@@ -56,10 +61,16 @@ def run_api_search(config: dict) -> list[WorkRecord]:
     blocked_sources: set[str] = set()
 
     for layer in layers:
-        layer_name = str(layer.get("name", "")).strip()
+        layer_name = str(
+            layer.get("name", "")
+        ).strip()
 
         for query in layer.get("queries", []):
-            for source_key, source_name, search_fn in SOURCE_HANDLERS:
+            for (
+                source_key,
+                source_name,
+                search_fn,
+            ) in SOURCE_HANDLERS:
                 if source_key not in enabled_sources:
                     continue
 
@@ -67,36 +78,66 @@ def run_api_search(config: dict) -> list[WorkRecord]:
                     continue
 
                 try:
-                    print(f"[{source_name}] {layer_name} :: {query}")
+                    print(
+                        f"[{source_name}] "
+                        f"{layer_name} :: {query}"
+                    )
+
                     records = search_fn(
                         query,
                         layer_name,
                         config,
                         per_page=per_page,
                     )
+
                     all_records.extend(records)
-                except Exception as exc:
-                    message = str(exc)
+
                     print(
-                        f"ERRO em {source_name} para query {query}: "
-                        f"{message}"
+                        f"[{source_name}] "
+                        f"{len(records)} registros"
                     )
 
-                    if "429" in message or "too many requests" in message.lower():
-                        blocked_sources.add(source_key)
-                        print(
-                            f"[{source_name}] suspensa nesta execução "
-                            "após rate limit (429)."
-                        )
-                finally:
-                    if delay > 0:
-                        time.sleep(delay)
+                except ApiRequestError as exc:
+                    print(
+                        f"ERRO em {source_name} "
+                        f"para query {query}: {exc}"
+                    )
 
-    filtered = filter_records_by_year(all_records, config)
+                    # Evita repetir dezenas de chamadas quando
+                    # a chave está inválida, o acesso foi proibido
+                    # ou o limite da fonte foi atingido.
+                    if exc.status_code in {
+                        401,
+                        403,
+                        429,
+                    }:
+                        blocked_sources.add(source_key)
+
+                        print(
+                            f"[{source_name}] suspensa "
+                            "pelo restante desta execução."
+                        )
+
+                except Exception as exc:
+                    print(
+                        f"ERRO inesperado em "
+                        f"{source_name} para query "
+                        f"{query}: "
+                        f"{exc.__class__.__name__}: "
+                        f"{exc}"
+                    )
+
+    filtered = filter_records_by_year(
+        all_records,
+        config,
+    )
+
     unique = deduplicate_records(filtered)
 
-    return classify_records(unique, config)
-
+    return classify_records(
+        unique,
+        config,
+    )
 
 def filter_records_by_year(
     records: Iterable[WorkRecord],
