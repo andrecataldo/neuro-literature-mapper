@@ -22,11 +22,15 @@ class WorkRecord:
 
     professor_source: str = ""
     corrente: str = ""
-    classification_confidence: str = ""
+    publication_status: str = ""
+    metadata_completeness: str = ""
     decision: str = ""
     notes: str = ""
     seed_source: str = ""
     duplicate_count: int = 1
+
+    # Campo legado, aceito temporariamente, mas não exportado.
+    classification_confidence: str = ""
 
     CSV_FIELDS: ClassVar[list[str]] = [
         "source_api",
@@ -43,7 +47,8 @@ class WorkRecord:
         "suggested_priority",
         "suggested_tags",
         "corrente",
-        "classification_confidence",
+        "publication_status",
+        "metadata_completeness",
         "seed_source",
         "duplicate_count",
         "decision",
@@ -53,6 +58,7 @@ class WorkRecord:
     def to_dict(self) -> dict:
         data = asdict(self)
         legacy_source = data.pop("professor_source", "")
+        data.pop("classification_confidence", None)
 
         if not data.get("seed_source"):
             data["seed_source"] = legacy_source

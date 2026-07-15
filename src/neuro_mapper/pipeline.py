@@ -19,29 +19,53 @@ SOURCE_QUALITY = {
     "crossref": 1,
 }
 
+SOURCE_HANDLERS = [
+    ("openalex", "OpenAlex", search_openalex),
+    ("crossref", "Crossref", search_crossref),
+    (
+        "semantic_scholar",
+        "Semantic Scholar",
+        search_semantic_scholar,
+    ),
+]
+
 
 def run_api_search(config: dict) -> list[WorkRecord]:
     """
-    Executa as buscas, aplica o filtro temporal, deduplica e só então classifica.
+    Executa buscas, filtra por ano, deduplica e classifica.
 
-    A query é preservada para rastreabilidade, mas não é usada para sugerir
-    tags, corrente ou prioridade.
+    `settings.enabled_sources` permite controlar as APIs utilizadas.
+    Após um erro 429, a fonte é suspensa pelo restante da execução para
+    evitar dezenas de chamadas repetidas sob rate limit.
     """
     settings = config.get("settings", {})
     per_page = int(settings.get("per_page", 20))
     layers = config.get("api_layers", [])
+    delay = float(settings.get("request_delay_seconds", 1))
+
+    configured_sources = settings.get(
+        "enabled_sources",
+        ["openalex", "crossref", "semantic_scholar"],
+    )
+    enabled_sources = {
+        str(source).strip().lower()
+        for source in configured_sources
+    }
 
     all_records: list[WorkRecord] = []
+    blocked_sources: set[str] = set()
 
     for layer in layers:
         layer_name = str(layer.get("name", "")).strip()
 
         for query in layer.get("queries", []):
-            for source_name, search_fn in [
-                ("OpenAlex", search_openalex),
-                ("Crossref", search_crossref),
-                ("Semantic Scholar", search_semantic_scholar),
-            ]:
+            for source_key, source_name, search_fn in SOURCE_HANDLERS:
+                if source_key not in enabled_sources:
+                    continue
+
+                if source_key in blocked_sources:
+                    continue
+
                 try:
                     print(f"[{source_name}] {layer_name} :: {query}")
                     records = search_fn(
@@ -51,11 +75,22 @@ def run_api_search(config: dict) -> list[WorkRecord]:
                         per_page=per_page,
                     )
                     all_records.extend(records)
-                    time.sleep(float(settings.get("request_delay_seconds", 1)))
                 except Exception as exc:
+                    message = str(exc)
                     print(
-                        f"ERRO em {source_name} para query {query}: {exc}"
+                        f"ERRO em {source_name} para query {query}: "
+                        f"{message}"
                     )
+
+                    if "429" in message or "too many requests" in message.lower():
+                        blocked_sources.add(source_key)
+                        print(
+                            f"[{source_name}] suspensa nesta execução "
+                            "após rate limit (429)."
+                        )
+                finally:
+                    if delay > 0:
+                        time.sleep(delay)
 
     filtered = filter_records_by_year(all_records, config)
     unique = deduplicate_records(filtered)
@@ -104,58 +139,127 @@ def classify_records(
     config: dict,
 ) -> list[WorkRecord]:
     """
-    Recalcula classificação usando somente conteúdo e metadados do artigo.
+    Classifica relevância usando apenas título e resumo.
 
-    A query de busca não entra no texto classificatório. Isso impede que os
-    termos da consulta façam um artigo irrelevante parecer central.
+    Venue, query e fonte são usados para rastreabilidade, status da publicação
+    e completude dos metadados, nunca como evidência semântica.
     """
     classified: list[WorkRecord] = []
 
     for record in records:
-        content_parts = (
-            record.title,
-            record.abstract,
-            record.venue,
-        )
-
         record.suggested_priority = suggest_priority(
             config=config,
             title=record.title,
+            abstract=record.abstract,
             venue=record.venue,
             query="",
             source_api=record.source_api,
-            abstract=record.abstract,
         )
         record.suggested_tags = "; ".join(
-            suggest_tags(config, *content_parts)
+            suggest_tags(
+                config,
+                record.title,
+                record.abstract,
+            )
         )
-        record.corrente = infer_corrente(*content_parts)
-        record.classification_confidence = infer_classification_confidence(
+        record.corrente = infer_corrente(
+            record.title,
+            record.abstract,
+            config,
+        )
+        record.publication_status = infer_publication_status(
+            record,
+            config,
+        )
+        record.metadata_completeness = infer_metadata_completeness(
             record
         )
+        record.classification_confidence = ""
         classified.append(record)
 
     return classified
 
 
-def infer_classification_confidence(record: WorkRecord) -> str:
+def infer_publication_status(
+    record: WorkRecord,
+    config: dict,
+) -> str:
     """
-    Estima a confiança da triagem automática com base na completude.
+    Infere o status bibliográfico sem confundi-lo com relevância temática.
 
-    - high: resumo informativo e venue disponível;
-    - medium: resumo curto ou venue ausente;
-    - low: sem resumo.
+    Valores:
+    - review-comment
+    - preprint
+    - published-record
+    - unknown
+    """
+    classification = config.get("classification", {})
+    if not isinstance(classification, dict):
+        classification = {}
+
+    review_prefixes = classification.get(
+        "review_comment_prefixes",
+        [
+            "review of:",
+            "review of ",
+            "comment on:",
+            "commentary on:",
+            "response to:",
+            "author response:",
+            "peer review of:",
+        ],
+    )
+    title = (record.title or "").strip().lower()
+
+    if any(title.startswith(str(prefix).lower()) for prefix in review_prefixes):
+        return "review-comment"
+
+    preprint_terms = classification.get(
+        "preprint_terms",
+        ["arxiv", "biorxiv", "medrxiv", "ssrn", "preprint"],
+    )
+    publication_text = " ".join(
+        [
+            record.source_api or "",
+            record.venue or "",
+            record.url or "",
+            record.title or "",
+        ]
+    ).lower()
+
+    if any(str(term).lower() in publication_text for term in preprint_terms):
+        return "preprint"
+
+    if (record.doi or "").strip() or (record.venue or "").strip():
+        return "published-record"
+
+    return "unknown"
+
+
+def infer_metadata_completeness(record: WorkRecord) -> str:
+    """
+    Mede completude dos metadados, não confiança epistemológica.
+
+    - high: resumo informativo, venue, autores, ano e DOI;
+    - medium: resumo presente, mas algum metadado importante está ausente;
+    - low: resumo ausente.
     """
     abstract = (record.abstract or "").strip()
-    venue = (record.venue or "").strip()
 
     if not abstract:
         return "low"
 
-    if len(abstract) >= 200 and venue:
-        return "high"
+    complete_core = all(
+        [
+            len(abstract) >= 200,
+            bool((record.venue or "").strip()),
+            bool((record.authors or "").strip()),
+            record.year is not None,
+            bool((record.doi or "").strip()),
+        ]
+    )
 
-    return "medium"
+    return "high" if complete_core else "medium"
 
 
 def deduplicate_records(
@@ -273,6 +377,8 @@ def merge_duplicate_group(records: list[WorkRecord]) -> WorkRecord:
     merged.suggested_priority = ""
     merged.suggested_tags = ""
     merged.corrente = ""
+    merged.publication_status = ""
+    merged.metadata_completeness = ""
     merged.classification_confidence = ""
 
     return merged

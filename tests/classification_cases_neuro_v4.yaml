@@ -1,0 +1,38 @@
+schema_version: '1.0'
+cases:
+- title: ChatBCI, a P300 speller BCI with context-driven word prediction leveraging large language models
+  abstract: The BCI uses context-driven word prediction and a large language model to improve sentence composition.
+  expected_priority: A1-central-integracao-llm
+- title: 'Enhancing Neural Decoding with Large Language Models: A GPT-Based Approach'
+  abstract: Large language models improve neural speech decoding from cortical recordings.
+  expected_priority: A1-central-integracao-llm
+- title: High-performance brain-to-text communication via handwriting
+  abstract: Intracortical neural activity is decoded into text from imagined handwriting.
+  expected_priority: A2-central-decoding-linguagem
+- title: Privacy and Security in Brain-Computer Interfaces
+  abstract: The paper analyzes privacy, security and governance risks in brain-computer interfaces.
+  expected_priority: A3-central-riscos-governanca
+- title: Issues in neurotechnology governance
+  abstract: This article examines governance and responsibility in neurotechnology broadly.
+  expected_priority: B-apoio
+- title: EEG-Transformer for Imagined Speech
+  abstract: A transformer architecture decodes imagined speech from EEG signals without a large language model.
+  expected_priority: A2-central-decoding-linguagem
+- title: Knowledge-Based Emotion Recognition Using Large Language Models
+  abstract: The method uses Bayesian Cue Integration (BCI) with a large language model.
+  expected_priority: D-descartar
+- title: Mind and Neuro-Linguistic Programming in Weight Management
+  abstract: The study examines obesity, body mass index and neuro-linguistic programming.
+  expected_priority: D-descartar
+- title: Neural Data Augmentation for Bot Detection
+  abstract: Neural data augmentation improves bot detection in social networks.
+  expected_priority: D-descartar
+- title: 'Review of: "Anchoring Bias in Large Language Models"'
+  abstract: Open peer review of another manuscript.
+  expected_priority: D-descartar
+- title: Learning Temporal Information for Brain-Computer Interface Using Convolutional Neural Networks
+  abstract: Natural language processing is mentioned as a general application of deep learning. The experiment concerns motor imagery classification.
+  expected_priority: B-apoio
+- title: Large Language Model Assistance for Vagus Nerve Stimulation Information
+  abstract: A language model answers physician questions about vagus nerve stimulation. No brain-computer interface is used.
+  expected_priority: B-apoio

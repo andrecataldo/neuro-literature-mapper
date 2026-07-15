@@ -1,7 +1,7 @@
-schema_version: '1.1'
+schema_version: '1.2'
 project:
   name: Neuro Literature Mapper
-  purpose: Taxonomia para classificação de literatura sobre BMI/BCI, LLMs, decodificação neural, interação humana e governança.
+  purpose: Taxonomia para classificação de literatura sobre integração BMI/BCI–LLM, decodificação neural de linguagem, interação humana, vieses, privacidade, segurança e governança.
 classification:
   neuro_terms:
   - brain-computer interface
@@ -40,6 +40,7 @@ classification:
   - p300
   - ssvep
   - motor imagery
+  - speller
   - neurotechnology
   - neuroengineering
   - interface
@@ -162,10 +163,128 @@ classification:
   - parameter count
   - training efficiency
   - inference throughput
+  explicit_interface_terms:
+  - brain-computer interface
+  - brain computer interface
+  - brain-machine interface
+  - brain machine interface
+  - neural interface
+  - brain interface
+  - chatbci
+  - bci speller
+  - p300 speller
+  brain_context_terms:
+  - brain
+  - cortical
+  - intracortical
+  - neural signal
+  - neural activity
+  - neural recording
+  - eeg
+  - ecog
+  - fmri
+  - meg
+  - fnirs
+  - p300
+  - ssvep
+  - motor imagery
+  language_decoding_terms:
+  - neural decoding
+  - speech decoding
+  - semantic decoding
+  - language decoding
+  - brain-to-text
+  - brain to text
+  - eeg-to-text
+  - eeg to text
+  - imagined speech
+  - attempted speech
+  - covert speech
+  - silent speech
+  - language reconstruction
+  - speech reconstruction
+  - speech synthesis
+  - speech neuroprosthesis
+  - neural speech prosthesis
+  - imagined handwriting
+  strong_llm_terms:
+  - large language model
+  - large language models
+  - llm
+  - llms
+  - generative ai
+  - genai
+  - gpt
+  - chatgpt
+  language_assistance_terms:
+  - language model
+  - language models
+  - language modeling
+  - language modelling
+  - natural language processing
+  - text generation
+  - language generation
+  - word prediction
+  - predictive text
+  - context-driven word prediction
+  risk_governance_terms:
+  - bias
+  - cognitive bias
+  - algorithmic bias
+  - confirmation bias
+  - anchoring bias
+  - automation bias
+  - hallucination
+  - uncertainty
+  - error propagation
+  - privacy
+  - neural privacy
+  - mental privacy
+  - security
+  - safety
+  - neuroethics
+  - neurorights
+  - governance
+  - autonomy
+  - consent
+  - accountability
+  - explainability
+  - traceability
+  - auditability
+  - data ownership
+  - neural data ownership
+  - mental integrity
+  - cognitive liberty
+  - agency
+  - liability
+  - responsibility
+  review_comment_prefixes:
+  - 'review of:'
+  - 'review of '
+  - 'comment on:'
+  - 'commentary on:'
+  - 'response to:'
+  - 'author response:'
+  - 'peer review of:'
+  preprint_terms:
+  - arxiv
+  - biorxiv
+  - medrxiv
+  - ssrn
+  - preprint
+  - working paper
+  published_record_terms:
+  - journal article
+  - conference paper
+  - proceedings
+  - book chapter
 tags:
   domain:bci:
   - brain-computer interface
   - brain computer interface
+  - chatbci
+  - bci speller
+  - p300 speller
   domain:bmi:
   - brain-machine interface
   - brain machine interface
@@ -348,11 +467,26 @@ tags:
   application:rehabilitation:
   - rehabilitation
   - neurorehabilitation
+  decoding:eeg-to-text:
+  - eeg-to-text
+  - eeg to text
+  decoding:covert-speech:
+  - covert speech
+  decoding:imagined-handwriting:
+  - imagined handwriting
+  governance:data-ownership:
+  - data ownership
+  - neural data ownership
+  governance:neurorights:
+  - neurorights
+  - neuro-rights
+  - cognitive liberty
+  - mental integrity
 priority_labels:
-  A1-central-integracao: Integração explícita entre BMI/BCI e LLM, modelo de linguagem, NLP ou decodificação de linguagem.
-  A2-central-riscos: BMI/BCI explícita combinada com privacidade, segurança, ética, vieses, confiança ou governança.
-  B-apoio: Contribui para uma dimensão do recorte, mas não combina os elementos necessários para ser central.
-  C-cautela: Preprint, fonte preliminar ou registro que exige validação.
+  A1-central-integracao-llm: Integração explícita entre BMI/BCI ou decodificação neural e LLM/modelo de linguagem/NLP.
+  A2-central-decoding-linguagem: Decodificação neural de fala, texto, linguagem ou significado, mesmo sem uso explícito de LLM.
+  A3-central-riscos-governanca: Riscos, privacidade, segurança, neuroética ou governança diretamente associados a BMI/BCI.
+  B-apoio: Fundamentação ou dimensão adjacente relevante, sem combinação suficiente para integrar o núcleo central.
   D-descartar: Falso positivo, comentário, registro irrelevante ou fora do escopo.
 exclusion_reasons:
   body-mass-index: BMI significa Body Mass Index.

@@ -12,6 +12,10 @@ settings:
   language: en
   enforce_year_filter: true
   request_delay_seconds: 1
+  enabled_sources:
+  - openalex
+  - crossref
+  - semantic_scholar
 
 api_layers:
 - name: 01 - Integração BMI/BCI + LLMs
@@ -21,22 +25,39 @@ api_layers:
   - '"brain-computer interface" "generative AI"'
   - '"brain-computer interface" "language model"'
   - '"brain-to-text" "large language model"'
-- name: 02 - Decodificação neural e linguagem
+  - '"BCI speller" "large language model"'
+  - '"BCI" "large language model" brain'
+  - '"BCI" "language model" EEG'
+  - '"ChatBCI"'
+  - '"P300 speller" "large language model"'
+  - '"EEG-to-text" "language model"'
+  - '"neural language decoding" "large language model"'
+  - '"brain decoding" "large language model"'
+- name: 02 - Decodificação neural de linguagem
   queries:
   - '"neural decoding" "language"'
   - '"neural decoding" "speech"'
   - '"brain-to-text"'
+  - '"EEG-to-text"'
   - '"imagined speech" "brain-computer interface"'
   - '"speech decoding" "brain-computer interface"'
+  - '"brain-computer interface" "language decoding"'
+  - '"BCI" "language decoding" brain'
   - '"ECoG" "speech decoding"'
-  - '"neural speech prosthesis" "language model"'
-- name: 03 - BMI/BCI + NLP e comunicação assistiva
+  - '"covert speech" ECoG decoding'
+  - '"speech neuroprosthesis"'
+  - '"neural speech prosthesis"'
+  - '"imagined handwriting" brain-to-text'
+- name: 03 - BMI/BCI, NLP e comunicação assistiva
   queries:
   - '"brain-computer interface" "natural language processing"'
   - '"brain-machine interface" "natural language processing"'
   - '"neural interface" "language model"'
   - '"assistive communication" "brain-computer interface"'
   - '"brain-computer interface" "text generation"'
+  - '"BCI speller" "word prediction"'
+  - '"P300 speller" "language model"'
+  - '"brain-computer interface" "predictive text"'
 - name: 04 - Vieses, confiança e vulnerabilidades em LLMs
   queries:
   - '"cognitive bias" "large language models"'
@@ -46,12 +67,15 @@ api_layers:
   - '"overreliance" "large language models"'
   - '"trust" "large language models" "decision making"'
   - '"hallucination" "large language models" "safety"'
-- name: 05 - Neurotecnologia, privacidade e governança
+- name: 05 - BMI/BCI, privacidade e governança
   queries:
   - '"brain-computer interface" "privacy"'
   - '"brain-computer interface" "security"'
   - '"brain-computer interface" "ethics"'
   - '"brain-computer interface" "safety"'
+  - '"BCI" "neural privacy" brain'
+  - '"BCI" "data ownership" brain'
+  - '"brain-computer interface researcher" privacy'
   - '"neurotechnology" "governance"'
   - '"neurotechnology" "privacy"'
   - '"neural privacy"'

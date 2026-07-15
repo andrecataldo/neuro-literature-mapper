@@ -1,0 +1,23 @@
+schema_version: '1.0'
+description: Artigos-semente usados para verificar recall da busca e regressão da classificação. A lista não representa a revisão final.
+seeds:
+- title: 'ARIEL: Brain-Computer Interfaces meet Large Language Models for Emotional Support Conversation'
+  expected_priority: A1-central-integracao-llm
+- title: Language model assisted EEG-based brain computer interface for typing
+  expected_priority: A1-central-integracao-llm
+- title: Human intention inference with a large language model can enhance brain-computer interface control
+  expected_priority: A1-central-integracao-llm
+- title: ChatBCI, a P300 speller BCI with context-driven word prediction leveraging large language models
+  expected_priority: A1-central-integracao-llm
+- title: 'Enhancing Neural Decoding with Large Language Models: A GPT-Based Approach'
+  expected_priority: A1-central-integracao-llm
+- title: High-performance brain-to-text communication via handwriting
+  expected_priority: A2-central-decoding-linguagem
+- title: A high-performance speech neuroprosthesis
+  expected_priority: A2-central-decoding-linguagem
+- title: Feasibility of decoding covert speech in ECoG with a Transformer trained on overt speech
+  expected_priority: A2-central-decoding-linguagem
+- title: Privacy and Security in Brain-Computer Interfaces
+  expected_priority: A3-central-riscos-governanca
+- title: Brain–computer interface researcher perspectives on neural data ownership and privacy
+  expected_priority: A3-central-riscos-governanca
