@@ -1,0 +1,360 @@
+schema_version: '1.0'
+project:
+  name: Neuro Literature Mapper
+  purpose: Taxonomia para classificação preliminar de literatura sobre BMI/BCI, LLMs, neurotecnologia, vieses, segurança, privacidade e governança.
+classification:
+  neuro_terms:
+  - brain-computer interface
+  - brain computer interface
+  - brain-machine interface
+  - brain machine interface
+  - bci
+  - bmi
+  - neural interface
+  - neurotechnology
+  - neuroengineering
+  - neural engineering
+  - neural signal
+  - neural data
+  - eeg
+  - ecog
+  - fmri
+  - meg
+  - fnirs
+  - intracortical
+  decoding_terms:
+  - neural decoding
+  - speech decoding
+  - semantic decoding
+  - language decoding
+  - brain-to-text
+  - brain to text
+  - imagined speech
+  - attempted speech
+  - silent speech
+  - language reconstruction
+  - speech reconstruction
+  - speech prosthesis
+  - neural speech prosthesis
+  llm_terms:
+  - large language model
+  - large language models
+  - llm
+  - llms
+  - generative ai
+  - genai
+  - language model
+  - language models
+  - natural language processing
+  - nlp
+  - transformer
+  - gpt
+  - chatgpt
+  human_terms:
+  - human-ai interaction
+  - human ai interaction
+  - human-computer interaction
+  - human computer interaction
+  - user
+  - patient
+  - trust
+  - reliance
+  - overreliance
+  - human validation
+  - human oversight
+  - decision making
+  - decision-making
+  - usability
+  - user experience
+  - assistive communication
+  risk_terms:
+  - bias
+  - cognitive bias
+  - algorithmic bias
+  - confirmation bias
+  - anchoring bias
+  - automation bias
+  - hallucination
+  - uncertainty
+  - error propagation
+  - privacy
+  - neural privacy
+  - mental privacy
+  - security
+  - safety
+  - neuroethics
+  - neurorights
+  - governance
+  - autonomy
+  - consent
+  - accountability
+  - explainability
+  - traceability
+  - auditability
+  false_positive_terms:
+  - body mass index
+  - body-mass index
+  - obesity
+  - overweight
+  - weight loss
+  - bmi percentile
+  pure_technical_terms:
+  - technical architecture
+  - benchmark
+  - model performance
+  - parameter count
+  - training efficiency
+  - inference throughput
+tags:
+  domain:bci:
+  - brain-computer interface
+  - brain computer interface
+  - bci
+  domain:bmi:
+  - brain-machine interface
+  - brain machine interface
+  - bmi
+  domain:neurotechnology:
+  - neurotechnology
+  - neural device
+  - neural implant
+  - neural interface
+  domain:neuroengineering:
+  - neuroengineering
+  - neural engineering
+  - biomedical engineering
+  - neural signal processing
+  signal:eeg:
+  - eeg
+  - electroencephalography
+  signal:ecog:
+  - ecog
+  - electrocorticography
+  signal:fmri:
+  - fmri
+  - functional magnetic resonance imaging
+  signal:meg:
+  - meg
+  - magnetoencephalography
+  signal:fnirs:
+  - fnirs
+  - functional near-infrared spectroscopy
+  signal:intracortical:
+  - intracortical
+  - single-unit
+  - single unit
+  - local field potential
+  invasiveness:invasive:
+  - invasive bci
+  - intracortical
+  - implanted electrode
+  - neural implant
+  invasiveness:partially-invasive:
+  - partially invasive
+  - semi-invasive
+  - ecog
+  - electrocorticography
+  invasiveness:non-invasive:
+  - non-invasive bci
+  - noninvasive bci
+  - eeg
+  - meg
+  - fmri
+  - fnirs
+  decoding:neural:
+  - neural decoding
+  decoding:speech:
+  - speech decoding
+  - speech reconstruction
+  - neural speech
+  decoding:semantic:
+  - semantic decoding
+  - semantic reconstruction
+  decoding:imagined-speech:
+  - imagined speech
+  - silent speech
+  decoding:attempted-speech:
+  - attempted speech
+  decoding:brain-to-text:
+  - brain-to-text
+  - brain to text
+  - language reconstruction
+  ai:llm:
+  - large language model
+  - large language models
+  - llm
+  - llms
+  - gpt
+  - chatgpt
+  ai:generative-ai:
+  - generative ai
+  - genai
+  - generative artificial intelligence
+  - ia generativa
+  ai:nlp:
+  - natural language processing
+  - nlp
+  - text generation
+  - language generation
+  ai:transformer:
+  - transformer
+  - transformer-based
+  human:interaction:
+  - human-ai interaction
+  - human-computer interaction
+  - user interaction
+  human:trust:
+  - trust
+  - calibrated trust
+  - confiança
+  human:reliance:
+  - reliance
+  - appropriate reliance
+  human:overreliance:
+  - overreliance
+  - over-reliance
+  human:validation:
+  - human validation
+  - human oversight
+  - human-in-the-loop
+  human:decision-making:
+  - decision making
+  - decision-making
+  - judgment
+  - judgement
+  - tomada de decisão
+  risk:cognitive-bias:
+  - cognitive bias
+  - cognitive biases
+  - viés cognitivo
+  - vieses cognitivos
+  risk:confirmation-bias:
+  - confirmation bias
+  - viés de confirmação
+  risk:anchoring-bias:
+  - anchoring bias
+  - viés de ancoragem
+  risk:automation-bias:
+  - automation bias
+  risk:algorithmic-bias:
+  - algorithmic bias
+  - model bias
+  - bias in ai
+  - fairness
+  risk:hallucination:
+  - hallucination
+  - hallucinations
+  - fabrication
+  - factuality
+  risk:uncertainty:
+  - uncertainty
+  - confidence estimation
+  - uncertainty communication
+  risk:error-propagation:
+  - error propagation
+  - cascading error
+  - pipeline error
+  governance:privacy:
+  - privacy
+  - data privacy
+  governance:neural-privacy:
+  - neural privacy
+  - mental privacy
+  - brain data privacy
+  governance:security:
+  - security
+  - cybersecurity
+  - adversarial attack
+  governance:safety:
+  - safety
+  - user safety
+  - risk assessment
+  governance:neuroethics:
+  - neuroethics
+  - neurorights
+  - neuro-rights
+  governance:consent:
+  - consent
+  - informed consent
+  governance:autonomy:
+  - autonomy
+  - agency
+  governance:accountability:
+  - accountability
+  - responsibility
+  - liability
+  governance:explainability:
+  - explainability
+  - interpretable
+  - interpretability
+  governance:traceability:
+  - traceability
+  - auditability
+  - provenance
+  application:assistive-communication:
+  - assistive communication
+  - communication aid
+  - speech prosthesis
+  application:clinical:
+  - clinical application
+  - patient
+  - clinical trial
+  application:rehabilitation:
+  - rehabilitation
+  - neurorehabilitation
+analytical_streams:
+- id: stream:bci-acquisition
+  label: BMI/BCI e aquisição de sinais neurais
+  keywords:
+  - bci
+  - bmi
+  - eeg
+  - ecog
+  - fmri
+  - intracortical
+- id: stream:neural-decoding
+  label: Decodificação neural e brain-to-text
+  keywords:
+  - neural decoding
+  - speech decoding
+  - brain-to-text
+- id: stream:bci-llm
+  label: Integração BMI/BCI e LLMs
+  keywords:
+  - brain-computer interface
+  - large language model
+  - llm
+- id: stream:human-interaction
+  label: Interação Humano-IA, confiança e validação
+  keywords:
+  - trust
+  - reliance
+  - human validation
+  - human oversight
+- id: stream:bias-risk
+  label: Vieses, erros e vulnerabilidades
+  keywords:
+  - bias
+  - hallucination
+  - uncertainty
+  - error propagation
+- id: stream:governance
+  label: Segurança, privacidade neural e governança
+  keywords:
+  - privacy
+  - security
+  - neuroethics
+  - governance
+priority_labels:
+  A-central: Combina BMI/BCI ou sinais neurais com decodificação/linguagem/LLM e dimensão humana ou de risco.
+  B-apoio: Contribui para uma parte importante do recorte ou para fundamentação.
+  C-cautela: Fonte preliminar ou preprint relevante que exige validação adicional.
+  D-descartar: Falso positivo, duplicata ou registro sem relação útil com o tema.
+exclusion_reasons:
+  false-positive: Coincidência terminológica sem relação com BMI/BCI.
+  body-mass-index: BMI significa Body Mass Index.
+  wrong-bci: BCI possui significado diferente de Brain-Computer Interface.
+  out-of-scope: Estudo fora do recorte da pesquisa.
+  duplicate: Registro duplicado.
+  replaced-version: Versão preliminar substituída por publicação posterior.
+  insufficient-metadata: Metadados insuficientes para triagem.

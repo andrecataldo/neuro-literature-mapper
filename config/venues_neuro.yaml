@@ -1,0 +1,214 @@
+schema_version: '1.0'
+project:
+  name: Neuro Literature Mapper
+  purpose: Catálogo de venues e buscas direcionadas para BMI/BCI, neuroengenharia, LLMs, HCI, segurança e neuroética.
+venue_search_layers:
+- venue_group: Journal of Neural Engineering
+  base_site: iopscience.iop.org/journal/1741-2552
+  queries:
+  - '"brain-computer interface" "language"'
+  - '"brain-machine interface" "language"'
+  - '"neural decoding" "language"'
+  - '"brain-to-text"'
+  - '"large language model"'
+  - '"LLM"'
+- venue_group: IEEE Neural and Biomedical Engineering
+  base_site: ieeexplore.ieee.org
+  queries:
+  - '"brain-computer interface" "large language model"'
+  - '"brain-machine interface" "large language model"'
+  - '"neural decoding" "speech"'
+  - '"imagined speech" "BCI"'
+  - '"assistive communication" "BCI"'
+  - '"neural interface" "language model"'
+- venue_group: Journal of NeuroEngineering and Rehabilitation
+  base_site: jneuroengrehab.biomedcentral.com
+  queries:
+  - '"brain-computer interface"'
+  - '"brain-machine interface"'
+  - '"assistive communication"'
+  - '"neural decoding"'
+  - '"speech decoding"'
+  - '"language model"'
+- venue_group: Frontiers in Neuroscience
+  base_site: frontiersin.org
+  queries:
+  - '"brain-computer interface" "language"'
+  - '"neural decoding" "language"'
+  - '"imagined speech"'
+  - '"neurotechnology" "ethics"'
+  - '"neural data" "privacy"'
+- venue_group: NeuroImage and ScienceDirect
+  base_site: sciencedirect.com
+  queries:
+  - '"neural decoding" "language"'
+  - '"speech decoding" "brain"'
+  - '"brain-computer interface" "language"'
+  - '"EEG" "language decoding"'
+  - '"ECoG" "speech decoding"'
+- venue_group: Nature Portfolio
+  base_site: nature.com
+  queries:
+  - '"brain-computer interface" "speech"'
+  - '"brain-machine interface" "neural decoding"'
+  - '"brain-to-text"'
+  - '"neurotechnology" "privacy"'
+  - '"neurotechnology" "ethics"'
+- venue_group: ACL Anthology
+  base_site: aclanthology.org
+  queries:
+  - '"large language models" "cognitive bias"'
+  - '"large language models" "decision making"'
+  - '"overreliance" "large language models"'
+  - '"human-AI interaction" "large language models"'
+  - '"language model" "neural decoding"'
+- venue_group: ACM HCI, FAccT and AIES
+  base_site: dl.acm.org
+  queries:
+  - '"human-AI interaction" "large language models"'
+  - '"overreliance" "AI"'
+  - '"trust" "AI" "decision making"'
+  - '"cognitive bias" "AI"'
+  - '"neurotechnology" "privacy"'
+  - '"brain-computer interface" "ethics"'
+- venue_group: AI and Machine Learning Conferences
+  base_site: ''
+  queries:
+  - '"large language models" "cognitive bias" "NeurIPS"'
+  - '"large language models" "human-AI interaction" "ICLR"'
+  - '"large language models" "decision making" "ICML"'
+  - '"neural decoding" "language model" "NeurIPS"'
+  - '"brain-computer interface" "large language model" "NeurIPS"'
+- venue_group: PubMed and biomedical literature
+  base_site: pubmed.ncbi.nlm.nih.gov
+  queries:
+  - '"brain-computer interface" "speech"'
+  - '"brain-machine interface" "communication"'
+  - '"neural decoding" "language"'
+  - '"speech prosthesis"'
+  - '"neural privacy"'
+classification:
+  primary_venues:
+  - Journal of Neural Engineering
+  - IEEE Transactions on Neural Systems and Rehabilitation Engineering
+  - IEEE Transactions on Biomedical Engineering
+  - Journal of NeuroEngineering and Rehabilitation
+  - Brain-Computer Interfaces
+  - Frontiers in Neuroscience
+  - Frontiers in Human Neuroscience
+  - NeuroImage
+  - Nature Biomedical Engineering
+  - Nature Neuroscience
+  - International IEEE EMBS Conference on Neural Engineering
+  - IEEE Engineering in Medicine and Biology Society
+  - BCI Meeting
+  - Brain-Computer Interface Conference
+  support_venues:
+  - ACL Anthology
+  - ACL
+  - EMNLP
+  - NAACL
+  - COLING
+  - NeurIPS
+  - ICLR
+  - ICML
+  - AAAI
+  - ACM CHI
+  - ACM CSCW
+  - ACM FAccT
+  - ACM AIES
+  - ACM Transactions on Computer-Human Interaction
+  - Neuroethics
+  - AI and Ethics
+  caution_sources:
+  - SSRN
+  - arXiv
+  - bioRxiv
+  - medRxiv
+  - preprint
+venues_catalog:
+  neuroengineering_bci:
+  - name: Journal of Neural Engineering
+    type: journal
+    priority: primary
+  - name: IEEE Transactions on Neural Systems and Rehabilitation Engineering
+    type: journal
+    priority: primary
+  - name: IEEE Transactions on Biomedical Engineering
+    type: journal
+    priority: primary
+  - name: Journal of NeuroEngineering and Rehabilitation
+    type: journal
+    priority: primary
+  - name: Brain-Computer Interfaces
+    type: journal
+    priority: primary
+  - name: International IEEE EMBS Conference on Neural Engineering
+    type: conference
+    priority: primary
+  - name: BCI Meeting
+    type: conference
+    priority: primary
+  neuroscience:
+  - name: Frontiers in Neuroscience
+    type: journal
+    priority: primary
+  - name: Frontiers in Human Neuroscience
+    type: journal
+    priority: primary
+  - name: NeuroImage
+    type: journal
+    priority: primary
+  - name: Nature Neuroscience
+    type: journal
+    priority: primary
+  - name: Nature Biomedical Engineering
+    type: journal
+    priority: primary
+  nlp_ai:
+  - name: ACL
+    type: conference
+    priority: support
+  - name: EMNLP
+    type: conference
+    priority: support
+  - name: NAACL
+    type: conference
+    priority: support
+  - name: COLING
+    type: conference
+    priority: support
+  - name: NeurIPS
+    type: conference
+    priority: support
+  - name: ICLR
+    type: conference
+    priority: support
+  - name: ICML
+    type: conference
+    priority: support
+  - name: AAAI
+    type: conference
+    priority: support
+  hci_governance:
+  - name: ACM CHI
+    type: conference
+    priority: support
+  - name: ACM CSCW
+    type: conference
+    priority: support
+  - name: ACM FAccT
+    type: conference
+    priority: support
+  - name: ACM AIES
+    type: conference
+    priority: support
+  - name: ACM Transactions on Computer-Human Interaction
+    type: journal
+    priority: support
+  - name: Neuroethics
+    type: journal
+    priority: support
+  - name: AI and Ethics
+    type: journal
+    priority: support

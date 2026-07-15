@@ -1,5 +1,7 @@
-from dataclasses import dataclass, asdict
-from typing import Optional
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+from typing import ClassVar, Optional
 
 
 @dataclass
@@ -17,10 +19,47 @@ class WorkRecord:
     cited_by_count: Optional[int]
     suggested_priority: str
     suggested_tags: str
-    professor_source: str = ""
+
+    # Campos de revisão e análise.
+    professor_source: str = ""  # Legado: mantido para compatibilidade.
     corrente: str = ""
     decision: str = ""
     notes: str = ""
+    seed_source: str = ""
+    duplicate_count: int = 1
+
+    CSV_FIELDS: ClassVar[list[str]] = [
+        "source_api",
+        "query_layer",
+        "query",
+        "title",
+        "year",
+        "authors",
+        "venue",
+        "doi",
+        "url",
+        "abstract",
+        "cited_by_count",
+        "suggested_priority",
+        "suggested_tags",
+        "corrente",
+        "seed_source",
+        "duplicate_count",
+        "decision",
+        "notes",
+    ]
 
     def to_dict(self) -> dict:
-        return asdict(self)
+        """
+        Converte o registro para exportação.
+
+        `professor_source` é um nome herdado do projeto anterior. Ele continua
+        aceito internamente, mas é exportado como `seed_source`.
+        """
+        data = asdict(self)
+        legacy_source = data.pop("professor_source", "")
+
+        if not data.get("seed_source"):
+            data["seed_source"] = legacy_source
+
+        return {field: data.get(field, "") for field in self.CSV_FIELDS}

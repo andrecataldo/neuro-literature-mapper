@@ -14,7 +14,7 @@ from neuro_mapper.venue_search import generate_venue_searches
 st.set_page_config(page_title="Neuro Literature Mapper", layout="wide")
 
 st.title("Neuro Literature Mapper")
-st.caption("Mapeamento exploratório de literatura de SI sobre LLMs, IA generativa, vieses, julgamento e decisão.")
+st.caption("Mapeamento exploratório de literatura sobre Brain-Computer Interfaces (BCI), Brain-Machine Interfaces (BMI), Large Language Models (LLMs), neuroengenharia, neurotecnologia, vieses, segurança, privacidade e governança.")
 
 load_dotenv()
 

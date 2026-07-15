@@ -2,10 +2,16 @@ project:
   name: "BMI/BCI, LLMs, Neurotecnologia e Vieses"
   description: "Mapeamento exploratório estruturado sobre BMI/BCI, LLMs, neuroengenharia, neurotecnologia, vieses, segurança, privacidade e governança."
 
+includes:
+  taxonomy: taxonomy_neuro.yaml
+  venues: venues_neuro.yaml
+
 settings:
-  per_page: 20
-  year_min: 2000
+  per_page: 5
+  year_min: 2018
   language: "en"
+  enforce_year_filter: true
+  request_delay_seconds: 1
 
 api_layers:
   - name: "01 - BMI/BCI + LLMs"
