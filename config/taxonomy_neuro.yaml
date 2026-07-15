@@ -1,7 +1,7 @@
-schema_version: '1.0'
+schema_version: '1.1'
 project:
   name: Neuro Literature Mapper
-  purpose: Taxonomia para classificação preliminar de literatura sobre BMI/BCI, LLMs, neurotecnologia, vieses, segurança, privacidade e governança.
+  purpose: Taxonomia para classificação de literatura sobre BMI/BCI, LLMs, decodificação neural, interação humana e governança.
 classification:
   neuro_terms:
   - brain-computer interface
@@ -14,8 +14,42 @@ classification:
   - neurotechnology
   - neuroengineering
   - neural engineering
+  - eeg
+  - ecog
+  - fmri
+  - meg
+  - fnirs
+  - intracortical
+  interface_terms:
+  - brain-computer interface
+  - brain computer interface
+  - brain-machine interface
+  - brain machine interface
+  - neural interface
+  - brain interface
+  interface_abbreviations:
+  - bci
+  - bmi
+  interface_context_terms:
+  - brain
+  - neural
+  - eeg
+  - ecog
+  - fmri
+  - intracortical
+  - p300
+  - ssvep
+  - motor imagery
+  - neurotechnology
+  - neuroengineering
+  - interface
+  broad_neuro_terms:
+  - neurotechnology
+  - neuroengineering
+  - neural engineering
+  - neuroscience
   - neural signal
-  - neural data
+  - brain data
   - eeg
   - ecog
   - fmri
@@ -43,13 +77,19 @@ classification:
   - llms
   - generative ai
   - genai
-  - language model
-  - language models
-  - natural language processing
-  - nlp
-  - transformer
   - gpt
   - chatgpt
+  language_model_terms:
+  - language model
+  - language models
+  - language modeling
+  - language modelling
+  nlp_terms:
+  - natural language processing
+  - text generation
+  - language generation
+  - word prediction
+  - predictive text
   human_terms:
   - human-ai interaction
   - human ai interaction
@@ -62,6 +102,7 @@ classification:
   - overreliance
   - human validation
   - human oversight
+  - human-in-the-loop
   - decision making
   - decision-making
   - usability
@@ -98,6 +139,22 @@ classification:
   - overweight
   - weight loss
   - bmi percentile
+  - bayesian cue integration
+  - neuro-linguistic programming
+  - neurolinguistic programming
+  ambiguous_bci_terms:
+  - bayesian cue integration
+  - business continuity index
+  - building cost index
+  ambiguous_nlp_terms:
+  - neuro-linguistic programming
+  - neurolinguistic programming
+  non_brain_neural_terms:
+  - neural network
+  - neural networks
+  - neural architecture
+  - neural data augmentation
+  - neural machine translation
   pure_technical_terms:
   - technical architecture
   - benchmark
@@ -109,20 +166,19 @@ tags:
   domain:bci:
   - brain-computer interface
   - brain computer interface
-  - bci
   domain:bmi:
   - brain-machine interface
   - brain machine interface
-  - bmi
+  domain:neural-interface:
+  - neural interface
+  - brain interface
   domain:neurotechnology:
   - neurotechnology
-  - neural device
   - neural implant
-  - neural interface
+  - brain implant
   domain:neuroengineering:
   - neuroengineering
   - neural engineering
-  - biomedical engineering
   - neural signal processing
   signal:eeg:
   - eeg
@@ -144,23 +200,6 @@ tags:
   - single-unit
   - single unit
   - local field potential
-  invasiveness:invasive:
-  - invasive bci
-  - intracortical
-  - implanted electrode
-  - neural implant
-  invasiveness:partially-invasive:
-  - partially invasive
-  - semi-invasive
-  - ecog
-  - electrocorticography
-  invasiveness:non-invasive:
-  - non-invasive bci
-  - noninvasive bci
-  - eeg
-  - meg
-  - fmri
-  - fnirs
   decoding:neural:
   - neural decoding
   decoding:speech:
@@ -191,14 +230,21 @@ tags:
   - genai
   - generative artificial intelligence
   - ia generativa
+  ai:language-model:
+  - language model
+  - language models
+  - language modeling
+  - language modelling
   ai:nlp:
   - natural language processing
-  - nlp
   - text generation
   - language generation
+  - word prediction
+  - predictive text
   ai:transformer:
-  - transformer
+  - transformer architecture
   - transformer-based
+  - self-attention
   human:interaction:
   - human-ai interaction
   - human-computer interaction
@@ -302,59 +348,18 @@ tags:
   application:rehabilitation:
   - rehabilitation
   - neurorehabilitation
-analytical_streams:
-- id: stream:bci-acquisition
-  label: BMI/BCI e aquisição de sinais neurais
-  keywords:
-  - bci
-  - bmi
-  - eeg
-  - ecog
-  - fmri
-  - intracortical
-- id: stream:neural-decoding
-  label: Decodificação neural e brain-to-text
-  keywords:
-  - neural decoding
-  - speech decoding
-  - brain-to-text
-- id: stream:bci-llm
-  label: Integração BMI/BCI e LLMs
-  keywords:
-  - brain-computer interface
-  - large language model
-  - llm
-- id: stream:human-interaction
-  label: Interação Humano-IA, confiança e validação
-  keywords:
-  - trust
-  - reliance
-  - human validation
-  - human oversight
-- id: stream:bias-risk
-  label: Vieses, erros e vulnerabilidades
-  keywords:
-  - bias
-  - hallucination
-  - uncertainty
-  - error propagation
-- id: stream:governance
-  label: Segurança, privacidade neural e governança
-  keywords:
-  - privacy
-  - security
-  - neuroethics
-  - governance
 priority_labels:
-  A-central: Combina BMI/BCI ou sinais neurais com decodificação/linguagem/LLM e dimensão humana ou de risco.
-  B-apoio: Contribui para uma parte importante do recorte ou para fundamentação.
-  C-cautela: Fonte preliminar ou preprint relevante que exige validação adicional.
-  D-descartar: Falso positivo, duplicata ou registro sem relação útil com o tema.
+  A1-central-integracao: Integração explícita entre BMI/BCI e LLM, modelo de linguagem, NLP ou decodificação de linguagem.
+  A2-central-riscos: BMI/BCI explícita combinada com privacidade, segurança, ética, vieses, confiança ou governança.
+  B-apoio: Contribui para uma dimensão do recorte, mas não combina os elementos necessários para ser central.
+  C-cautela: Preprint, fonte preliminar ou registro que exige validação.
+  D-descartar: Falso positivo, comentário, registro irrelevante ou fora do escopo.
 exclusion_reasons:
-  false-positive: Coincidência terminológica sem relação com BMI/BCI.
   body-mass-index: BMI significa Body Mass Index.
-  wrong-bci: BCI possui significado diferente de Brain-Computer Interface.
-  out-of-scope: Estudo fora do recorte da pesquisa.
+  bayesian-cue-integration: BCI significa Bayesian Cue Integration.
+  neuro-linguistic-programming: NLP significa Neuro-Linguistic Programming.
+  non-brain-neural: Uso de neural relacionado a redes neurais, não a dados cerebrais.
+  review-comment: Registro é comentário, revisão aberta ou resposta a outro artigo.
+  out-of-scope: Estudo fora do recorte.
   duplicate: Registro duplicado.
-  replaced-version: Versão preliminar substituída por publicação posterior.
-  insufficient-metadata: Metadados insuficientes para triagem.
+  replaced-version: Versão preliminar substituída.

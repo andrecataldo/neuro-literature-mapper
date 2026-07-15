@@ -130,9 +130,32 @@ def classify_records(
             suggest_tags(config, *content_parts)
         )
         record.corrente = infer_corrente(*content_parts)
+        record.classification_confidence = infer_classification_confidence(
+            record
+        )
         classified.append(record)
 
     return classified
+
+
+def infer_classification_confidence(record: WorkRecord) -> str:
+    """
+    Estima a confiança da triagem automática com base na completude.
+
+    - high: resumo informativo e venue disponível;
+    - medium: resumo curto ou venue ausente;
+    - low: sem resumo.
+    """
+    abstract = (record.abstract or "").strip()
+    venue = (record.venue or "").strip()
+
+    if not abstract:
+        return "low"
+
+    if len(abstract) >= 200 and venue:
+        return "high"
+
+    return "medium"
 
 
 def deduplicate_records(
@@ -250,6 +273,7 @@ def merge_duplicate_group(records: list[WorkRecord]) -> WorkRecord:
     merged.suggested_priority = ""
     merged.suggested_tags = ""
     merged.corrente = ""
+    merged.classification_confidence = ""
 
     return merged
 
@@ -307,6 +331,16 @@ def normalize_title(title: str | None) -> str:
     value = value.casefold()
 
     # Remove marcadores finais de versão, mas não remove "Review of".
+    value = re.sub(
+        r"^(?:preprint|accepted manuscript)\s*[:\-]?\s*",
+        "",
+        value,
+    )
+    value = re.sub(
+        r"\s*[\[(]?(?:preprint|accepted manuscript)[\])]?$",
+        "",
+        value,
+    )
     value = re.sub(r"\b(?:version|v)\s*\d+\b\s*$", "", value)
     value = re.sub(r"[^a-z0-9]+", " ", value)
     return re.sub(r"\s+", " ", value).strip()

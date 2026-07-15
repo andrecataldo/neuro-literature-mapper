@@ -20,9 +20,9 @@ class WorkRecord:
     suggested_priority: str
     suggested_tags: str
 
-    # Campos de revisão e análise.
-    professor_source: str = ""  # Legado: mantido para compatibilidade.
+    professor_source: str = ""
     corrente: str = ""
+    classification_confidence: str = ""
     decision: str = ""
     notes: str = ""
     seed_source: str = ""
@@ -43,6 +43,7 @@ class WorkRecord:
         "suggested_priority",
         "suggested_tags",
         "corrente",
+        "classification_confidence",
         "seed_source",
         "duplicate_count",
         "decision",
@@ -50,16 +51,13 @@ class WorkRecord:
     ]
 
     def to_dict(self) -> dict:
-        """
-        Converte o registro para exportação.
-
-        `professor_source` é um nome herdado do projeto anterior. Ele continua
-        aceito internamente, mas é exportado como `seed_source`.
-        """
         data = asdict(self)
         legacy_source = data.pop("professor_source", "")
 
         if not data.get("seed_source"):
             data["seed_source"] = legacy_source
 
-        return {field: data.get(field, "") for field in self.CSV_FIELDS}
+        return {
+            field: data.get(field, "")
+            for field in self.CSV_FIELDS
+        }
