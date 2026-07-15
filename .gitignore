@@ -26,6 +26,8 @@ outputs/*.csv
 outputs/*.xlsx
 outputs/*.json
 outputs/*.bib
+!outputs/.gitkeep
+
 
 # VS Code
 .vscode/
@@ -33,6 +35,7 @@ outputs/*.bib
 # Variáveis de ambiente e segredos
 .env
 *.env
+!.env.example
 
 # Sistema operacional
 .DS_Store
@@ -46,4 +49,5 @@ Thumbs.db
 # Arquivos grandes ou locais
 data/raw/
 data/external/
+!data/.gitkeep
 EOF
