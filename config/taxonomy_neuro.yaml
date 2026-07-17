@@ -1,4 +1,4 @@
-schema_version: '1.2'
+schema_version: '1.3'
 project:
   name: Neuro Literature Mapper
   purpose: Taxonomia para classificação de literatura sobre integração BMI/BCI–LLM, decodificação neural de linguagem, interação humana, vieses, privacidade, segurança e governança.
@@ -163,16 +163,36 @@ classification:
   - parameter count
   - training efficiency
   - inference throughput
-  explicit_interface_terms:
+  strong_interface_terms:
   - brain-computer interface
   - brain computer interface
   - brain-machine interface
   - brain machine interface
-  - neural interface
   - brain interface
   - chatbci
   - bci speller
   - p300 speller
+  ambiguous_interface_terms:
+  - neural interface
+  neural_interface_context_terms:
+  - brain
+  - brain signal
+  - brain signals
+  - brain activity
+  - cortical
+  - intracortical
+  - neural signal
+  - neural signals
+  - neural recording
+  - neural recordings
+  - eeg
+  - ecog
+  - fmri
+  - meg
+  - fnirs
+  - p300
+  - ssvep
+  - motor imagery
   brain_context_terms:
   - brain
   - cortical
@@ -188,6 +208,34 @@ classification:
   - p300
   - ssvep
   - motor imagery
+  neural_signal_terms:
+  - brain signal
+  - brain signals
+  - brain activity
+  - cortical activity
+  - cortical recording
+  - cortical recordings
+  - intracortical
+  - neural signal
+  - neural signals
+  - neural activity
+  - neural recording
+  - neural recordings
+  - eeg
+  - ecog
+  - fmri
+  - meg
+  - fnirs
+  - p300
+  - ssvep
+  - motor imagery
+  - electrode
+  - electrodes
+  - neural implant
+  - brain implant
+  - speech neuroprosthesis
+  - neural speech prosthesis
+  - speech prosthesis
   language_decoding_terms:
   - neural decoding
   - speech decoding
@@ -227,6 +275,55 @@ classification:
   - word prediction
   - predictive text
   - context-driven word prediction
+  integration_relation_terms:
+  - use
+  - uses
+  - using
+  - integrate
+  - integrates
+  - integrating
+  - integrated with
+  - leverage
+  - leverages
+  - leveraging
+  - assist
+  - assists
+  - assisted by
+  - powered by
+  - augment
+  - augments
+  - augmented with
+  - guide
+  - guides
+  - guided by
+  - incorporate
+  - incorporates
+  - incorporating
+  - combined with
+  - based on
+  - driven by
+  - enhance
+  - enhances
+  - enhancing
+  - post-processing with
+  - postprocessing with
+  - rerank
+  - reranking
+  - word prediction
+  weak_integration_terms:
+  - inspired by
+  - similar to
+  - analogous to
+  - compared with
+  - compared to
+  - unlike
+  - without
+  - does not use
+  - do not use
+  - did not use
+  - not using
+  - absence of
+  - prompting us to explore
   risk_governance_terms:
   - bias
   - cognitive bias
@@ -258,6 +355,39 @@ classification:
   - agency
   - liability
   - responsibility
+  strong_risk_governance_terms:
+  - bias
+  - cognitive bias
+  - algorithmic bias
+  - confirmation bias
+  - anchoring bias
+  - automation bias
+  - hallucination
+  - error propagation
+  - privacy
+  - neural privacy
+  - mental privacy
+  - security
+  - cybersecurity
+  - safety
+  - neuroethics
+  - neurorights
+  - governance
+  - informed consent
+  - data ownership
+  - neural data ownership
+  - mental integrity
+  - cognitive liberty
+
+  non_neural_decoding_terms:
+  - literature
+  - literary
+  - literary studies
+  - mind style
+  - narratology
+  - fiction
+  - poetics
+
   review_comment_prefixes:
   - 'review of:'
   - 'review of '
@@ -419,6 +549,11 @@ tags:
   - error propagation
   - cascading error
   - pipeline error
+  governance:governance:
+  - governance
+  - governance framework
+  - governance model
+  - regulatory governance
   governance:privacy:
   - privacy
   - data privacy

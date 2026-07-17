@@ -16,6 +16,159 @@ DEFAULT_INTERFACE_TERMS = [
     "bci speller",
     "p300 speller",
 ]
+DEFAULT_STRONG_INTERFACE_TERMS = [
+    "brain-computer interface",
+    "brain computer interface",
+    "brain-machine interface",
+    "brain machine interface",
+    "brain interface",
+    "chatbci",
+    "bci speller",
+    "p300 speller",
+]
+
+DEFAULT_AMBIGUOUS_INTERFACE_TERMS = [
+    "neural interface",
+]
+
+DEFAULT_NEURAL_INTERFACE_CONTEXT_TERMS = [
+    "brain",
+    "brain signal",
+    "brain signals",
+    "brain activity",
+    "cortical",
+    "intracortical",
+    "neural signal",
+    "neural signals",
+    "neural recording",
+    "neural recordings",
+    "eeg",
+    "ecog",
+    "fmri",
+    "meg",
+    "fnirs",
+    "p300",
+    "ssvep",
+    "motor imagery",
+]
+
+DEFAULT_NEURAL_SIGNAL_TERMS = [
+    "brain signal",
+    "brain signals",
+    "brain activity",
+    "cortical activity",
+    "cortical recording",
+    "cortical recordings",
+    "intracortical",
+    "neural signal",
+    "neural signals",
+    "neural activity",
+    "neural recording",
+    "neural recordings",
+    "eeg",
+    "ecog",
+    "fmri",
+    "meg",
+    "fnirs",
+    "p300",
+    "ssvep",
+    "motor imagery",
+    "electrode",
+    "electrodes",
+    "neural implant",
+    "brain implant",
+    "speech neuroprosthesis",
+    "neural speech prosthesis",
+    "speech prosthesis",
+]
+
+DEFAULT_INTEGRATION_RELATION_TERMS = [
+    "use",
+    "uses",
+    "using",
+    "integrate",
+    "integrates",
+    "integrating",
+    "integrated with",
+    "leverage",
+    "leverages",
+    "leveraging",
+    "assist",
+    "assists",
+    "assisted by",
+    "powered by",
+    "augment",
+    "augments",
+    "augmented with",
+    "guide",
+    "guides",
+    "guided by",
+    "incorporate",
+    "incorporates",
+    "incorporating",
+    "combined with",
+    "based on",
+    "driven by",
+    "enhance",
+    "enhances",
+    "enhancing",
+    "post-processing with",
+    "postprocessing with",
+    "rerank",
+    "reranking",
+    "word prediction",
+]
+
+DEFAULT_WEAK_INTEGRATION_TERMS = [
+    "inspired by",
+    "similar to",
+    "analogous to",
+    "compared with",
+    "compared to",
+    "unlike",
+    "without",
+    "does not use",
+    "do not use",
+    "did not use",
+    "not using",
+    "absence of",
+    "prompting us to explore",
+]
+
+DEFAULT_STRONG_RISK_TERMS = [
+    "bias",
+    "cognitive bias",
+    "algorithmic bias",
+    "confirmation bias",
+    "anchoring bias",
+    "automation bias",
+    "hallucination",
+    "error propagation",
+    "privacy",
+    "neural privacy",
+    "mental privacy",
+    "security",
+    "cybersecurity",
+    "safety",
+    "neuroethics",
+    "neurorights",
+    "governance",
+    "informed consent",
+    "data ownership",
+    "neural data ownership",
+    "mental integrity",
+    "cognitive liberty",
+]
+
+DEFAULT_NON_NEURAL_DECODING_TERMS = [
+    "literature",
+    "literary",
+    "literary studies",
+    "mind style",
+    "narratology",
+    "fiction",
+    "poetics",
+]
 DEFAULT_INTERFACE_ABBREVIATIONS = ["bci", "bmi"]
 DEFAULT_INTERFACE_CONTEXT_TERMS = [
     "brain",
@@ -181,21 +334,45 @@ DEFAULT_REVIEW_PREFIXES = [
 class SemanticEvidence:
     interface_title: bool
     interface_abstract: bool
+
     brain_title: bool
     brain_abstract: bool
+
+    neural_signal_title: bool
+    neural_signal_abstract: bool
+
     decoding_title: bool
     decoding_abstract: bool
+
     llm_title: bool
     llm_abstract: bool
+
     language_title: bool
     language_abstract: bool
+
     human_title: bool
     human_abstract: bool
+
     risk_title: bool
     risk_abstract: bool
+
+    strong_risk_title: bool
+    strong_risk_abstract: bool
+
+    integration_title: bool
+    integration_abstract: bool
+
+    weak_integration_title: bool
+    weak_integration_abstract: bool
+
     interface_language_same_sentence: bool
+    decoding_language_same_sentence: bool
+
     brain_decoding_same_sentence: bool
+    neural_signal_decoding_same_sentence: bool
+
     interface_risk_same_sentence: bool
+    interface_strong_risk_same_sentence: bool
 
 
 def normalize_text(*parts: str | None) -> str:
@@ -243,6 +420,120 @@ def _same_sentence_has(
         for sentence in _sentences(text)
     )
 
+def _same_sentence_has_valid_interface_and(
+    text: str,
+    classification: dict,
+    second_terms: Iterable[str],
+) -> bool:
+    """
+    Exige uma interface BMI/BCI válida na sentença.
+
+    Isso impede que expressões de software, como "neural interface
+    layer", sejam interpretadas automaticamente como interface neural
+    humana.
+    """
+
+    return any(
+        _has_explicit_interface(sentence, classification)
+        and contains_any(sentence, second_terms)
+        for sentence in _sentences(text)
+    )
+
+
+def _has_integration_relation(
+    text: str,
+    classification: dict,
+    technology_terms: Iterable[str],
+) -> bool:
+    """
+    Identifica relação operacional entre um sistema e um modelo de
+    linguagem.
+
+    Sentenças comparativas, negativas ou apenas inspiracionais não
+    contam como integração.
+    """
+
+    relation_terms = _config_terms(
+        classification,
+        "integration_relation_terms",
+        fallback=DEFAULT_INTEGRATION_RELATION_TERMS,
+    )
+
+    weak_terms = _config_terms(
+        classification,
+        "weak_integration_terms",
+        fallback=DEFAULT_WEAK_INTEGRATION_TERMS,
+    )
+
+    for sentence in _sentences(text):
+        if not contains_any(sentence, technology_terms):
+            continue
+
+        if contains_any(sentence, weak_terms):
+            continue
+
+        if contains_any(sentence, relation_terms):
+            return True
+
+    return False
+
+
+def _has_weak_integration_relation(
+    text: str,
+    classification: dict,
+    technology_terms: Iterable[str],
+) -> bool:
+    weak_terms = _config_terms(
+        classification,
+        "weak_integration_terms",
+        fallback=DEFAULT_WEAK_INTEGRATION_TERMS,
+    )
+
+    return any(
+        contains_any(sentence, technology_terms)
+        and contains_any(sentence, weak_terms)
+        for sentence in _sentences(text)
+    )
+
+
+def _has_neural_privacy_context(
+    text: str,
+    classification: dict,
+) -> bool:
+    """
+    Distingue privacidade cerebral de privacidade de redes neurais
+    artificiais.
+    """
+
+    if contains_any(
+        text,
+        [
+            "mental privacy",
+            "brain data privacy",
+            "brain privacy",
+        ],
+    ):
+        return True
+
+    if not contains_any(text, ["neural privacy"]):
+        return False
+
+    context_terms = _config_terms(
+        classification,
+        "neural_signal_terms",
+        fallback=DEFAULT_NEURAL_SIGNAL_TERMS,
+    ) + [
+        "brain",
+        "neurotechnology",
+        "neurotechnologies",
+        "neuroethics",
+        "neurorights",
+    ]
+
+    return (
+        _has_explicit_interface(text, classification)
+        or contains_any(text, context_terms)
+    )
 
 def _mask_negated_mentions(
     text: str,
@@ -300,37 +591,87 @@ def _is_review_comment(title: str, classification: dict) -> bool:
     return any(lowered.startswith(prefix.lower()) for prefix in prefixes)
 
 
-def _has_explicit_interface(text: str, classification: dict) -> bool:
-    phrases = _config_terms(
+def _has_explicit_interface(
+    text: str,
+    classification: dict,
+) -> bool:
+    """
+    Identifica BMI/BCI evitando interpretar automaticamente
+    "neural interface" como interface neural humana.
+    """
+
+    strong_phrases = _config_terms(
         classification,
+        "strong_interface_terms",
         "explicit_interface_terms",
         "interface_terms",
-        fallback=DEFAULT_INTERFACE_TERMS,
+        fallback=DEFAULT_STRONG_INTERFACE_TERMS,
     )
+
+    ambiguous_interface_terms = _config_terms(
+        classification,
+        "ambiguous_interface_terms",
+        fallback=DEFAULT_AMBIGUOUS_INTERFACE_TERMS,
+    )
+
+    # Mesmo que uma configuração antiga ainda inclua "neural interface"
+    # na lista explícita, ela será removida da evidência forte.
+    ambiguous_keys = {
+        value.strip().casefold()
+        for value in ambiguous_interface_terms
+    }
+
+    strong_phrases = [
+        value
+        for value in strong_phrases
+        if value.strip().casefold() not in ambiguous_keys
+    ]
+
     abbreviations = _config_terms(
         classification,
         "interface_abbreviations",
         fallback=DEFAULT_INTERFACE_ABBREVIATIONS,
     )
-    context_terms = _config_terms(
+
+    abbreviation_context_terms = _config_terms(
         classification,
         "interface_context_terms",
         fallback=DEFAULT_INTERFACE_CONTEXT_TERMS,
     )
-    ambiguous_terms = _config_terms(
+
+    neural_interface_context_terms = _config_terms(
+        classification,
+        "neural_interface_context_terms",
+        fallback=DEFAULT_NEURAL_INTERFACE_CONTEXT_TERMS,
+    )
+
+    ambiguous_bci_terms = _config_terms(
         classification,
         "ambiguous_bci_terms",
         fallback=DEFAULT_AMBIGUOUS_BCI_TERMS,
     )
 
-    if contains_any(text, ambiguous_terms):
+    if contains_any(text, ambiguous_bci_terms):
         return False
 
-    if contains_any(text, phrases):
+    if contains_any(text, strong_phrases):
         return True
 
-    # A sigla precisa compartilhar a mesma sentença com contexto cerebral/BCI.
-    return _same_sentence_has(text, abbreviations, context_terms)
+    # "Neural interface" só conta quando compartilha sentença com
+    # evidência cerebral, fisiológica ou neurotecnológica.
+    if _same_sentence_has(
+        text,
+        ambiguous_interface_terms,
+        neural_interface_context_terms,
+    ):
+        return True
+
+    # BCI/BMI só contam com contexto cerebral na mesma sentença.
+    return _same_sentence_has(
+        text,
+        abbreviations,
+        abbreviation_context_terms,
+    )
 
 
 def _semantic_evidence(
@@ -338,34 +679,53 @@ def _semantic_evidence(
     abstract: str,
     classification: dict,
 ) -> SemanticEvidence:
-    interface_terms = _config_terms(
-        classification,
-        "explicit_interface_terms",
-        "interface_terms",
-        fallback=DEFAULT_INTERFACE_TERMS,
-    ) + _config_terms(
-        classification,
-        "interface_abbreviations",
-        fallback=DEFAULT_INTERFACE_ABBREVIATIONS,
+    interface_terms = (
+        _config_terms(
+            classification,
+            "strong_interface_terms",
+            "explicit_interface_terms",
+            "interface_terms",
+            fallback=DEFAULT_STRONG_INTERFACE_TERMS,
+        )
+        + _config_terms(
+            classification,
+            "ambiguous_interface_terms",
+            fallback=DEFAULT_AMBIGUOUS_INTERFACE_TERMS,
+        )
+        + _config_terms(
+            classification,
+            "interface_abbreviations",
+            fallback=DEFAULT_INTERFACE_ABBREVIATIONS,
+        )
     )
+
     brain_terms = _config_terms(
         classification,
         "brain_context_terms",
         "broad_neuro_terms",
         fallback=DEFAULT_BRAIN_CONTEXT_TERMS,
     )
+
+    neural_signal_terms = _config_terms(
+        classification,
+        "neural_signal_terms",
+        fallback=DEFAULT_NEURAL_SIGNAL_TERMS,
+    )
+
     decoding_terms = _config_terms(
         classification,
         "language_decoding_terms",
         "decoding_terms",
         fallback=DEFAULT_DECODING_TERMS,
     )
+
     llm_terms = _config_terms(
         classification,
         "strong_llm_terms",
         "llm_terms",
         fallback=DEFAULT_STRONG_LLM_TERMS,
     )
+
     language_terms = _config_terms(
         classification,
         "language_assistance_terms",
@@ -373,11 +733,13 @@ def _semantic_evidence(
         "nlp_terms",
         fallback=DEFAULT_LANGUAGE_ASSISTANCE_TERMS,
     )
+
     human_terms = _config_terms(
         classification,
         "human_terms",
         fallback=DEFAULT_HUMAN_TERMS,
     )
+
     risk_terms = _config_terms(
         classification,
         "risk_governance_terms",
@@ -385,56 +747,181 @@ def _semantic_evidence(
         fallback=DEFAULT_RISK_TERMS,
     )
 
+    strong_risk_terms = _config_terms(
+        classification,
+        "strong_risk_governance_terms",
+        fallback=DEFAULT_STRONG_RISK_TERMS,
+    )
+
+    technology_terms = [
+        *llm_terms,
+        *language_terms,
+    ]
+
     title_text = title.lower()
 
     semantic_terms = [
         *interface_terms,
         *brain_terms,
+        *neural_signal_terms,
         *decoding_terms,
-        *llm_terms,
-        *language_terms,
+        *technology_terms,
         *human_terms,
         *risk_terms,
+        *strong_risk_terms,
     ]
+
     abstract_text = _mask_negated_mentions(
         abstract.lower(),
         semantic_terms,
     )
 
     return SemanticEvidence(
-        interface_title=_has_explicit_interface(title_text, classification),
+        interface_title=_has_explicit_interface(
+            title_text,
+            classification,
+        ),
         interface_abstract=_has_explicit_interface(
-            abstract_text, classification
-        ),
-        brain_title=contains_any(title_text, brain_terms),
-        brain_abstract=contains_any(abstract_text, brain_terms),
-        decoding_title=contains_any(title_text, decoding_terms),
-        decoding_abstract=contains_any(abstract_text, decoding_terms),
-        llm_title=contains_any(title_text, llm_terms),
-        llm_abstract=contains_any(abstract_text, llm_terms),
-        language_title=contains_any(title_text, language_terms),
-        language_abstract=contains_any(abstract_text, language_terms),
-        human_title=contains_any(title_text, human_terms),
-        human_abstract=contains_any(abstract_text, human_terms),
-        risk_title=contains_any(title_text, risk_terms),
-        risk_abstract=contains_any(abstract_text, risk_terms),
-        interface_language_same_sentence=_same_sentence_has(
             abstract_text,
-            interface_terms,
-            [*llm_terms, *language_terms],
+            classification,
         ),
+
+        brain_title=contains_any(
+            title_text,
+            brain_terms,
+        ),
+        brain_abstract=contains_any(
+            abstract_text,
+            brain_terms,
+        ),
+
+        neural_signal_title=contains_any(
+            title_text,
+            neural_signal_terms,
+        ),
+        neural_signal_abstract=contains_any(
+            abstract_text,
+            neural_signal_terms,
+        ),
+
+        decoding_title=contains_any(
+            title_text,
+            decoding_terms,
+        ),
+        decoding_abstract=contains_any(
+            abstract_text,
+            decoding_terms,
+        ),
+
+        llm_title=contains_any(
+            title_text,
+            llm_terms,
+        ),
+        llm_abstract=contains_any(
+            abstract_text,
+            llm_terms,
+        ),
+
+        language_title=contains_any(
+            title_text,
+            language_terms,
+        ),
+        language_abstract=contains_any(
+            abstract_text,
+            language_terms,
+        ),
+
+        human_title=contains_any(
+            title_text,
+            human_terms,
+        ),
+        human_abstract=contains_any(
+            abstract_text,
+            human_terms,
+        ),
+
+        risk_title=contains_any(
+            title_text,
+            risk_terms,
+        ),
+        risk_abstract=contains_any(
+            abstract_text,
+            risk_terms,
+        ),
+
+        strong_risk_title=contains_any(
+            title_text,
+            strong_risk_terms,
+        ),
+        strong_risk_abstract=contains_any(
+            abstract_text,
+            strong_risk_terms,
+        ),
+
+        integration_title=_has_integration_relation(
+            title_text,
+            classification,
+            technology_terms,
+        ),
+        integration_abstract=_has_integration_relation(
+            abstract_text,
+            classification,
+            technology_terms,
+        ),
+
+        weak_integration_title=_has_weak_integration_relation(
+            title_text,
+            classification,
+            technology_terms,
+        ),
+        weak_integration_abstract=_has_weak_integration_relation(
+            abstract_text,
+            classification,
+            technology_terms,
+        ),
+
+        interface_language_same_sentence=(
+            _same_sentence_has_valid_interface_and(
+                abstract_text,
+                classification,
+                technology_terms,
+            )
+        ),
+
+        decoding_language_same_sentence=_same_sentence_has(
+            abstract_text,
+            decoding_terms,
+            technology_terms,
+        ),
+
         brain_decoding_same_sentence=_same_sentence_has(
             abstract_text,
             brain_terms,
             decoding_terms,
         ),
-        interface_risk_same_sentence=_same_sentence_has(
+
+        neural_signal_decoding_same_sentence=_same_sentence_has(
             abstract_text,
-            interface_terms,
-            risk_terms,
+            neural_signal_terms,
+            decoding_terms,
+        ),
+
+        interface_risk_same_sentence=(
+            _same_sentence_has_valid_interface_and(
+                abstract_text,
+                classification,
+                risk_terms,
+            )
+        ),
+
+        interface_strong_risk_same_sentence=(
+            _same_sentence_has_valid_interface_and(
+                abstract_text,
+                classification,
+                strong_risk_terms,
+            )
         ),
     )
-
 
 def suggest_priority(
     config: dict,
@@ -447,16 +934,29 @@ def suggest_priority(
     """
     Sugere relevância temática usando somente título e resumo.
 
-    `venue`, `query` e `source_api` são mantidos na assinatura por
-    compatibilidade, mas não participam da classificação semântica.
+    `venue`, `query` e `source_api` são mantidos por compatibilidade,
+    mas não participam da classificação semântica.
     """
+
     classification = config.get("classification", {})
+
     if not isinstance(classification, dict):
         classification = {}
 
-    semantic_text = normalize_text(title, abstract)
+    clean_title = (title or "").strip()
 
-    if _is_review_comment(title, classification):
+    if not clean_title:
+        return "D-descartar"
+
+    semantic_text = normalize_text(
+        clean_title,
+        abstract,
+    )
+
+    if _is_review_comment(
+        clean_title,
+        classification,
+    ):
         return "D-descartar"
 
     false_terms = _config_terms(
@@ -464,99 +964,208 @@ def suggest_priority(
         "false_positive_terms",
         fallback=DEFAULT_FALSE_POSITIVE_TERMS,
     )
+
     if contains_any(semantic_text, false_terms):
         return "D-descartar"
 
-    evidence = _semantic_evidence(title, abstract, classification)
+    evidence = _semantic_evidence(
+        clean_title,
+        abstract,
+        classification,
+    )
 
-    # A1: integração com LLM/modelos de linguagem.
+    ambiguous_interface_terms = _config_terms(
+        classification,
+        "ambiguous_interface_terms",
+        fallback=DEFAULT_AMBIGUOUS_INTERFACE_TERMS,
+    )
+
+    # "Neural interface" sem cérebro, sinal neural ou BCI é uma
+    # interface entre componentes de software, não uma BMI/BCI.
     if (
-        evidence.interface_title
-        and (
-            evidence.llm_title
-            or evidence.language_title
-            or evidence.llm_abstract
+        contains_any(
+            semantic_text,
+            ambiguous_interface_terms,
         )
+        and not (
+            evidence.interface_title
+            or evidence.interface_abstract
+            or evidence.neural_signal_title
+            or evidence.neural_signal_abstract
+            or evidence.decoding_title
+            or evidence.decoding_abstract
+        )
+    ):
+        return "D-descartar"
+
+    non_neural_decoding_terms = _config_terms(
+        classification,
+        "non_neural_decoding_terms",
+        fallback=DEFAULT_NON_NEURAL_DECODING_TERMS,
+    )
+
+    # Evita interpretar metáforas ou estudos literários como
+    # decodificação neural.
+    if (
+        (
+            evidence.decoding_title
+            or evidence.decoding_abstract
+        )
+        and contains_any(
+            semantic_text,
+            non_neural_decoding_terms,
+        )
+        and not (
+            evidence.interface_title
+            or evidence.interface_abstract
+            or evidence.neural_signal_title
+            or evidence.neural_signal_abstract
+        )
+    ):
+        return "D-descartar"
+
+    interface_or_decoding_title = (
+        evidence.interface_title
+        or evidence.decoding_title
+    )
+
+    technology_title = (
+        evidence.llm_title
+        or evidence.language_title
+    )
+
+    technology_abstract = (
+        evidence.llm_abstract
+        or evidence.language_abstract
+    )
+
+    # A1 — integração entre BMI/BCI ou decodificação e modelos de
+    # linguagem.
+    #
+    # Quando ambos aparecem no título, a evidência é forte, exceto
+    # quando o título explicita relação comparativa ou inspiracional.
+    if (
+        interface_or_decoding_title
+        and technology_title
+        and not evidence.weak_integration_title
+    ):
+        return "A1-central-integracao-llm"
+
+    # Quando a tecnologia aparece apenas no resumo, é necessária uma
+    # relação operacional explícita: uso, integração, assistência etc.
+    if (
+        interface_or_decoding_title
+        and technology_abstract
+        and evidence.integration_abstract
+        and not evidence.weak_integration_abstract
     ):
         return "A1-central-integracao-llm"
 
     if (
-        evidence.llm_title
+        technology_title
         and (
             evidence.interface_abstract
             or evidence.decoding_abstract
         )
+        and evidence.integration_abstract
+        and not evidence.weak_integration_abstract
     ):
         return "A1-central-integracao-llm"
 
     if (
+        (
+            evidence.interface_language_same_sentence
+            or evidence.decoding_language_same_sentence
+        )
+        and evidence.integration_abstract
+        and not evidence.weak_integration_abstract
+    ):
+        return "A1-central-integracao-llm"
+
+    # A2 — decodificação neural de linguagem.
+    #
+    # A presença de "brain-to-text" ou "neural decoding" não basta:
+    # deve haver interface real ou evidência de sinais/registro neural.
+    if (
         evidence.decoding_title
         and (
-            evidence.llm_title
-            or evidence.llm_abstract
-            or evidence.language_title
+            evidence.interface_title
+            or evidence.interface_abstract
+            or evidence.neural_signal_title
+            or evidence.neural_signal_abstract
         )
     ):
-        return "A1-central-integracao-llm"
+        return "A2-central-decoding-linguagem"
 
-    if evidence.interface_language_same_sentence:
-        return "A1-central-integracao-llm"
-
-    # A2: decodificação neural de linguagem, sem exigir LLM.
-    if evidence.decoding_title and (
-        evidence.brain_title
-        or evidence.brain_abstract
-        or evidence.interface_title
-        or evidence.interface_abstract
+    if (
+        evidence.interface_title
+        and evidence.decoding_abstract
+        and evidence.neural_signal_abstract
     ):
         return "A2-central-decoding-linguagem"
 
-    if evidence.interface_title and evidence.decoding_abstract:
+    if evidence.neural_signal_decoding_same_sentence:
         return "A2-central-decoding-linguagem"
 
-    if evidence.brain_decoding_same_sentence:
-        return "A2-central-decoding-linguagem"
-
-    # A3: risco/governança diretamente ligado a BMI/BCI.
-    if evidence.interface_title and (
-        evidence.risk_title or evidence.risk_abstract
+    # A3 — risco ou governança diretamente relacionado à BMI/BCI.
+    #
+    # Termos genéricos como autonomia, responsabilidade e
+    # explicabilidade continuam gerando tags, mas não são suficientes
+    # para promover um trabalho a A3.
+    if (
+        evidence.interface_title
+        and evidence.strong_risk_title
     ):
         return "A3-central-riscos-governanca"
 
-    if evidence.risk_title and evidence.interface_abstract:
+    if (
+        evidence.strong_risk_title
+        and evidence.interface_abstract
+    ):
         return "A3-central-riscos-governanca"
 
-    if evidence.interface_risk_same_sentence:
+    if evidence.interface_strong_risk_same_sentence:
         return "A3-central-riscos-governanca"
 
-    # Falsos "neural" de redes neurais devem ser excluídos antes das
-    # regras amplas de apoio.
     non_brain_terms = _config_terms(
         classification,
         "non_brain_neural_terms",
         fallback=DEFAULT_NON_BRAIN_NEURAL_TERMS,
     )
-    if contains_any(semantic_text, non_brain_terms) and not (
-        evidence.brain_title
-        or evidence.brain_abstract
-        or evidence.interface_title
-        or evidence.interface_abstract
-        or evidence.decoding_title
-        or evidence.decoding_abstract
+
+    if (
+        contains_any(
+            semantic_text,
+            non_brain_terms,
+        )
+        and not (
+            evidence.brain_title
+            or evidence.brain_abstract
+            or evidence.neural_signal_title
+            or evidence.neural_signal_abstract
+            or evidence.interface_title
+            or evidence.interface_abstract
+            or evidence.decoding_title
+            or evidence.decoding_abstract
+        )
     ):
         return "D-descartar"
 
-    # Apoio: componentes importantes, mas sem acoplamento central.
+    # Literatura de apoio.
     if (
         evidence.interface_title
         or evidence.interface_abstract
         or evidence.brain_title
+        or evidence.neural_signal_title
         or evidence.decoding_title
     ):
         return "B-apoio"
 
     if (
-        (evidence.llm_title or evidence.llm_abstract)
+        (
+            evidence.llm_title
+            or evidence.llm_abstract
+        )
         and (
             evidence.risk_title
             or evidence.risk_abstract
@@ -567,7 +1176,6 @@ def suggest_priority(
         return "B-apoio"
 
     return "B-apoio"
-
 
 def suggest_tags(config: dict, *parts: str | None) -> list[str]:
     """
@@ -633,8 +1241,33 @@ def suggest_tags(config: dict, *parts: str | None) -> list[str]:
     ):
         tags.discard("ai:nlp")
 
-    if contains_any(text, ["body mass index", "body-mass index"]):
+    if contains_any(
+        text,
+        ["body mass index", "body-mass index"],
+    ):
         tags.discard("domain:bmi")
+
+    # "Neural interface" de software não recebe tag de interface
+    # neural humana.
+    if (
+        "domain:neural-interface" in tags
+        and not _has_explicit_interface(
+            text,
+            classification,
+        )
+    ):
+        tags.discard("domain:neural-interface")
+
+    # "Neural privacy" só recebe a tag específica quando há
+    # contexto cerebral ou neurotecnológico.
+    if (
+        "governance:neural-privacy" in tags
+        and not _has_neural_privacy_context(
+            text,
+            classification,
+        )
+    ):
+        tags.discard("governance:neural-privacy")
 
     # LLM é uma subclasse mais específica; evita redundância no Zotero.
     if "ai:llm" in tags:
@@ -681,23 +1314,19 @@ def infer_corrente(
         classification,
     )
 
-    if suggest_priority(
+    priority = suggest_priority(
         config or {},
         title or "",
         abstract=abstract or "",
-    ) == "A1-central-integracao-llm":
+    )
+
+    if priority == "A1-central-integracao-llm":
         return "Integração BMI/BCI e LLMs"
 
-    if (
-        evidence.decoding_title
-        or evidence.brain_decoding_same_sentence
-    ):
+    if priority == "A2-central-decoding-linguagem":
         return "Decodificação Neural de Linguagem"
 
-    if (
-        evidence.interface_title
-        and (evidence.risk_title or evidence.risk_abstract)
-    ) or evidence.interface_risk_same_sentence:
+    if priority == "A3-central-riscos-governanca":
         return "Riscos e Governança em BMI/BCI"
 
     if (
