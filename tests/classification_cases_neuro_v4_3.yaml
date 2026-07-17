@@ -1,4 +1,4 @@
-schema_version: '1.0'
+schema_version: '1.1'
 
 cases:
   - id: chatbci-llm-integration
@@ -141,3 +141,123 @@ cases:
       - domain:bci
       - governance:neural-privacy
       - governance:neurorights
+
+  - id: unicode-dash-llm-bci-integration
+    title: >-
+      Large language models integrated into brain–computer interfaces
+    abstract: >-
+      The study integrates large language models into brain–computer
+      interface systems.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+    expected_tags_contains:
+      - domain:bci
+      - ai:llm
+
+  - id: unicode-dash-bci-privacy
+    title: >-
+      Privacy Transfer Dilemma in Brain–Computer Interfaces
+    abstract: >-
+      The study analyzes privacy risks in brain–computer interface
+      data transfer.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+    expected_tags_contains:
+      - domain:bci
+      - governance:privacy
+
+  - id: positive-integration-with-unrelated-absence
+    title: Reading Embeddings from EEG
+    abstract: >-
+      We use large language models to generate reading embeddings from EEG.
+      The method also operates in the absence of task-specific details.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+
+  - id: eeg2text-built-on-language-model
+    title: EEG2TEXT-CN
+    abstract: >-
+      The EEG-to-text architecture is built on a pretrained language
+      model and neural EEG representations.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+
+  - id: prior-work-language-model
+    title: >-
+      Neural Decoding of Overt Speech from ECoG Using Vision Transformers
+    abstract: >-
+      Previous studies used language models for speech decoding.
+      We propose a vision transformer that reconstructs speech directly
+      from ECoG recordings.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: text-generation-is-decoding-output
+    title: >-
+      Text Generation of Speech Imagery Based on an Enhanced CTA-BiLSTM
+    abstract: >-
+      The system decodes imagined speech from EEG signals into text using
+      an enhanced CTA-BiLSTM architecture.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: intracranial-depth-electrode-speech
+    title: >-
+      Synthesizing Speech from Intracranial Depth Electrodes
+    abstract: >-
+      Speech is synthesized from intracranial neural recordings acquired
+      with depth electrodes.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: emg-speech-neuroprosthesis
+    title: >-
+      Non-invasive Electromyographic Speech Neuroprosthesis
+    abstract: >-
+      The system reconstructs speech from surface EMG muscle signals
+      without recording brain activity.
+    expected_priority: B-apoio
+
+  - id: nlp-analysis-of-bci-posts
+    title: >-
+      Public Perception of Brain-Computer Interfaces Based on Data on X
+    abstract: >-
+      Natural language processing is used to analyze social media posts
+      and public perception of brain-computer interfaces.
+    expected_priority: B-apoio
+    expected_tags_contains:
+      - domain:bci
+      - ai:nlp
+
+  - id: security-as-application-area
+    title: >-
+      Brain-Computer Interfacing: An Introduction
+    abstract: >-
+      Applications of brain-computer interfaces include gaming,
+      education, art, lie detection and security.
+    expected_priority: B-apoio
+
+  - id: safety-as-bibliometric-theme
+    title: Identifying Thematics in Brain-Computer Interface Research
+    abstract: >-
+      A bibliometric analysis identifies themes including rehabilitation,
+      safety, security, education and entertainment.
+    expected_priority: B-apoio
+
+  - id: semantic-reconstruction-with-privacy-discussion
+    title: >-
+      Semantic Reconstruction of Continuous Language from
+      Non-invasive Brain Recordings
+    abstract: >-
+      A semantic decoder reconstructs continuous language from fMRI brain
+      recordings. The study also discusses implications for mental privacy.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: risk-contribution-in-abstract
+    title: Challenges of Brain-Computer Interfaces
+    abstract: >-
+      This study examines privacy risks, security threats and
+      vulnerabilities in brain-computer interface systems.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI

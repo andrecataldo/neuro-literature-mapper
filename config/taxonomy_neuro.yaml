@@ -1,4 +1,4 @@
-schema_version: '1.3'
+schema_version: '1.4'
 project:
   name: Neuro Literature Mapper
   purpose: Taxonomia para classificação de literatura sobre integração BMI/BCI–LLM, decodificação neural de linguagem, interação humana, vieses, privacidade, segurança e governança.
@@ -212,10 +212,19 @@ classification:
   - brain signal
   - brain signals
   - brain activity
+  - brain recording
+  - brain recordings
   - cortical activity
   - cortical recording
   - cortical recordings
   - intracortical
+  - intracranial
+  - intracranial electrode
+  - intracranial electrodes
+  - intracranial depth electrode
+  - intracranial depth electrodes
+  - depth electrode
+  - depth electrodes
   - neural signal
   - neural signals
   - neural activity
@@ -226,16 +235,13 @@ classification:
   - fmri
   - meg
   - fnirs
+  - seeg
+  - stereo-electroencephalography
   - p300
   - ssvep
   - motor imagery
-  - electrode
-  - electrodes
   - neural implant
   - brain implant
-  - speech neuroprosthesis
-  - neural speech prosthesis
-  - speech prosthesis
   language_decoding_terms:
   - neural decoding
   - speech decoding
@@ -245,13 +251,21 @@ classification:
   - brain to text
   - eeg-to-text
   - eeg to text
+  - eeg2text
   - imagined speech
+  - speech imagery
   - attempted speech
   - covert speech
   - silent speech
   - language reconstruction
+  - semantic reconstruction
   - speech reconstruction
+  - reconstructing speech
+  - reconstructed speech
+  - speech is reconstructed
   - speech synthesis
+  - synthesize speech
+  - synthesizing speech
   - speech neuroprosthesis
   - neural speech prosthesis
   - imagined handwriting
@@ -272,6 +286,17 @@ classification:
   - natural language processing
   - text generation
   - language generation
+  - word prediction
+  - predictive text
+  - context-driven word prediction
+  a1_language_technology_terms:
+  - language model
+  - language models
+  - pretrained language model
+  - pre-trained language model
+  - generative language model
+  - natural language processing
+  - nlp
   - word prediction
   - predictive text
   - context-driven word prediction
@@ -310,6 +335,19 @@ classification:
   - rerank
   - reranking
   - word prediction
+  - integrated into
+  - integration of
+  - built on
+  - built upon
+  - builds on
+  - builds upon
+  - employ
+  - employs
+  - employed
+  - utilize
+  - utilizes
+  - utilizing
+  - coupled with
   weak_integration_terms:
   - inspired by
   - similar to
@@ -324,6 +362,78 @@ classification:
   - not using
   - absence of
   - prompting us to explore
+  prior_work_terms:
+  - previous studies
+  - previous study
+  - prior studies
+  - prior study
+  - earlier studies
+  - previous work
+  - prior work
+  - earlier work
+  - existing work
+  - existing approaches
+  - previous approaches
+  - prior approaches
+  - recent studies have
+  - the literature has
+  - state of the art
+
+  external_analysis_terms:
+  - public perception
+  - social media
+  - social network
+  - posts
+  - tweets
+  - sentiment analysis
+  - topic modeling
+  - topic modelling
+  - discourse analysis
+  - bibliometric analysis
+  - bibliometric study
+  - literature analysis
+  - literature review
+  - thematic analysis
+  - research thematics
+
+  risk_contribution_terms:
+  - analyze
+  - analyzes
+  - analyse
+  - analyses
+  - examine
+  - examines
+  - investigate
+  - investigates
+  - assess
+  - assesses
+  - evaluate
+  - evaluates
+  - address
+  - addresses
+  - focuses on
+  - risk
+  - risks
+  - threat
+  - threats
+  - vulnerability
+  - vulnerabilities
+  - privacy concern
+  - privacy concerns
+  - security concern
+  - security concerns
+  - ethical implication
+  - ethical implications
+
+  peripheral_signal_terms:
+  - electromyographic
+  - electromyography
+  - surface electromyography
+  - surface emg
+  - emg signal
+  - emg signals
+  - muscle signal
+  - muscle signals
   risk_governance_terms:
   - bias
   - cognitive bias
@@ -378,6 +488,10 @@ classification:
   - neural data ownership
   - mental integrity
   - cognitive liberty
+  - threat
+  - threats
+  - vulnerability
+  - vulnerabilities
 
   non_neural_decoding_terms:
   - literature

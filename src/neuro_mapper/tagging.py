@@ -4,6 +4,18 @@ import re
 from collections.abc import Iterable
 from dataclasses import dataclass
 
+UNICODE_HYPHEN_TRANSLATION = str.maketrans(
+    {
+        "\u00ad": "-",  # soft hyphen
+        "\u2010": "-",  # hyphen
+        "\u2011": "-",  # non-breaking hyphen
+        "\u2012": "-",  # figure dash
+        "\u2013": "-",  # en dash
+        "\u2014": "-",  # em dash
+        "\u2212": "-",  # minus sign
+        "\uff0d": "-",  # full-width hyphen-minus
+    }
+)
 
 DEFAULT_INTERFACE_TERMS = [
     "brain-computer interface",
@@ -56,10 +68,19 @@ DEFAULT_NEURAL_SIGNAL_TERMS = [
     "brain signal",
     "brain signals",
     "brain activity",
+    "brain recording",
+    "brain recordings",
     "cortical activity",
     "cortical recording",
     "cortical recordings",
     "intracortical",
+    "intracranial",
+    "intracranial electrode",
+    "intracranial electrodes",
+    "intracranial depth electrode",
+    "intracranial depth electrodes",
+    "depth electrode",
+    "depth electrodes",
     "neural signal",
     "neural signals",
     "neural activity",
@@ -70,16 +91,13 @@ DEFAULT_NEURAL_SIGNAL_TERMS = [
     "fmri",
     "meg",
     "fnirs",
+    "seeg",
+    "stereo-electroencephalography",
     "p300",
     "ssvep",
     "motor imagery",
-    "electrode",
-    "electrodes",
     "neural implant",
     "brain implant",
-    "speech neuroprosthesis",
-    "neural speech prosthesis",
-    "speech prosthesis",
 ]
 
 DEFAULT_INTEGRATION_RELATION_TERMS = [
@@ -117,6 +135,19 @@ DEFAULT_INTEGRATION_RELATION_TERMS = [
     "rerank",
     "reranking",
     "word prediction",
+    "integrated into",
+    "integration of",
+    "built on",
+    "built upon",
+    "builds on",
+    "builds upon",
+    "employ",
+    "employs",
+    "employed",
+    "utilize",
+    "utilizes",
+    "utilizing",
+    "coupled with",
 ]
 
 DEFAULT_WEAK_INTEGRATION_TERMS = [
@@ -158,6 +189,10 @@ DEFAULT_STRONG_RISK_TERMS = [
     "neural data ownership",
     "mental integrity",
     "cognitive liberty",
+    "threat",
+    "threats",
+    "vulnerability",
+    "vulnerabilities",
 ]
 
 DEFAULT_NON_NEURAL_DECODING_TERMS = [
@@ -168,6 +203,82 @@ DEFAULT_NON_NEURAL_DECODING_TERMS = [
     "narratology",
     "fiction",
     "poetics",
+]
+DEFAULT_PRIOR_WORK_TERMS = [
+    "previous studies",
+    "previous study",
+    "prior studies",
+    "prior study",
+    "earlier studies",
+    "previous work",
+    "prior work",
+    "earlier work",
+    "existing work",
+    "existing approaches",
+    "previous approaches",
+    "prior approaches",
+    "recent studies have",
+    "the literature has",
+    "state of the art",
+]
+
+DEFAULT_EXTERNAL_ANALYSIS_TERMS = [
+    "public perception",
+    "social media",
+    "social network",
+    "posts",
+    "tweets",
+    "sentiment analysis",
+    "topic modeling",
+    "topic modelling",
+    "discourse analysis",
+    "bibliometric analysis",
+    "bibliometric study",
+    "literature analysis",
+    "literature review",
+    "thematic analysis",
+    "research thematics",
+]
+
+DEFAULT_RISK_CONTRIBUTION_TERMS = [
+    "analyze",
+    "analyzes",
+    "analyse",
+    "analyses",
+    "examines",
+    "examine",
+    "investigates",
+    "investigate",
+    "assesses",
+    "assess",
+    "evaluates",
+    "evaluate",
+    "addresses",
+    "address",
+    "focuses on",
+    "risk",
+    "risks",
+    "threat",
+    "threats",
+    "vulnerability",
+    "vulnerabilities",
+    "privacy concern",
+    "privacy concerns",
+    "security concern",
+    "security concerns",
+    "ethical implication",
+    "ethical implications",
+]
+
+DEFAULT_PERIPHERAL_SIGNAL_TERMS = [
+    "electromyographic",
+    "electromyography",
+    "surface electromyography",
+    "surface emg",
+    "emg signal",
+    "emg signals",
+    "muscle signal",
+    "muscle signals",
 ]
 DEFAULT_INTERFACE_ABBREVIATIONS = ["bci", "bmi"]
 DEFAULT_INTERFACE_CONTEXT_TERMS = [
@@ -211,17 +322,26 @@ DEFAULT_DECODING_TERMS = [
     "brain to text",
     "eeg-to-text",
     "eeg to text",
+    "eeg2text",
     "imagined speech",
+    "speech imagery",
     "attempted speech",
     "covert speech",
     "silent speech",
     "language reconstruction",
+    "semantic reconstruction",
     "speech reconstruction",
+    "reconstructing speech",
+    "reconstructed speech",
+    "speech is reconstructed",
     "speech synthesis",
+    "synthesize speech",
+    "synthesizing speech",
     "speech neuroprosthesis",
     "neural speech prosthesis",
     "imagined handwriting",
 ]
+
 DEFAULT_STRONG_LLM_TERMS = [
     "large language model",
     "large language models",
@@ -240,6 +360,18 @@ DEFAULT_LANGUAGE_ASSISTANCE_TERMS = [
     "natural language processing",
     "text generation",
     "language generation",
+    "word prediction",
+    "predictive text",
+    "context-driven word prediction",
+]
+DEFAULT_A1_LANGUAGE_TECHNOLOGY_TERMS = [
+    "language model",
+    "language models",
+    "pretrained language model",
+    "pre-trained language model",
+    "generative language model",
+    "natural language processing",
+    "nlp",
     "word prediction",
     "predictive text",
     "context-driven word prediction",
@@ -375,39 +507,88 @@ class SemanticEvidence:
     interface_strong_risk_same_sentence: bool
 
 
+def _normalize_semantic_text(
+    value: str | None,
+) -> str:
+    """
+    Normaliza texto para comparação semântica.
+
+    Padroniza hífens tipográficos, espaços não separáveis,
+    capitalização e sequências de espaços.
+    """
+
+    normalized = str(value or "").translate(
+        UNICODE_HYPHEN_TRANSLATION
+    )
+
+    normalized = normalized.replace(
+        "\u00a0",
+        " ",
+    )
+
+    normalized = re.sub(
+        r"\s+",
+        " ",
+        normalized,
+    )
+
+    return normalized.strip().lower()
+
+
 def normalize_text(*parts: str | None) -> str:
-    return " ".join(part or "" for part in parts).lower()
+    return _normalize_semantic_text(
+        " ".join(part or "" for part in parts)
+    )
 
 
-def _matches_term(text: str, term: str) -> bool:
-    normalized = term.strip().lower()
-    if not normalized:
+def _matches_term(
+    text: str,
+    term: str,
+) -> bool:
+    normalized_text = _normalize_semantic_text(text)
+    normalized_term = _normalize_semantic_text(term)
+
+    if not normalized_term:
         return False
 
-    if re.fullmatch(r"[a-z0-9]{2,5}", normalized):
+    if re.fullmatch(
+        r"[a-z0-9]{2,5}",
+        normalized_term,
+    ):
         return (
             re.search(
-                rf"(?<![a-z0-9]){re.escape(normalized)}(?![a-z0-9])",
-                text,
+                rf"(?<![a-z0-9])"
+                rf"{re.escape(normalized_term)}"
+                rf"(?![a-z0-9])",
+                normalized_text,
             )
             is not None
         )
 
-    return normalized in text
+    return normalized_term in normalized_text
 
 
-def contains_any(text: str, values: Iterable[str]) -> bool:
-    lower = text.lower()
-    return any(_matches_term(lower, value) for value in values)
+def contains_any(
+    text: str,
+    values: Iterable[str],
+) -> bool:
+    return any(
+        _matches_term(text, value)
+        for value in values
+    )
 
 
 def _sentences(text: str) -> list[str]:
+    normalized = _normalize_semantic_text(text)
+
     return [
         part.strip()
-        for part in re.split(r"(?<=[.!?;])\s+|\n+", text.lower())
+        for part in re.split(
+            r"(?<=[.!?;])\s+|\n+",
+            normalized,
+        )
         if part.strip()
     ]
-
 
 def _same_sentence_has(
     text: str,
@@ -446,11 +627,11 @@ def _has_integration_relation(
     technology_terms: Iterable[str],
 ) -> bool:
     """
-    Identifica relação operacional entre um sistema e um modelo de
-    linguagem.
+    Identifica uma relação operacional com tecnologia de linguagem.
 
-    Sentenças comparativas, negativas ou apenas inspiracionais não
-    contam como integração.
+    O bloqueio de negação, comparação ou inspiração é aplicado somente
+    à sentença analisada. Menções a trabalhos anteriores também não
+    contam como evidência da contribuição atual.
     """
 
     relation_terms = _config_terms(
@@ -465,18 +646,38 @@ def _has_integration_relation(
         fallback=DEFAULT_WEAK_INTEGRATION_TERMS,
     )
 
+    prior_work_terms = _config_terms(
+        classification,
+        "prior_work_terms",
+        fallback=DEFAULT_PRIOR_WORK_TERMS,
+    )
+
     for sentence in _sentences(text):
-        if not contains_any(sentence, technology_terms):
+        if not contains_any(
+            sentence,
+            technology_terms,
+        ):
             continue
 
-        if contains_any(sentence, weak_terms):
+        if contains_any(
+            sentence,
+            weak_terms,
+        ):
             continue
 
-        if contains_any(sentence, relation_terms):
+        if contains_any(
+            sentence,
+            prior_work_terms,
+        ):
+            continue
+
+        if contains_any(
+            sentence,
+            relation_terms,
+        ):
             return True
 
     return False
-
 
 def _has_weak_integration_relation(
     text: str,
@@ -495,6 +696,38 @@ def _has_weak_integration_relation(
         for sentence in _sentences(text)
     )
 
+def _has_risk_contribution_sentence(
+    text: str,
+    classification: dict,
+) -> bool:
+    """
+    Verifica se risco ou governança aparecem como objeto da
+    contribuição, não apenas em uma lista de aplicações ou temas.
+    """
+
+    strong_risk_terms = _config_terms(
+        classification,
+        "strong_risk_governance_terms",
+        fallback=DEFAULT_STRONG_RISK_TERMS,
+    )
+
+    contribution_terms = _config_terms(
+        classification,
+        "risk_contribution_terms",
+        fallback=DEFAULT_RISK_CONTRIBUTION_TERMS,
+    )
+
+    return any(
+        contains_any(
+            sentence,
+            strong_risk_terms,
+        )
+        and contains_any(
+            sentence,
+            contribution_terms,
+        )
+        for sentence in _sentences(text)
+    )
 
 def _has_neural_privacy_context(
     text: str,
@@ -547,7 +780,7 @@ def _mask_negated_mentions(
     - "no brain-computer interface is used"
     - "does not use an LLM"
     """
-    result = text.lower()
+    result = _normalize_semantic_text(text)
     negators = (
         r"no|without|not using|does not use|do not use|"
         r"did not use|absence of|unrelated to"
@@ -587,8 +820,15 @@ def _is_review_comment(title: str, classification: dict) -> bool:
         "review_comment_prefixes",
         fallback=DEFAULT_REVIEW_PREFIXES,
     )
-    lowered = title.strip().lower()
-    return any(lowered.startswith(prefix.lower()) for prefix in prefixes)
+
+    normalized_title = _normalize_semantic_text(title)
+
+    return any(
+        normalized_title.startswith(
+            _normalize_semantic_text(prefix)
+        )
+        for prefix in prefixes
+    )
 
 
 def _has_explicit_interface(
@@ -728,10 +968,8 @@ def _semantic_evidence(
 
     language_terms = _config_terms(
         classification,
-        "language_assistance_terms",
-        "language_model_terms",
-        "nlp_terms",
-        fallback=DEFAULT_LANGUAGE_ASSISTANCE_TERMS,
+        "a1_language_technology_terms",
+        fallback=DEFAULT_A1_LANGUAGE_TECHNOLOGY_TERMS,
     )
 
     human_terms = _config_terms(
@@ -758,7 +996,7 @@ def _semantic_evidence(
         *language_terms,
     ]
 
-    title_text = title.lower()
+    title_text = _normalize_semantic_text(title)
 
     semantic_terms = [
         *interface_terms,
@@ -1024,9 +1262,29 @@ def suggest_priority(
     ):
         return "D-descartar"
 
-    interface_or_decoding_title = (
+    external_analysis_terms = _config_terms(
+        classification,
+        "external_analysis_terms",
+        fallback=DEFAULT_EXTERNAL_ANALYSIS_TERMS,
+    )
+
+    external_analysis_context = (
+        contains_any(
+            semantic_text,
+            external_analysis_terms,
+        )
+        and not (
+            evidence.decoding_title
+            or evidence.decoding_abstract
+            or evidence.neural_signal_title
+            or evidence.neural_signal_abstract
+        )
+    )
+
+    neural_domain_title = (
         evidence.interface_title
         or evidence.decoding_title
+        or evidence.neural_signal_title
     )
 
     technology_title = (
@@ -1039,25 +1297,23 @@ def suggest_priority(
         or evidence.language_abstract
     )
 
-    # A1 — integração entre BMI/BCI ou decodificação e modelos de
-    # linguagem.
-    #
-    # Quando ambos aparecem no título, a evidência é forte, exceto
-    # quando o título explicita relação comparativa ou inspiracional.
+    # A1 — integração entre BMI/BCI, sinais neurais ou decodificação
+    # e modelos de linguagem.
     if (
-        interface_or_decoding_title
+        neural_domain_title
         and technology_title
         and not evidence.weak_integration_title
+        and not external_analysis_context
     ):
         return "A1-central-integracao-llm"
 
-    # Quando a tecnologia aparece apenas no resumo, é necessária uma
-    # relação operacional explícita: uso, integração, assistência etc.
+    # O helper de integração já rejeita negação, comparação,
+    # inspiração e descrição de trabalhos anteriores por sentença.
     if (
-        interface_or_decoding_title
+        neural_domain_title
         and technology_abstract
         and evidence.integration_abstract
-        and not evidence.weak_integration_abstract
+        and not external_analysis_context
     ):
         return "A1-central-integracao-llm"
 
@@ -1066,9 +1322,10 @@ def suggest_priority(
         and (
             evidence.interface_abstract
             or evidence.decoding_abstract
+            or evidence.neural_signal_abstract
         )
         and evidence.integration_abstract
-        and not evidence.weak_integration_abstract
+        and not external_analysis_context
     ):
         return "A1-central-integracao-llm"
 
@@ -1078,9 +1335,31 @@ def suggest_priority(
             or evidence.decoding_language_same_sentence
         )
         and evidence.integration_abstract
-        and not evidence.weak_integration_abstract
+        and not external_analysis_context
     ):
         return "A1-central-integracao-llm"
+
+    peripheral_signal_terms = _config_terms(
+        classification,
+        "peripheral_signal_terms",
+        fallback=DEFAULT_PERIPHERAL_SIGNAL_TERMS,
+    )
+
+    peripheral_only = (
+        contains_any(
+            semantic_text,
+            peripheral_signal_terms,
+        )
+        and not (
+            evidence.interface_title
+            or evidence.interface_abstract
+            or evidence.neural_signal_title
+            or evidence.neural_signal_abstract
+        )
+    )
+
+    if peripheral_only:
+        return "B-apoio"
 
     # A2 — decodificação neural de linguagem.
     #
@@ -1124,7 +1403,13 @@ def suggest_priority(
     ):
         return "A3-central-riscos-governanca"
 
-    if evidence.interface_strong_risk_same_sentence:
+    if (
+        evidence.interface_title
+        and _has_risk_contribution_sentence(
+            abstract,
+            classification,
+        )
+    ):
         return "A3-central-riscos-governanca"
 
     non_brain_terms = _config_terms(

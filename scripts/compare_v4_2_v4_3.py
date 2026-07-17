@@ -213,13 +213,35 @@ def validate_hygiene(
         != source_values
     ]
 
-    raw_text = path.read_text(
-        encoding="utf-8-sig"
-    )
+    integer_columns = [
+        "year",
+        "cited_by_count",
+        "duplicate_count",
+    ]
 
-    decimal_suffixes = re.findall(
-        r"(?<![\d.])\d+\.0(?!\d)",
-        raw_text,
+    decimal_suffix_errors: dict[str, int] = {}
+
+    for column in integer_columns:
+        if column not in dataframe.columns:
+            decimal_suffix_errors[column] = 0
+            continue
+
+        values = (
+            dataframe[column]
+            .fillna("")
+            .astype(str)
+            .str.strip()
+        )
+
+        decimal_suffix_errors[column] = int(
+            values.str.fullmatch(
+                r"[+-]?\d+\.0",
+                na=False,
+            ).sum()
+        )
+
+    total_decimal_suffix_errors = sum(
+        decimal_suffix_errors.values()
     )
 
     print("\nVALIDAÇÕES DE HIGIENE")
@@ -236,9 +258,14 @@ def validate_hygiene(
         len(source_order_errors),
     )
     print(
-        "  Ocorrências numéricas terminadas em .0:",
-        len(decimal_suffixes),
+        "  Valores inteiros exportados com sufixo .0:",
+        total_decimal_suffix_errors,
     )
+
+    for column, errors in decimal_suffix_errors.items():
+        print(
+            f"    {column}: {errors}"
+        )
 
 
 def prepare_comparison(
@@ -349,7 +376,7 @@ def main() -> None:
         "COMPLETUDE V4.3",
     )
 
-    validate_hygiene(v4_3, V4_3_PATH)
+    validate_hygiene(v4_3)
 
     left = prepare_comparison(
         v4_2,
