@@ -1,0 +1,143 @@
+schema_version: '1.0'
+
+cases:
+  - id: chatbci-llm-integration
+    title: >-
+      ChatBCI, a P300 speller BCI with context-driven word prediction
+      leveraging large language models
+    abstract: >-
+      The brain-computer interface uses a large language model to improve
+      word prediction and sentence composition.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+    expected_tags_contains:
+      - domain:bci
+      - ai:llm
+    expected_tags_excludes:
+      - ai:language-model
+
+  - id: neural-decoding-gpt-integration
+    title: >-
+      Enhancing Neural Decoding with Large Language Models:
+      A GPT-Based Approach
+    abstract: >-
+      Large language models are used to improve neural speech decoding
+      from cortical recordings.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+    expected_tags_contains:
+      - ai:llm
+      - decoding:neural
+
+  - id: videochat-software-neural-interface
+    title: 'VideoChat: Chat-Centric Video Understanding'
+    abstract: >-
+      A neural interface connects a video encoder to a large language
+      model for video understanding.
+    expected_priority: D-descartar
+    expected_tags_excludes:
+      - domain:neural-interface
+
+  - id: brain-model-inspired-by-llm
+    title: >-
+      Large Brain Model for Learning Generic Representations
+      with Tremendous EEG Data in BCI
+    abstract: >-
+      Inspired by large language models, the system learns generic
+      representations from EEG data for brain-computer interface
+      classification.
+    expected_priority: B-apoio
+    expected_tags_contains:
+      - domain:bci
+      - signal:eeg
+      - ai:llm
+    expected_tags_excludes:
+      - ai:language-model
+
+  - id: intracortical-brain-to-text
+    title: >-
+      High-performance brain-to-text communication via handwriting
+    abstract: >-
+      Intracortical neural activity is decoded into text from imagined
+      handwriting.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+    expected_tags_contains:
+      - decoding:brain-to-text
+      - signal:intracortical
+
+  - id: literary-brain-to-text
+    title: >-
+      Brain Text, Brain-to-Text, and the Mind Style of Literature
+    abstract: >-
+      This literary study examines narrative style, fiction and
+      representations of thought in literature.
+    expected_priority: D-descartar
+
+  - id: metaverse-bci-survey
+    title: >-
+      A Human-Centric Metaverse Enabled by Brain-Computer Interface:
+      A Survey
+    abstract: >-
+      The survey discusses brain-computer interfaces as one component
+      of future human-centric metaverse environments.
+    expected_priority: B-apoio
+    expected_tags_contains:
+      - domain:bci
+
+  - id: bci-privacy-security
+    title: Privacy and Security in Brain-Computer Interfaces
+    abstract: >-
+      The study analyzes privacy, security and governance risks directly
+      associated with brain-computer interfaces.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+    expected_tags_contains:
+      - domain:bci
+      - governance:privacy
+      - governance:security
+      - governance:governance
+
+  - id: incidental-autonomy
+    title: >-
+      Improving EEG Based Brain Computer Interface Emotion Detection
+    abstract: >-
+      The model improves emotion detection accuracy and may support user
+      autonomy in future applications.
+    expected_priority: B-apoio
+    expected_tags_contains:
+      - domain:bci
+      - signal:eeg
+      - governance:autonomy
+
+  - id: broad-neurotechnology-governance
+    title: Issues in Neurotechnology Governance
+    abstract: >-
+      This article discusses governance and responsibility in
+      neurotechnology at a broad societal level.
+    expected_priority: B-apoio
+    expected_tags_contains:
+      - domain:neurotechnology
+      - governance:governance
+
+  - id: artificial-neural-network-privacy
+    title: Neural Privacy in Federated Neural Networks
+    abstract: >-
+      The study presents privacy-preserving neural network training for
+      distributed machine learning systems.
+    expected_priority: D-descartar
+    expected_tags_excludes:
+      - governance:neural-privacy
+      - domain:neural-interface
+
+  - id: mental-privacy-bci
+    title: Mental Privacy in Brain-Computer Interfaces
+    abstract: >-
+      The study examines mental privacy, brain data protection and
+      neurorights in brain-computer interface systems.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+    expected_tags_contains:
+      - domain:bci
+      - governance:neural-privacy
+      - governance:neurorights
