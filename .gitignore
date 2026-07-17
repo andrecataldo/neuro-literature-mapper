@@ -26,6 +26,7 @@ outputs/*.csv
 outputs/*.xlsx
 outputs/*.json
 outputs/*.bib
+outputs/*.txt
 !outputs/.gitkeep
 
 
