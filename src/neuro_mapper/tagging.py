@@ -73,6 +73,10 @@ DEFAULT_NEURAL_SIGNAL_TERMS = [
     "cortical activity",
     "cortical recording",
     "cortical recordings",
+    "cortical signal",
+    "cortical signals",
+    "direct cortical signal",
+    "direct cortical signals",
     "intracortical",
     "intracranial",
     "intracranial electrode",
@@ -182,6 +186,14 @@ DEFAULT_STRONG_RISK_TERMS = [
     "cybersecurity",
     "safety",
     "neuroethics",
+    "ethics",
+    "ethical",
+    "ethical challenge",
+    "ethical challenges",
+    "ethical framework",
+    "ethical significance",
+    "ethical consideration",
+    "ethical considerations",
     "neurorights",
     "governance",
     "informed consent",
@@ -279,6 +291,36 @@ DEFAULT_PERIPHERAL_SIGNAL_TERMS = [
     "emg signals",
     "muscle signal",
     "muscle signals",
+]
+DEFAULT_SPEECH_NEUROPROSTHESIS_TERMS = [
+    "speech neuroprosthesis",
+    "speech neuroprostheses",
+    "neural speech prosthesis",
+    "neural speech prostheses",
+    "neuroprosthetic speech",
+]
+
+DEFAULT_ETHICS_TERMS = [
+    "ethics",
+    "ethical",
+    "ethical challenge",
+    "ethical challenges",
+    "ethical framework",
+    "ethical significance",
+    "ethical consideration",
+    "ethical considerations",
+]
+
+DEFAULT_DOCUMENT_LANGUAGE_CONTEXT_TERMS = [
+    "eeg report",
+    "eeg reports",
+    "electroencephalography report",
+    "electroencephalography reports",
+    "report understanding",
+    "report generation",
+    "report summarization",
+    "report summarisation",
+    "report classification",
 ]
 DEFAULT_INTERFACE_ABBREVIATIONS = ["bci", "bmi"]
 DEFAULT_INTERFACE_CONTEXT_TERMS = [
@@ -1268,18 +1310,59 @@ def suggest_priority(
         fallback=DEFAULT_EXTERNAL_ANALYSIS_TERMS,
     )
 
-    external_analysis_context = (
-        contains_any(
-            semantic_text,
-            external_analysis_terms,
-        )
-        and not (
-            evidence.decoding_title
-            or evidence.decoding_abstract
-            or evidence.neural_signal_title
-            or evidence.neural_signal_abstract
-        )
+    external_analysis_context = contains_any(
+        semantic_text,
+        external_analysis_terms,
     )
+
+    speech_neuroprosthesis_terms = _config_terms(
+        classification,
+        "speech_neuroprosthesis_terms",
+        fallback=DEFAULT_SPEECH_NEUROPROSTHESIS_TERMS,
+    )
+
+    ethics_terms = _config_terms(
+        classification,
+        "ethics_terms",
+        fallback=DEFAULT_ETHICS_TERMS,
+    )
+
+    document_language_context_terms = _config_terms(
+        classification,
+        "document_language_context_terms",
+        fallback=DEFAULT_DOCUMENT_LANGUAGE_CONTEXT_TERMS,
+    )
+
+    normalized_title = _normalize_semantic_text(
+        clean_title,
+    )
+
+    speech_neuroprosthesis_title = contains_any(
+        normalized_title,
+        speech_neuroprosthesis_terms,
+    )
+
+    ethics_title = contains_any(
+        normalized_title,
+        ethics_terms,
+    )
+
+    document_language_context = contains_any(
+        semantic_text,
+        document_language_context_terms,
+    )
+
+    # Trabalhos cuja contribuição principal é ética e diretamente
+    # relacionada a BCI ou neuropróteses de fala pertencem a A3.
+    if (
+        ethics_title
+        and (
+            evidence.interface_title
+            or speech_neuroprosthesis_title
+        )
+        and not external_analysis_context
+    ):
+        return "A3-central-riscos-governanca"
 
     neural_domain_title = (
         evidence.interface_title
@@ -1304,6 +1387,7 @@ def suggest_priority(
         and technology_title
         and not evidence.weak_integration_title
         and not external_analysis_context
+        and not document_language_context
     ):
         return "A1-central-integracao-llm"
 
@@ -1326,6 +1410,7 @@ def suggest_priority(
         )
         and evidence.integration_abstract
         and not external_analysis_context
+        and not document_language_context
     ):
         return "A1-central-integracao-llm"
 
@@ -1336,6 +1421,7 @@ def suggest_priority(
         )
         and evidence.integration_abstract
         and not external_analysis_context
+        and not document_language_context
     ):
         return "A1-central-integracao-llm"
 
@@ -1359,7 +1445,24 @@ def suggest_priority(
     )
 
     if peripheral_only:
-        return "B-apoio"
+        # Fala ou linguagem baseada em EMG ainda é literatura de
+        # apoio, mas próteses periféricas sem relação com linguagem,
+        # BCI ou decodificação devem ser descartadas.
+        if (
+            evidence.decoding_title
+            or evidence.decoding_abstract
+            or technology_title
+            or technology_abstract
+        ):
+            return "B-apoio"
+
+        return "D-descartar"
+
+    # O título "speech neuroprosthesis" representa diretamente
+    # decodificação neural de linguagem quando não há evidência de
+    # modalidade exclusivamente periférica.
+    if speech_neuroprosthesis_title:
+        return "A2-central-decoding-linguagem"
 
     # A2 — decodificação neural de linguagem.
     #
@@ -1394,12 +1497,14 @@ def suggest_priority(
     if (
         evidence.interface_title
         and evidence.strong_risk_title
+        and not external_analysis_context
     ):
         return "A3-central-riscos-governanca"
 
     if (
         evidence.strong_risk_title
         and evidence.interface_abstract
+        and not external_analysis_context
     ):
         return "A3-central-riscos-governanca"
 
@@ -1409,6 +1514,7 @@ def suggest_priority(
             abstract,
             classification,
         )
+        and not external_analysis_context
     ):
         return "A3-central-riscos-governanca"
 

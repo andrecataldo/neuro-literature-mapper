@@ -43,6 +43,16 @@ SUPPLEMENTARY_PATTERNS = [
     # Extensões típicas de arquivos auxiliares.
     r"\.(?:png|jpe?g|gif|tiff?|xlsx?|xls|docx?|pptx?|"
     r"zip|rar|7z|csv)(?:$|[?#])",
+
+        # Ativos editoriais retornados como registros independentes.
+    # Exemplos: "Figure 4:", "Fig. 2:", "Table 3:".
+    r"^\s*(?:fig(?:ure)?\.?|table)\s+"
+    r"\d+[a-z]?\s*[:.\-]",
+
+    # DOI ou URL de figuras e tabelas.
+    # Exemplos: /fig-4, /figure-2, /table-3.
+    r"(?:/|#)(?:fig(?:ure)?|table)-?"
+    r"\d+[a-z]?(?:$|[?#\s])",
 ]
 
 SOURCE_HANDLERS = [
@@ -275,9 +285,10 @@ def is_supplementary_material(
     record: WorkRecord,
 ) -> bool:
     """
-    Detecta arquivos auxiliares e materiais suplementares.
+    Detecta arquivos auxiliares, materiais suplementares e ativos
+    editoriais.
 
-    A análise usa apenas título e URL. A palavra isolada
+    A análise usa título, URL e DOI. A palavra isolada
     "supplementary" não é suficiente, evitando falsos positivos
     como "supplementary motor area".
     """
@@ -286,6 +297,7 @@ def is_supplementary_material(
         [
             record.title or "",
             record.url or "",
+            record.doi or "",
         ]
     ).strip().lower()
 

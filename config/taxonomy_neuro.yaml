@@ -1,4 +1,4 @@
-schema_version: '1.4'
+schema_version: '1.5'
 project:
   name: Neuro Literature Mapper
   purpose: Taxonomia para classificação de literatura sobre integração BMI/BCI–LLM, decodificação neural de linguagem, interação humana, vieses, privacidade, segurança e governança.
@@ -214,6 +214,10 @@ classification:
   - brain activity
   - brain recording
   - brain recordings
+  - cortical signal
+  - cortical signals
+  - direct cortical signal
+  - direct cortical signals
   - cortical activity
   - cortical recording
   - cortical recordings
@@ -434,6 +438,35 @@ classification:
   - emg signals
   - muscle signal
   - muscle signals
+
+  speech_neuroprosthesis_terms:
+  - speech neuroprosthesis
+  - speech neuroprostheses
+  - neural speech prosthesis
+  - neural speech prostheses
+  - neuroprosthetic speech
+
+  ethics_terms:
+  - ethics
+  - ethical
+  - ethical challenge
+  - ethical challenges
+  - ethical framework
+  - ethical significance
+  - ethical consideration
+  - ethical considerations
+
+  document_language_context_terms:
+  - eeg report
+  - eeg reports
+  - electroencephalography report
+  - electroencephalography reports
+  - report understanding
+  - report generation
+  - report summarization
+  - report summarisation
+  - report classification
+
   risk_governance_terms:
   - bias
   - cognitive bias
@@ -481,6 +514,14 @@ classification:
   - cybersecurity
   - safety
   - neuroethics
+  - ethics
+  - ethical
+  - ethical challenge
+  - ethical challenges
+  - ethical framework
+  - ethical significance
+  - ethical consideration
+  - ethical considerations
   - neurorights
   - governance
   - informed consent

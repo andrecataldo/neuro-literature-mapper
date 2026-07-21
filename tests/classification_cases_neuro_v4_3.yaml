@@ -1,4 +1,4 @@
-schema_version: '1.1'
+schema_version: '1.2'
 
 cases:
   - id: chatbci-llm-integration
@@ -261,3 +261,72 @@ cases:
       vulnerabilities in brain-computer interface systems.
     expected_priority: A3-central-riscos-governanca
     expected_corrente: Riscos e Governança em BMI/BCI
+
+  - id: ethics-bci-medicine
+    title: >-
+      Ethics and the emergence of brain-computer interface medicine
+    abstract: >-
+      Brain-computer interfaces introduce ethical challenges involving
+      neural privacy, agency and authenticity. The chapter proposes an
+      ethical framework for BCI medicine.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+
+  - id: ethical-neuroprosthetic-speech
+    title: >-
+      Neuroprosthetic Speech: The Ethical Significance of Accuracy,
+      Control and Pragmatics
+    abstract: >-
+      The study analyzes the ethical significance of accuracy, control
+      and authenticity in neural speech prostheses.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+
+  - id: cortical-signal-speech-neuroprosthesis
+    title: >-
+      Generalizable spelling using a speech neuroprosthesis
+    abstract: >-
+      Direct cortical signals are decoded into letters and sentences
+      using a speech neuroprosthesis.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: speech-neuroprosthesis-title-only
+    title: The speech neuroprosthesis
+    abstract: ''
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: clinical-bci-review-incidental-ethics
+    title: >-
+      Brain-computer interfaces: the innovative key to unlocking
+      neurological conditions
+    abstract: >-
+      This comprehensive clinical review examines BCI applications in
+      neurological disorders. It concludes by discussing future
+      directions and the need for ethical considerations.
+    expected_priority: B-apoio
+
+  - id: eeg-report-language-model
+    title: >-
+      NeuroLex: A Lightweight Domain Language Model for EEG Report
+      Understanding and Generation
+    abstract: ''
+    expected_priority: B-apoio
+
+  - id: external-public-perception-with-risks
+    title: >-
+      Public Perception of the Brain-Computer Interface Based on
+      Data on X
+    abstract: >-
+      Natural language processing and sentiment analysis are applied to
+      social media posts about BCI. The discussion mentions privacy and
+      security concerns.
+    expected_priority: B-apoio
+
+  - id: peripheral-arm-prosthesis
+    title: >-
+      Deep Learning with Convolutional Neural Network for Controlling
+      Human Arm Prosthesis using sEMG signals
+    abstract: ''
+    expected_priority: D-descartar

@@ -155,6 +155,47 @@ class PipelineHygieneV43Test(unittest.TestCase):
             is_supplementary_material(valid_record)
         )
 
+    def test_editorial_figure_is_discarded(self) -> None:
+        figure_record = make_record(
+            title=(
+                "Figure 4: The relationship between brain "
+                "connectivity, BCI, neural encoding, and "
+                "neural decoding."
+            ),
+            doi="10.7717/peerj-cs.2938/fig-4",
+            url=(
+                "https://doi.org/"
+                "10.7717/peerj-cs.2938/fig-4"
+            ),
+            abstract="",
+        )
+
+        self.assertTrue(
+            is_supplementary_material(
+                figure_record
+            )
+        )
+
+        result = classify_records(
+            [figure_record],
+            self.config,
+        )[0]
+
+        self.assertEqual(
+            "supplementary-material",
+            result.publication_status,
+        )
+
+        self.assertEqual(
+            "D-descartar",
+            result.suggested_priority,
+        )
+
+        self.assertEqual(
+            "",
+            result.suggested_tags,
+        )
+
     def test_invalid_records_are_discarded(self) -> None:
         supplementary = make_record(
             title=(
