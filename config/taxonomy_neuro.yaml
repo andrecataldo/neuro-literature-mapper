@@ -1,4 +1,4 @@
-schema_version: '1.5'
+schema_version: '1.5.1'
 project:
   name: Neuro Literature Mapper
   purpose: Taxonomia para classificação de literatura sobre integração BMI/BCI–LLM, decodificação neural de linguagem, interação humana, vieses, privacidade, segurança e governança.
@@ -282,6 +282,8 @@ classification:
   - genai
   - gpt
   - chatgpt
+  - llama
+
   language_assistance_terms:
   - language model
   - language models
@@ -399,6 +401,9 @@ classification:
   - literature review
   - thematic analysis
   - research thematics
+  - thematics
+  - research themes
+  - umbrella review
 
   risk_contribution_terms:
   - analyze
@@ -455,6 +460,16 @@ classification:
   - ethical significance
   - ethical consideration
   - ethical considerations
+
+  specific_risk_title_terms:
+  - mental privacy
+  - neural privacy
+  - brain privacy
+  - brain data privacy
+  - neurorights
+  - cognitive liberty
+  - mental integrity
+  - neural data ownership
 
   document_language_context_terms:
   - eeg report
@@ -629,6 +644,7 @@ tags:
   - llms
   - gpt
   - chatgpt
+  - llama
   ai:generative-ai:
   - generative ai
   - genai

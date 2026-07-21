@@ -250,6 +250,9 @@ DEFAULT_EXTERNAL_ANALYSIS_TERMS = [
     "literature review",
     "thematic analysis",
     "research thematics",
+    "thematics",
+    "research themes",
+    "umbrella review",
 ]
 
 DEFAULT_RISK_CONTRIBUTION_TERMS = [
@@ -309,6 +312,17 @@ DEFAULT_ETHICS_TERMS = [
     "ethical significance",
     "ethical consideration",
     "ethical considerations",
+]
+
+DEFAULT_SPECIFIC_RISK_TITLE_TERMS = [
+    "mental privacy",
+    "neural privacy",
+    "brain privacy",
+    "brain data privacy",
+    "neurorights",
+    "cognitive liberty",
+    "mental integrity",
+    "neural data ownership",
 ]
 
 DEFAULT_DOCUMENT_LANGUAGE_CONTEXT_TERMS = [
@@ -393,6 +407,7 @@ DEFAULT_STRONG_LLM_TERMS = [
     "genai",
     "gpt",
     "chatgpt",
+    "llama",
 ]
 DEFAULT_LANGUAGE_ASSISTANCE_TERMS = [
     "language model",
@@ -1310,8 +1325,15 @@ def suggest_priority(
         fallback=DEFAULT_EXTERNAL_ANALYSIS_TERMS,
     )
 
+    normalized_title = _normalize_semantic_text(
+        clean_title,
+    )
+
+    # O bloqueio de análises externas deve representar o objeto
+    # principal do trabalho, identificado pelo título. Termos
+    # metodológicos ou exemplos no resumo não bloqueiam A1 ou A3.
     external_analysis_context = contains_any(
-        semantic_text,
+        normalized_title,
         external_analysis_terms,
     )
 
@@ -1327,14 +1349,16 @@ def suggest_priority(
         fallback=DEFAULT_ETHICS_TERMS,
     )
 
+    specific_risk_title_terms = _config_terms(
+        classification,
+        "specific_risk_title_terms",
+        fallback=DEFAULT_SPECIFIC_RISK_TITLE_TERMS,
+    )
+
     document_language_context_terms = _config_terms(
         classification,
         "document_language_context_terms",
         fallback=DEFAULT_DOCUMENT_LANGUAGE_CONTEXT_TERMS,
-    )
-
-    normalized_title = _normalize_semantic_text(
-        clean_title,
     )
 
     speech_neuroprosthesis_title = contains_any(
@@ -1345,6 +1369,11 @@ def suggest_priority(
     ethics_title = contains_any(
         normalized_title,
         ethics_terms,
+    )
+
+    specific_risk_title = contains_any(
+        normalized_title,
+        specific_risk_title_terms,
     )
 
     document_language_context = contains_any(
@@ -1398,6 +1427,7 @@ def suggest_priority(
         and technology_abstract
         and evidence.integration_abstract
         and not external_analysis_context
+        and not document_language_context
     ):
         return "A1-central-integracao-llm"
 
@@ -1501,8 +1531,11 @@ def suggest_priority(
     ):
         return "A3-central-riscos-governanca"
 
+    # Quando a interface aparece somente no resumo, o título precisa
+    # apresentar um risco neuroespecífico. "Ethics" ou "governance"
+    # genéricos não são suficientes.
     if (
-        evidence.strong_risk_title
+        specific_risk_title
         and evidence.interface_abstract
         and not external_analysis_context
     ):

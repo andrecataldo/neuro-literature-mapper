@@ -1,4 +1,4 @@
-schema_version: '1.2'
+schema_version: '1.2.1'
 
 cases:
   - id: chatbci-llm-integration
@@ -238,10 +238,12 @@ cases:
     expected_priority: B-apoio
 
   - id: safety-as-bibliometric-theme
-    title: Identifying Thematics in Brain-Computer Interface Research
+    title: >-
+      Identifying Thematics in a Brain‐Computer Interface Research
     abstract: >-
-      A bibliometric analysis identifies themes including rehabilitation,
-      safety, security, education and entertainment.
+      This umbrella review examines shifts in BCI research themes.
+      Applications include education, gaming, safety and security.
+      Ethics and legal oversight are discussed as future trends.
     expected_priority: B-apoio
 
   - id: semantic-reconstruction-with-privacy-discussion
@@ -330,3 +332,49 @@ cases:
       Human Arm Prosthesis using sEMG signals
     abstract: ''
     expected_priority: D-descartar
+
+  - id: llm-bci-with-posts-as-application
+    title: >-
+      Human intention inference with a large language model can
+      enhance brain-computer interface control
+    abstract: >-
+      We developed a neural decoder that integrates neural and
+      oculomotor signals with contextual information using an LLM
+      agent. The experiment included selecting posts in a social
+      networking service.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+
+  - id: mental-privacy-with-thematic-analysis-method
+    title: >-
+      Does brain-computer interface-based mind reading threaten
+      mental privacy?
+    abstract: >-
+      The study examines neurorights and mental privacy in BCI-based
+      mind reading. Interviews with experts were examined using
+      reflexive thematic analysis.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+
+  - id: broad-ethics-with-incidental-bci
+    title: >-
+      Postplagiarism: transdisciplinary ethics and integrity in the
+      age of artificial intelligence and neurotechnology
+    abstract: >-
+      The article examines academic integrity in education and
+      describes brain-computer interfaces as one example of future
+      neurotechnology.
+    expected_priority: B-apoio
+
+  - id: llama-fmri-language-decoding
+    title: >-
+      The Capacity of Thought: Benchmarking Llama 3.2 in Semantic
+      fMRI Neural Language Decoding
+    abstract: >-
+      Llama 3.2 is evaluated as a language model for decoding
+      continuous language from fMRI brain signals.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+    expected_tags_contains:
+      - ai:llm
+      - signal:fmri
