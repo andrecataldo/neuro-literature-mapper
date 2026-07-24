@@ -7,7 +7,7 @@ includes:
   venues: venues_neuro.yaml
 
 settings:
-  per_page: 5
+  per_page: 10
   year_min: 2018
   language: en
   enforce_year_filter: true

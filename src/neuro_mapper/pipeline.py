@@ -19,6 +19,42 @@ SOURCE_QUALITY = {
     "crossref": 1,
 }
 
+SOURCE_CANONICAL_NAMES = {
+    "crossref": "Crossref",
+    "openalex": "OpenAlex",
+    "semantic scholar": "Semantic Scholar",
+}
+
+SOURCE_CANONICAL_ORDER = {
+    "crossref": 0,
+    "openalex": 1,
+    "semantic scholar": 2,
+}
+
+SUPPLEMENTARY_PATTERNS = [
+    # Materiais explicitamente identificados como anexos.
+    r"\b(?:supplementary|supplemental)\s+"
+    r"(?:material|materials|file|files|data|dataset|appendix|"
+    r"figure|figures|table|tables)\b",
+
+    # Exemplos: _supp1, -supp4-, supp2.xlsx.
+    r"(?:^|[_\-\s])supp\d+(?:[_\-\s.]|$)",
+
+    # Extensões típicas de arquivos auxiliares.
+    r"\.(?:png|jpe?g|gif|tiff?|xlsx?|xls|docx?|pptx?|"
+    r"zip|rar|7z|csv)(?:$|[?#])",
+
+        # Ativos editoriais retornados como registros independentes.
+    # Exemplos: "Figure 4:", "Fig. 2:", "Table 3:".
+    r"^\s*(?:fig(?:ure)?\.?|table)\s+"
+    r"\d+[a-z]?\s*[:.\-]",
+
+    # DOI ou URL de figuras e tabelas.
+    # Exemplos: /fig-4, /figure-2, /table-3.
+    r"(?:/|#)(?:fig(?:ure)?|table)-?"
+    r"\d+[a-z]?(?:$|[?#\s])",
+]
+
 SOURCE_HANDLERS = [
     ("openalex", "OpenAlex", search_openalex),
     ("crossref", "Crossref", search_crossref),
@@ -184,42 +220,95 @@ def classify_records(
 
     Venue, query e fonte são usados para rastreabilidade, status da publicação
     e completude dos metadados, nunca como evidência semântica.
+
+    Registros inválidos ou materiais suplementares são descartados antes da
+    classificação temática.
     """
+
     classified: list[WorkRecord] = []
 
     for record in records:
-        record.suggested_priority = suggest_priority(
-            config=config,
-            title=record.title,
-            abstract=record.abstract,
-            venue=record.venue,
-            query="",
-            source_api=record.source_api,
-        )
-        record.suggested_tags = "; ".join(
-            suggest_tags(
-                config,
-                record.title,
-                record.abstract,
-            )
-        )
-        record.corrente = infer_corrente(
-            record.title,
-            record.abstract,
-            config,
-        )
         record.publication_status = infer_publication_status(
             record,
             config,
         )
-        record.metadata_completeness = infer_metadata_completeness(
-            record
+
+        has_title = bool(
+            (record.title or "").strip()
         )
+
+        discard_for_hygiene = (
+            not has_title
+            or record.publication_status == "supplementary-material"
+        )
+
+        if discard_for_hygiene:
+            record.suggested_priority = "D-descartar"
+            record.suggested_tags = ""
+            record.corrente = (
+                "Literatura de apoio / A classificar"
+            )
+        else:
+            record.suggested_priority = suggest_priority(
+                config=config,
+                title=record.title,
+                abstract=record.abstract,
+                venue=record.venue,
+                query="",
+                source_api=record.source_api,
+            )
+
+            record.suggested_tags = "; ".join(
+                suggest_tags(
+                    config,
+                    record.title,
+                    record.abstract,
+                )
+            )
+
+            record.corrente = infer_corrente(
+                record.title,
+                record.abstract,
+                config,
+            )
+
+        record.metadata_completeness = (
+            infer_metadata_completeness(record)
+        )
+
         record.classification_confidence = ""
         classified.append(record)
 
     return classified
 
+def is_supplementary_material(
+    record: WorkRecord,
+) -> bool:
+    """
+    Detecta arquivos auxiliares, materiais suplementares e ativos
+    editoriais.
+
+    A análise usa título, URL e DOI. A palavra isolada
+    "supplementary" não é suficiente, evitando falsos positivos
+    como "supplementary motor area".
+    """
+
+    text = " ".join(
+        [
+            record.title or "",
+            record.url or "",
+            record.doi or "",
+        ]
+    ).strip().lower()
+
+    if not text:
+        return False
+
+    return any(
+        re.search(pattern, text, flags=re.IGNORECASE)
+        is not None
+        for pattern in SUPPLEMENTARY_PATTERNS
+    )
 
 def infer_publication_status(
     record: WorkRecord,
@@ -229,6 +318,7 @@ def infer_publication_status(
     Infere o status bibliográfico sem confundi-lo com relevância temática.
 
     Valores:
+    - supplementary-material
     - review-comment
     - preprint
     - published-record
@@ -237,6 +327,8 @@ def infer_publication_status(
     classification = config.get("classification", {})
     if not isinstance(classification, dict):
         classification = {}
+    if is_supplementary_material(record):
+        return "supplementary-material"
 
     review_prefixes = classification.get(
         "review_comment_prefixes",
@@ -285,9 +377,10 @@ def infer_metadata_completeness(record: WorkRecord) -> str:
     - medium: resumo presente, mas algum metadado importante está ausente;
     - low: resumo ausente.
     """
+    title = (record.title or "").strip()
     abstract = (record.abstract or "").strip()
 
-    if not abstract:
+    if not title or not abstract:
         return "low"
 
     complete_core = all(
@@ -371,7 +464,7 @@ def merge_duplicate_group(records: list[WorkRecord]) -> WorkRecord:
     )
     merged = deepcopy(ranked[0])
 
-    merged.source_api = _join_unique(
+    merged.source_api = _join_sources(
         record.source_api for record in records
     )
     merged.query_layer = _join_unique(
@@ -477,6 +570,14 @@ def normalize_title(title: str | None) -> str:
     )
     value = value.casefold()
 
+    # Remove prefixos editoriais que não fazem parte do título.
+    value = re.sub(
+        r"^(?:(?:paper|article|manuscript)\s+)?"
+        r"title\s*[:\-]\s*",
+        "",
+        value,
+    )
+
     # Remove marcadores finais de versão, mas não remove "Review of".
     value = re.sub(
         r"^(?:preprint|accepted manuscript)\s*[:\-]?\s*",
@@ -533,6 +634,59 @@ def _best_text(
         for record in ranked_records
     )
 
+def _normalize_source_key(source: str) -> str:
+    """Normaliza o identificador de uma fonte bibliográfica."""
+
+    value = source.strip().casefold()
+    value = re.sub(r"[_\s]+", " ", value)
+
+    return value.strip()
+
+
+def _join_sources(values: Iterable[str]) -> str:
+    """
+    Combina fontes em ordem canônica e sem duplicatas.
+
+    Ordem:
+    Crossref | OpenAlex | Semantic Scholar
+    """
+
+    sources: dict[str, str] = {}
+
+    for value in values:
+        for part in str(value or "").split("|"):
+            cleaned = part.strip()
+
+            if not cleaned:
+                continue
+
+            source_key = _normalize_source_key(cleaned)
+
+            canonical_name = SOURCE_CANONICAL_NAMES.get(
+                source_key,
+                cleaned,
+            )
+
+            sources.setdefault(
+                source_key,
+                canonical_name,
+            )
+
+    ordered_sources = sorted(
+        sources.items(),
+        key=lambda item: (
+            SOURCE_CANONICAL_ORDER.get(
+                item[0],
+                99,
+            ),
+            item[0],
+        ),
+    )
+
+    return " | ".join(
+        display_name
+        for _, display_name in ordered_sources
+    )
 
 def _join_unique(values: Iterable[str]) -> str:
     unique: list[str] = []

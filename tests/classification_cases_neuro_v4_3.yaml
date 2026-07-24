@@ -1,0 +1,380 @@
+schema_version: '1.2.1'
+
+cases:
+  - id: chatbci-llm-integration
+    title: >-
+      ChatBCI, a P300 speller BCI with context-driven word prediction
+      leveraging large language models
+    abstract: >-
+      The brain-computer interface uses a large language model to improve
+      word prediction and sentence composition.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+    expected_tags_contains:
+      - domain:bci
+      - ai:llm
+    expected_tags_excludes:
+      - ai:language-model
+
+  - id: neural-decoding-gpt-integration
+    title: >-
+      Enhancing Neural Decoding with Large Language Models:
+      A GPT-Based Approach
+    abstract: >-
+      Large language models are used to improve neural speech decoding
+      from cortical recordings.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+    expected_tags_contains:
+      - ai:llm
+      - decoding:neural
+
+  - id: videochat-software-neural-interface
+    title: 'VideoChat: Chat-Centric Video Understanding'
+    abstract: >-
+      A neural interface connects a video encoder to a large language
+      model for video understanding.
+    expected_priority: D-descartar
+    expected_tags_excludes:
+      - domain:neural-interface
+
+  - id: brain-model-inspired-by-llm
+    title: >-
+      Large Brain Model for Learning Generic Representations
+      with Tremendous EEG Data in BCI
+    abstract: >-
+      Inspired by large language models, the system learns generic
+      representations from EEG data for brain-computer interface
+      classification.
+    expected_priority: B-apoio
+    expected_tags_contains:
+      - domain:bci
+      - signal:eeg
+      - ai:llm
+    expected_tags_excludes:
+      - ai:language-model
+
+  - id: intracortical-brain-to-text
+    title: >-
+      High-performance brain-to-text communication via handwriting
+    abstract: >-
+      Intracortical neural activity is decoded into text from imagined
+      handwriting.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+    expected_tags_contains:
+      - decoding:brain-to-text
+      - signal:intracortical
+
+  - id: literary-brain-to-text
+    title: >-
+      Brain Text, Brain-to-Text, and the Mind Style of Literature
+    abstract: >-
+      This literary study examines narrative style, fiction and
+      representations of thought in literature.
+    expected_priority: D-descartar
+
+  - id: metaverse-bci-survey
+    title: >-
+      A Human-Centric Metaverse Enabled by Brain-Computer Interface:
+      A Survey
+    abstract: >-
+      The survey discusses brain-computer interfaces as one component
+      of future human-centric metaverse environments.
+    expected_priority: B-apoio
+    expected_tags_contains:
+      - domain:bci
+
+  - id: bci-privacy-security
+    title: Privacy and Security in Brain-Computer Interfaces
+    abstract: >-
+      The study analyzes privacy, security and governance risks directly
+      associated with brain-computer interfaces.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+    expected_tags_contains:
+      - domain:bci
+      - governance:privacy
+      - governance:security
+      - governance:governance
+
+  - id: incidental-autonomy
+    title: >-
+      Improving EEG Based Brain Computer Interface Emotion Detection
+    abstract: >-
+      The model improves emotion detection accuracy and may support user
+      autonomy in future applications.
+    expected_priority: B-apoio
+    expected_tags_contains:
+      - domain:bci
+      - signal:eeg
+      - governance:autonomy
+
+  - id: broad-neurotechnology-governance
+    title: Issues in Neurotechnology Governance
+    abstract: >-
+      This article discusses governance and responsibility in
+      neurotechnology at a broad societal level.
+    expected_priority: B-apoio
+    expected_tags_contains:
+      - domain:neurotechnology
+      - governance:governance
+
+  - id: artificial-neural-network-privacy
+    title: Neural Privacy in Federated Neural Networks
+    abstract: >-
+      The study presents privacy-preserving neural network training for
+      distributed machine learning systems.
+    expected_priority: D-descartar
+    expected_tags_excludes:
+      - governance:neural-privacy
+      - domain:neural-interface
+
+  - id: mental-privacy-bci
+    title: Mental Privacy in Brain-Computer Interfaces
+    abstract: >-
+      The study examines mental privacy, brain data protection and
+      neurorights in brain-computer interface systems.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+    expected_tags_contains:
+      - domain:bci
+      - governance:neural-privacy
+      - governance:neurorights
+
+  - id: unicode-dash-llm-bci-integration
+    title: >-
+      Large language models integrated into brain–computer interfaces
+    abstract: >-
+      The study integrates large language models into brain–computer
+      interface systems.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+    expected_tags_contains:
+      - domain:bci
+      - ai:llm
+
+  - id: unicode-dash-bci-privacy
+    title: >-
+      Privacy Transfer Dilemma in Brain–Computer Interfaces
+    abstract: >-
+      The study analyzes privacy risks in brain–computer interface
+      data transfer.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+    expected_tags_contains:
+      - domain:bci
+      - governance:privacy
+
+  - id: positive-integration-with-unrelated-absence
+    title: Reading Embeddings from EEG
+    abstract: >-
+      We use large language models to generate reading embeddings from EEG.
+      The method also operates in the absence of task-specific details.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+
+  - id: eeg2text-built-on-language-model
+    title: EEG2TEXT-CN
+    abstract: >-
+      The EEG-to-text architecture is built on a pretrained language
+      model and neural EEG representations.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+
+  - id: prior-work-language-model
+    title: >-
+      Neural Decoding of Overt Speech from ECoG Using Vision Transformers
+    abstract: >-
+      Previous studies used language models for speech decoding.
+      We propose a vision transformer that reconstructs speech directly
+      from ECoG recordings.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: text-generation-is-decoding-output
+    title: >-
+      Text Generation of Speech Imagery Based on an Enhanced CTA-BiLSTM
+    abstract: >-
+      The system decodes imagined speech from EEG signals into text using
+      an enhanced CTA-BiLSTM architecture.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: intracranial-depth-electrode-speech
+    title: >-
+      Synthesizing Speech from Intracranial Depth Electrodes
+    abstract: >-
+      Speech is synthesized from intracranial neural recordings acquired
+      with depth electrodes.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: emg-speech-neuroprosthesis
+    title: >-
+      Non-invasive Electromyographic Speech Neuroprosthesis
+    abstract: >-
+      The system reconstructs speech from surface EMG muscle signals
+      without recording brain activity.
+    expected_priority: B-apoio
+
+  - id: nlp-analysis-of-bci-posts
+    title: >-
+      Public Perception of Brain-Computer Interfaces Based on Data on X
+    abstract: >-
+      Natural language processing is used to analyze social media posts
+      and public perception of brain-computer interfaces.
+    expected_priority: B-apoio
+    expected_tags_contains:
+      - domain:bci
+      - ai:nlp
+
+  - id: security-as-application-area
+    title: >-
+      Brain-Computer Interfacing: An Introduction
+    abstract: >-
+      Applications of brain-computer interfaces include gaming,
+      education, art, lie detection and security.
+    expected_priority: B-apoio
+
+  - id: safety-as-bibliometric-theme
+    title: >-
+      Identifying Thematics in a Brain‐Computer Interface Research
+    abstract: >-
+      This umbrella review examines shifts in BCI research themes.
+      Applications include education, gaming, safety and security.
+      Ethics and legal oversight are discussed as future trends.
+    expected_priority: B-apoio
+
+  - id: semantic-reconstruction-with-privacy-discussion
+    title: >-
+      Semantic Reconstruction of Continuous Language from
+      Non-invasive Brain Recordings
+    abstract: >-
+      A semantic decoder reconstructs continuous language from fMRI brain
+      recordings. The study also discusses implications for mental privacy.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: risk-contribution-in-abstract
+    title: Challenges of Brain-Computer Interfaces
+    abstract: >-
+      This study examines privacy risks, security threats and
+      vulnerabilities in brain-computer interface systems.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+
+  - id: ethics-bci-medicine
+    title: >-
+      Ethics and the emergence of brain-computer interface medicine
+    abstract: >-
+      Brain-computer interfaces introduce ethical challenges involving
+      neural privacy, agency and authenticity. The chapter proposes an
+      ethical framework for BCI medicine.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+
+  - id: ethical-neuroprosthetic-speech
+    title: >-
+      Neuroprosthetic Speech: The Ethical Significance of Accuracy,
+      Control and Pragmatics
+    abstract: >-
+      The study analyzes the ethical significance of accuracy, control
+      and authenticity in neural speech prostheses.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+
+  - id: cortical-signal-speech-neuroprosthesis
+    title: >-
+      Generalizable spelling using a speech neuroprosthesis
+    abstract: >-
+      Direct cortical signals are decoded into letters and sentences
+      using a speech neuroprosthesis.
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: speech-neuroprosthesis-title-only
+    title: The speech neuroprosthesis
+    abstract: ''
+    expected_priority: A2-central-decoding-linguagem
+    expected_corrente: Decodificação Neural de Linguagem
+
+  - id: clinical-bci-review-incidental-ethics
+    title: >-
+      Brain-computer interfaces: the innovative key to unlocking
+      neurological conditions
+    abstract: >-
+      This comprehensive clinical review examines BCI applications in
+      neurological disorders. It concludes by discussing future
+      directions and the need for ethical considerations.
+    expected_priority: B-apoio
+
+  - id: eeg-report-language-model
+    title: >-
+      NeuroLex: A Lightweight Domain Language Model for EEG Report
+      Understanding and Generation
+    abstract: ''
+    expected_priority: B-apoio
+
+  - id: external-public-perception-with-risks
+    title: >-
+      Public Perception of the Brain-Computer Interface Based on
+      Data on X
+    abstract: >-
+      Natural language processing and sentiment analysis are applied to
+      social media posts about BCI. The discussion mentions privacy and
+      security concerns.
+    expected_priority: B-apoio
+
+  - id: peripheral-arm-prosthesis
+    title: >-
+      Deep Learning with Convolutional Neural Network for Controlling
+      Human Arm Prosthesis using sEMG signals
+    abstract: ''
+    expected_priority: D-descartar
+
+  - id: llm-bci-with-posts-as-application
+    title: >-
+      Human intention inference with a large language model can
+      enhance brain-computer interface control
+    abstract: >-
+      We developed a neural decoder that integrates neural and
+      oculomotor signals with contextual information using an LLM
+      agent. The experiment included selecting posts in a social
+      networking service.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+
+  - id: mental-privacy-with-thematic-analysis-method
+    title: >-
+      Does brain-computer interface-based mind reading threaten
+      mental privacy?
+    abstract: >-
+      The study examines neurorights and mental privacy in BCI-based
+      mind reading. Interviews with experts were examined using
+      reflexive thematic analysis.
+    expected_priority: A3-central-riscos-governanca
+    expected_corrente: Riscos e Governança em BMI/BCI
+
+  - id: broad-ethics-with-incidental-bci
+    title: >-
+      Postplagiarism: transdisciplinary ethics and integrity in the
+      age of artificial intelligence and neurotechnology
+    abstract: >-
+      The article examines academic integrity in education and
+      describes brain-computer interfaces as one example of future
+      neurotechnology.
+    expected_priority: B-apoio
+
+  - id: llama-fmri-language-decoding
+    title: >-
+      The Capacity of Thought: Benchmarking Llama 3.2 in Semantic
+      fMRI Neural Language Decoding
+    abstract: >-
+      Llama 3.2 is evaluated as a language model for decoding
+      continuous language from fMRI brain signals.
+    expected_priority: A1-central-integracao-llm
+    expected_corrente: Integração BMI/BCI e LLMs
+    expected_tags_contains:
+      - ai:llm
+      - signal:fmri

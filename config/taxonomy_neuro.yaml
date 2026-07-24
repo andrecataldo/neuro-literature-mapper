@@ -1,4 +1,4 @@
-schema_version: '1.2'
+schema_version: '1.6'
 project:
   name: Neuro Literature Mapper
   purpose: Taxonomia para classificação de literatura sobre integração BMI/BCI–LLM, decodificação neural de linguagem, interação humana, vieses, privacidade, segurança e governança.
@@ -44,6 +44,8 @@ classification:
   - neurotechnology
   - neuroengineering
   - interface
+  - spelling
+  - word prediction
   broad_neuro_terms:
   - neurotechnology
   - neuroengineering
@@ -163,16 +165,36 @@ classification:
   - parameter count
   - training efficiency
   - inference throughput
-  explicit_interface_terms:
+  strong_interface_terms:
   - brain-computer interface
   - brain computer interface
   - brain-machine interface
   - brain machine interface
-  - neural interface
   - brain interface
   - chatbci
   - bci speller
   - p300 speller
+  ambiguous_interface_terms:
+  - neural interface
+  neural_interface_context_terms:
+  - brain
+  - brain signal
+  - brain signals
+  - brain activity
+  - cortical
+  - intracortical
+  - neural signal
+  - neural signals
+  - neural recording
+  - neural recordings
+  - eeg
+  - ecog
+  - fmri
+  - meg
+  - fnirs
+  - p300
+  - ssvep
+  - motor imagery
   brain_context_terms:
   - brain
   - cortical
@@ -188,6 +210,44 @@ classification:
   - p300
   - ssvep
   - motor imagery
+  neural_signal_terms:
+  - brain signal
+  - brain signals
+  - brain activity
+  - brain recording
+  - brain recordings
+  - cortical signal
+  - cortical signals
+  - direct cortical signal
+  - direct cortical signals
+  - cortical activity
+  - cortical recording
+  - cortical recordings
+  - intracortical
+  - intracranial
+  - intracranial electrode
+  - intracranial electrodes
+  - intracranial depth electrode
+  - intracranial depth electrodes
+  - depth electrode
+  - depth electrodes
+  - neural signal
+  - neural signals
+  - neural activity
+  - neural recording
+  - neural recordings
+  - eeg
+  - ecog
+  - fmri
+  - meg
+  - fnirs
+  - seeg
+  - stereo-electroencephalography
+  - p300
+  - ssvep
+  - motor imagery
+  - neural implant
+  - brain implant
   language_decoding_terms:
   - neural decoding
   - speech decoding
@@ -197,16 +257,30 @@ classification:
   - brain to text
   - eeg-to-text
   - eeg to text
+  - eeg2text
   - imagined speech
+  - speech imagery
   - attempted speech
   - covert speech
   - silent speech
   - language reconstruction
+  - semantic reconstruction
   - speech reconstruction
+  - reconstructing speech
+  - reconstructed speech
+  - speech is reconstructed
   - speech synthesis
+  - synthesize speech
+  - synthesizing speech
   - speech neuroprosthesis
   - neural speech prosthesis
   - imagined handwriting
+  - brain waves-to-text
+  - brain waves to text
+  - brain signal-to-text
+  - brain signals-to-text
+  - brain signal to text
+  - brain signals to text
   strong_llm_terms:
   - large language model
   - large language models
@@ -216,6 +290,8 @@ classification:
   - genai
   - gpt
   - chatgpt
+  - llama
+
   language_assistance_terms:
   - language model
   - language models
@@ -227,6 +303,344 @@ classification:
   - word prediction
   - predictive text
   - context-driven word prediction
+  a1_language_technology_terms:
+  - language model
+  - language models
+  - pretrained language model
+  - pre-trained language model
+  - generative language model
+  - natural language processing
+  - nlp
+  - word prediction
+  - predictive text
+  - context-driven word prediction
+  - language-model
+  - language-models
+  integration_relation_terms:
+  - use
+  - uses
+  - using
+  - integrate
+  - integrates
+  - integrating
+  - integrated with
+  - leverage
+  - leverages
+  - leveraging
+  - assist
+  - assists
+  - assisted by
+  - powered by
+  - augment
+  - augments
+  - augmented with
+  - guide
+  - guides
+  - guided by
+  - incorporate
+  - incorporates
+  - incorporating
+  - combined with
+  - based on
+  - driven by
+  - enhance
+  - enhances
+  - enhancing
+  - post-processing with
+  - postprocessing with
+  - rerank
+  - reranking
+  - word prediction
+  - integrated into
+  - integration of
+  - built on
+  - built upon
+  - builds on
+  - builds upon
+  - employ
+  - employs
+  - employed
+  - utilize
+  - utilizes
+  - utilizing
+  - coupled with
+  weak_integration_terms:
+  - inspired by
+  - similar to
+  - analogous to
+  - compared with
+  - compared to
+  - unlike
+  - without
+  - does not use
+  - do not use
+  - did not use
+  - not using
+  - absence of
+  - prompting us to explore
+  prior_work_terms:
+  - previous studies
+  - previous study
+  - prior studies
+  - prior study
+  - earlier studies
+  - previous work
+  - prior work
+  - earlier work
+  - existing work
+  - existing approaches
+  - previous approaches
+  - prior approaches
+  - recent studies have
+  - the literature has
+  - state of the art
+
+  external_analysis_terms:
+  - public perception
+  - social media
+  - social network
+  - posts
+  - tweets
+  - sentiment analysis
+  - topic modeling
+  - topic modelling
+  - discourse analysis
+  - bibliometric analysis
+  - bibliometric study
+  - literature analysis
+  - literature review
+  - thematic analysis
+  - research thematics
+  - thematics
+  - research themes
+  - umbrella review
+
+  risk_contribution_terms:
+  - analyze
+  - analyzes
+  - analyse
+  - analyses
+  - examine
+  - examines
+  - investigate
+  - investigates
+  - assess
+  - assesses
+  - evaluate
+  - evaluates
+  - address
+  - addresses
+  - focuses on
+  - risk
+  - risks
+  - threat
+  - threats
+  - vulnerability
+  - vulnerabilities
+  - privacy concern
+  - privacy concerns
+  - security concern
+  - security concerns
+  - ethical implication
+  - ethical implications
+
+  peripheral_signal_terms:
+  - electromyographic
+  - electromyography
+  - surface electromyography
+  - surface emg
+  - emg signal
+  - emg signals
+  - muscle signal
+  - muscle signals
+
+  speech_neuroprosthesis_terms:
+  - speech neuroprosthesis
+  - speech neuroprostheses
+  - neural speech prosthesis
+  - neural speech prostheses
+  - neuroprosthetic speech
+
+  ethics_terms:
+  - ethics
+  - ethical
+  - ethical challenge
+  - ethical challenges
+  - ethical framework
+  - ethical significance
+  - ethical consideration
+  - ethical considerations
+
+  specific_risk_title_terms:
+  - mental privacy
+  - neural privacy
+  - brain privacy
+  - brain data privacy
+  - neurorights
+  - cognitive liberty
+  - mental integrity
+  - neural data ownership
+
+  ambiguous_language_model_terms:
+  - sign language model
+  - sign-language model
+
+  alignment_analysis_title_terms:
+  - align with the brain
+  - alignment with the brain
+  - brain alignment
+  - brain-like
+  - converge
+  - convergence
+  - mirror cognitive
+  - representational similarity
+
+  generic_decoding_terms:
+  - neural decoding
+  - brain decoding
+
+  explicit_language_decoding_terms:
+  - speech decoding
+  - semantic decoding
+  - language decoding
+  - brain-to-text
+  - brain to text
+  - eeg-to-text
+  - eeg to text
+  - eeg2text
+  - imagined speech
+  - speech imagery
+  - attempted speech
+  - covert speech
+  - silent speech
+  - language reconstruction
+  - semantic reconstruction
+  - speech reconstruction
+  - reconstructing speech
+  - reconstructed speech
+  - speech is reconstructed
+  - speech synthesis
+  - synthesize speech
+  - synthesizing speech
+  - speech neuroprosthesis
+  - neural speech prosthesis
+  - imagined handwriting
+  - brain waves-to-text
+  - brain waves to text
+  - brain signal-to-text
+  - brain signals-to-text
+  - brain signal to text
+  - brain signals to text
+
+  language_output_terms:
+  - speech
+  - spoken language
+  - language
+  - sign language
+  - word
+  - words
+  - sentence
+  - sentences
+  - spelling
+  - handwriting
+  - phoneme
+  - phonemes
+  - phonetic
+  - articulatory
+
+  communication_output_terms:
+  - brain-to-text
+  - brain to text
+  - eeg-to-text
+  - eeg to text
+  - eeg2text
+  - text generation
+  - word prediction
+  - predictive text
+  - context-driven word prediction
+  - speller
+  - spelling
+  - sentence composition
+  - assistive communication
+  - speech decoding
+  - language decoding
+  - speech neuroprosthesis
+  - neural speech prosthesis
+  - imagined speech
+  - attempted speech
+  - covert speech
+  - silent speech
+  - typing
+  - typing prediction
+  - communication system
+  - bci communication
+  - augmentative and alternative communication
+  - icon-based communication
+
+  broad_review_title_terms:
+  - systematic review
+  - scoping review
+  - literature review
+  - umbrella review
+  - introductory tutorial
+  - tutorial
+  - overview
+  - survey
+
+  security_application_terms:
+  - authentication
+  - user identification
+  - identity verification
+  - biometric
+  - biometrics
+  - access control
+  - personal device security
+  - lie detection
+  - fraud detection
+
+  risk_framing_title_terms:
+  - risk
+  - risks
+  - threat
+  - threats
+  - vulnerability
+  - vulnerabilities
+  - privacy
+  - neural privacy
+  - mental privacy
+  - attack
+  - attacks
+  - ethical
+  - ethics
+  - governance
+  - neurorights
+  - safety
+
+  nlp_architecture_transfer_terms:
+  - widely used for natural language processing tasks
+  - commonly used for natural language processing tasks
+  - originally developed for natural language processing
+  - developed for natural language processing tasks
+
+  document_language_context_terms:
+  - eeg report
+  - eeg reports
+  - electroencephalography report
+  - electroencephalography reports
+  - report understanding
+  - report generation
+  - report summarization
+  - report summarisation
+  - report classification
+  - clinical interpretation
+  - clinical narrative
+  - clinical narratives
+  - clinical reporting
+  - clinical report
+  - clinical reports
+  - clinical description
+  - clinical descriptions
+
   risk_governance_terms:
   - bias
   - cognitive bias
@@ -258,6 +672,51 @@ classification:
   - agency
   - liability
   - responsibility
+  strong_risk_governance_terms:
+  - bias
+  - cognitive bias
+  - algorithmic bias
+  - confirmation bias
+  - anchoring bias
+  - automation bias
+  - hallucination
+  - error propagation
+  - privacy
+  - neural privacy
+  - mental privacy
+  - security
+  - cybersecurity
+  - safety
+  - neuroethics
+  - ethics
+  - ethical
+  - ethical challenge
+  - ethical challenges
+  - ethical framework
+  - ethical significance
+  - ethical consideration
+  - ethical considerations
+  - neurorights
+  - governance
+  - informed consent
+  - data ownership
+  - neural data ownership
+  - mental integrity
+  - cognitive liberty
+  - threat
+  - threats
+  - vulnerability
+  - vulnerabilities
+
+  non_neural_decoding_terms:
+  - literature
+  - literary
+  - literary studies
+  - mind style
+  - narratology
+  - fiction
+  - poetics
+
   review_comment_prefixes:
   - 'review of:'
   - 'review of '
@@ -344,6 +803,7 @@ tags:
   - llms
   - gpt
   - chatgpt
+  - llama
   ai:generative-ai:
   - generative ai
   - genai
@@ -419,6 +879,11 @@ tags:
   - error propagation
   - cascading error
   - pipeline error
+  governance:governance:
+  - governance
+  - governance framework
+  - governance model
+  - regulatory governance
   governance:privacy:
   - privacy
   - data privacy
