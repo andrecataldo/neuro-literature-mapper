@@ -1,0 +1,395 @@
+schema_version: '1.0'
+cases:
+- id: v4-3f-audit-01-a-proposed-sign-language-model-for-speechless-persons-u
+  title: A PROPOSED SIGN LANGUAGE MODEL FOR SPEECHLESS PERSONS USING EEG SIGNALS
+  abstract: Recently, algorithms of machine learning are widely used with the field of electroencephalography
+    (EEG)-Brain-Computer interfaces (BCI). In this paper, a sign language software model based on the
+    EEG brain signal was implemented, to help the speechless persons to communicate their thoughts to
+    others.  The preprocessing stage for the EEG signals was performed by applying the Principle Component
+    Analysis (PCA) algorithm to extract the important features and reducing the data redundancy. A model
+    for classifying ten classes of EEG signals, including  Facial Expression(FE) and some Motor Execution(ME)
+    processes, had been designed. A neural network of three hidden layers with deep learning classifier
+    had been used in this work. Data set from four different subjects were collected using a 14 channels
+    Emotiv epoc+ device. A classification results with accuracy 95.75% were obtained ‎for the collected
+    samples. An optimization process was performed on the predicted class with the aid of user, and then
+    sign class will be connected to the specified sentence under a predesigned lock up table.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Modelo de classificação de sinais, não um language model.
+- id: v4-3f-audit-02-a-human-machine-environment-interaction-system-based-on
+  title: A human-machine-environment interaction system based on VLA model and brain-computer interface
+  abstract: The vision language action (VLA) model has shown extraordinary ability in the motion planning
+    of the robots, which has great value in human-machine-environment interaction (HMEI), especially for
+    rehabilitation engineering and robotic arm teleoperation fields. This paper proposes an HMEI system
+    that integrates the brain-computer interface (BCI) with VLA model, enabling robots to interact with
+    surrounding environment according to human intentions. Firstly, neural decoding technique is employed
+    to interpret neural signals into intentions via a time and frequency fusion model. Then, the user’s
+    intentions are converted into a textual instruction, which subsequently guides the VLA model in generating
+    corresponding motion trajectories for robotic arm teleoperation. Experimental results demonstrate
+    smooth and compliant control of the robotic arm, which can be a viable solution for HMEI applications.
+  expected_priority: B-apoio
+  audit_status: revisao-manual
+  reason: Integra BCI e VLA para controle robótico; decidir entre A1 e B.
+- id: v4-3f-audit-03-a-study-on-the-application-of-contrastive-learning-in-t
+  title: A study on the application of contrastive learning in the brain-computer interface of motor imagery
+  abstract: In brain-computer interface (BCI) systems, acquiring EEG signals is relatively easy, but labeling
+    EEG signals is challenging. Supervised learning is widely used in existing BCI research, but its generalization
+    ability is poor due to the influence of labeled data, which is not conducive to the promotion and
+    application of BCI. In the fields of computer vision and natural language processing, self-supervised
+    learning is becoming a popular research direction that can use unlabeled data for learning. In this
+    study, we propose a self-supervised contrastive learning method for identifying motor imagery states
+    by performing different data transformation operations on EEG data to generate positive and negative
+    sample pairs. This allows the pre-trained network to learn general feature representations from the
+    signals, enabling it to converge faster and achieve better classification performance when performing
+    downstream tasks. The network's performance is significantly related to the amount of unlabeled data
+    used in the self-supervised learning process. Through the evaluation of the collected data, we achieved
+    an accuracy of 82.56% in classifying motor imagery states with 40% amount of labeled data, demonstrating
+    the practical value of our method.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: NLP aparece apenas como área de referência metodológica.
+- id: v4-3f-audit-04-advancing-brain-computer-interface-closed-loop-systems-
+  title: 'Advancing Brain-Computer Interface Closed-Loop Systems for Neurorehabilitation: Systematic Review
+    of AI and Machine Learning Innovations in Biomedical Engineering'
+  abstract: Abstract Background Brain-computer interface (BCI) closed-loop systems have emerged as a promising
+    tool in health care and wellness monitoring, particularly in neurorehabilitation and cognitive assessment.
+    With the increasing burden of neurological disorders, including Alzheimer disease and related dementias
+    (AD/ADRD), there is a critical need for real-time, noninvasive monitoring technologies. BCIs enable
+    direct communication between the brain and external devices, leveraging artificial intelligence (AI)
+    and machine learning (ML) to interpret neural signals. However, challenges such as signal noise, data
+    processing limitations, and privacy concerns hinder widespread implementation. Objective The primary
+    objective of this study is to investigate the role of ML and AI in enhancing BCI closed-loop systems
+    for health care applications. Specifically, we aim to analyze the methods and parameters used in these
+    systems, assess the effectiveness of different AI and ML techniques, identify key challenges in their
+    development and implementation, and propose a framework for using BCIs in the longitudinal monitoring
+    of AD/ADRD patients. By addressing these aspects, this study seeks to provide a comprehensive overview
+    of the potential and limitations of AI-driven BCIs in neurological health care. Methods A systematic
+    literature review was conducted following PRISMA (Preferred Reporting Items for Systematic Reviews
+    and Meta-Analyses) guidelines, focusing on studies published between 2019 and 2024. We sourced research
+    articles from PubMed, IEEE, ACM, and Scopus using predefined keywords related to BCIs, AI, and AD/ADRD.
+    A total of 220 papers were initially identified, with 18 meeting the final inclusion criteria. Data
+    extraction followed a structured matrix approach, categorizing studies based on methods, ML algorithms,
+    limitations, and proposed solutions. A comparative analysis was performed to synthesize key findings
+    and trends in AI-enhanced BCI systems for neurorehabilitation and cognitive monitoring. Results The
+    review identified several ML techniques, including transfer learning (TL), support vector machines
+    (SVMs), and convolutional neural networks (CNNs), that enhance BCI closed-loop performance. These
+    methods improve signal classification, feature extraction, and real-time adaptability, enabling accurate
+    monitoring of cognitive states. However, challenges such as long calibration sessions, computational
+    costs, data security risks, and variability in neural signals were also highlighted. To address these
+    issues, emerging solutions such as improved sensor technology, efficient calibration protocols, and
+    advanced AI-driven decoding models are being explored. In addition, BCIs show potential for real-time
+    alert systems that support caregivers in managing AD/ADRD patients. Conclusions BCI closed-loop systems,
+    when integrated with AI and ML, offer significant advancements in neurological health care, particularly
+    in AD/ADRD monitoring and neurorehabilitation. Despite their potential, challenges related to data
+    accuracy, security, and scalability must be addressed for widespread clinical adoption. Future research
+    should focus on refining AI models, improving real-time data processing, and enhancing user accessibility.
+    With continued advancements, AI-powered BCIs can revolutionize personalized health care by providing
+    continuous, adaptive monitoring and intervention for patients with neurological disorders.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Privacidade é desafio incidental em revisão ampla.
+- id: v4-3f-audit-05-an-introductory-tutorial-on-braincomputer-interfaces-an
+  title: An Introductory Tutorial on Brain–Computer Interfaces and Their Applications
+  abstract: The prospect and potentiality of interfacing minds with machines has long captured human imagination.
+    Recent advances in biomedical engineering, computer science, and neuroscience are making brain–computer
+    interfaces a reality, paving the way to restoring and potentially augmenting human physical and mental
+    capabilities. Applications of brain–computer interfaces are being explored in applications as diverse
+    as security, lie detection, alertness monitoring, gaming, education, art, and human cognition augmentation.
+    The present tutorial aims to survey the principal features and challenges of brain–computer interfaces
+    (such as reliable acquisition of brain signals, filtering and processing of the acquired brainwaves,
+    ethical and legal issues related to brain–computer interface (BCI), data privacy, and performance
+    assessment) with special emphasis to biomedical engineering and automation engineering applications.
+    The content of this paper is aimed at students, researchers, and practitioners to glimpse the multifaceted
+    world of brain–computer interfacing.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Tutorial amplo; ética e privacidade são tópicos secundários.
+- id: v4-3f-audit-06-brain-computer-interface-based-user-authentication-syst
+  title: Brain-Computer Interface based User Authentication System for Personal Device Security
+  abstract: ''
+  expected_priority: B-apoio
+  audit_status: revisao-manual
+  reason: Segurança pode ser objetivo biométrico, não risco da BCI.
+- id: v4-3f-audit-07-contextual-feature-extraction-hierarchies-converge-in-l
+  title: Contextual Feature Extraction Hierarchies Converge in Large Language Models and the Brain
+  abstract: Recent advancements in artificial intelligence have sparked interest in the parallels between
+    large language models (LLMs) and human neural processing, particularly in language comprehension.
+    Although previous research has demonstrated similarities between LLM representations and neural responses,
+    the computational principles driving this convergence—especially as LLMs evolve—remain elusive. Here
+    we used intracranial electroencephalography recordings from neurosurgical patients listening to speech
+    to investigate the alignment between high-performance LLMs and the language-processing mechanisms
+    of the brain. We examined a diverse selection of LLMs with similar parameter sizes and found that
+    as their performance on benchmark tasks improves, they not only become more brain-like, reflected
+    in better neural response predictions from model embeddings, but they also align more closely with
+    the hierarchical feature extraction pathways of the brain, using fewer layers for the same encoding.
+    Additionally, we identified commonalities in the hierarchical processing mechanisms of high-performing
+    LLMs, revealing their convergence towards similar language-processing strategies. Finally, we demonstrate
+    the critical role of contextual information in both LLM performance and brain alignment. These findings
+    reveal converging aspects of language processing in the brain and LLMs, offering new directions for
+    developing models that better align with human cognitive processing. Why brain-like feature extraction
+    emerges in large language models (LLMs) remains elusive. Mischler, Li and colleagues demonstrate that
+    high-performing LLMs not only predict neural responses more accurately than other LLMs but also align
+    more closely with the hierarchical language processing pathway in the brain, revealing parallels between
+    these models and human cognitive mechanisms.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Comparação cérebro–LLM, sem integração operacional.
+- id: v4-3f-audit-08-cross-modality-fusion-with-eeg-and-text-for-enhanced-em
+  title: Cross-modality fusion with EEG and text for enhanced emotion detection in English writing
+  abstract: 'Introduction: Emotion detection in written text is critical for applications in human-computer
+    interaction, affective computing, and personalized content recommendation. Traditional approaches
+    to emotion detection primarily leverage textual features, using natural language processing techniques
+    such as sentiment analysis, which, while effective, may miss subtle nuances of emotions. These methods
+    often fall short in recognizing the complex, multimodal nature of human emotions, as they ignore physiological
+    cues that could provide richer emotional insights. Methods: To address these limitations, this paper
+    proposes Emotion Fusion-Transformer, a cross-modality fusion model that integrates EEG signals and
+    textual data to enhance emotion detection in English writing. By utilizing the Transformer architecture,
+    our model effectively captures contextual relationships within the text while concurrently processing
+    EEG signals to extract underlying emotional states. Specifically, the Emotion Fusion-Transformer first
+    preprocesses EEG data through signal transformation and filtering, followed by feature extraction
+    that complements the textual embeddings. These modalities are fused within a unified Transformer framework,
+    allowing for a holistic view of both the cognitive and physiological dimensions of emotion. Results
+    and discussion: Experimental results demonstrate that the proposed model significantly outperforms
+    text-only and EEG-only approaches, with improvements in both accuracy and F1-score across diverse
+    emotional categories. This model shows promise for enhancing affective computing applications by bridging
+    the gap between physiological and textual emotion detection, enabling more nuanced and accurate emotion
+    analysis in English writing.'
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Fusão multimodal para emoção, sem BMI/BCI–LLM.
+- id: v4-3f-audit-09-deep-learning-approaches-for-neural-decoding-across-arc
+  title: Deep learning approaches for neural decoding across architectures and recording modalities
+  abstract: Decoding behavior, perception or cognitive state directly from neural signals is critical
+    for brain-computer interface research and an important tool for systems neuroscience. In the last
+    decade, deep learning has become the state-of-the-art method in many machine learning tasks ranging
+    from speech recognition to image segmentation. The success of deep networks in other domains has led
+    to a new wave of applications in neuroscience. In this article, we review deep learning approaches
+    to neural decoding. We describe the architectures used for extracting useful features from neural
+    recording modalities ranging from spikes to functional magnetic resonance imaging. Furthermore, we
+    explore how deep learning has been leveraged to predict common outputs including movement, speech
+    and vision, with a focus on how pretrained deep networks can be incorporated as priors for complex
+    decoding targets like acoustic speech or images. Deep learning has been shown to be a useful tool
+    for improving the accuracy and flexibility of neural decoding across a wide range of tasks, and we
+    point out areas for future scientific development.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Revisão ampla de modalidades e saídas.
+- id: v4-3f-audit-10-do-large-language-models-mirror-cognitive-language-proc
+  title: Do Large Language Models Mirror Cognitive Language Processing?
+  abstract: Large Language Models (LLMs) have demonstrated remarkable abilities in text comprehension
+    and logical reasoning, indicating that the text representations learned by LLMs can facilitate their
+    language processing capabilities. In neuroscience, brain cognitive processing signals are typically
+    utilized to study human language processing. Therefore, it is natural to ask how well the text embeddings
+    from LLMs align with the brain cognitive processing signals, and how training strategies affect the
+    LLM-brain alignment? In this paper, we employ Representational Similarity Analysis (RSA) to measure
+    the alignment between 23 mainstream LLMs and fMRI signals of the brain to evaluate how effectively
+    LLMs simulate cognitive language processing. We empirically investigate the impact of various factors
+    (e.g., pre-training data size, model scaling, alignment training, and prompts) on such LLM-brain alignment.
+    Experimental results indicate that pre-training data size and model scaling are positively correlated
+    with LLM-brain similarity, and alignment training can significantly improve LLM-brain similarity.
+    Explicit prompts contribute to the consistency of LLMs with brain cognitive language processing, while
+    nonsensical noisy prompts may attenuate such alignment. Additionally, the performance of a wide range
+    of LLM evaluations (e.g., MMLU, Chatbot Arena) is highly correlated with the LLM-brain similarity.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Estudo de alinhamento cérebro–LLM.
+- id: v4-3f-audit-11-enhancing-security-in-brain-computer-interface-applicat
+  title: 'Enhancing security in brain-computer interface applications with deep learning: Electroencephalogram-based
+    user identification'
+  abstract: ''
+  expected_priority: B-apoio
+  audit_status: revisao-manual
+  reason: Identificação biométrica; resumo ausente.
+- id: v4-3f-audit-12-get-a-generative-eeg-transformer-for-continuous-context
+  title: 'GET: A Generative EEG Transformer for Continuous Context-Based Neural Signals'
+  abstract: Generating continuous electroencephalography (EEG) signals through advanced artificial neural
+    networks presents a novel opportunity to enhance brain-computer interface (BCI) technology. This capability
+    has the potential to significantly enhance applications ranging from simulating dynamic brain activity
+    and data augmentation to improving real-time epilepsy detection and BCI inference. By harnessing generative
+    transformer neural networks, specifically designed for EEG signal generation, we can revolutionize
+    the interpretation and interaction with neural data. Generative AI has demonstrated significant success
+    across various domains, from natural language processing (NLP) and computer vision to content creation
+    in visual arts and music. It distinguishes itself by using large-scale datasets to construct context
+    windows during pre-training, a technique that has proven particularly effective in NLP, where models
+    are fine-tuned for specific downstream tasks after extensive foundational training. However, the application
+    of generative AI in the field of BCIs, particularly through the development of continuous, context-rich
+    neural signal generators, has been limited. To address this, we introduce the Generative EEG Transformer
+    (GET), a model leveraging transformer architecture tailored for EEG data. The GET model is pre-trained
+    on diverse EEG datasets, including motor imagery and alpha wave datasets, enabling it to produce high-fidelity
+    neural signals that maintain contextual integrity. Our empirical findings indicate that GET not only
+    faithfully reproduces the frequency spectrum of the training data and input prompts but also robustly
+    generates continuous neural signals. By adopting the successful training strategies of the NLP domain
+    for BCIs, the GET sets a new standard for the development and application of neural signal generation
+    technologies.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Geração de EEG; NLP aparece como analogia metodológica.
+- id: v4-3f-audit-13-natural-scene-reconstruction-from-fmri-signals-using-ge
+  title: Natural scene reconstruction from fMRI signals using generative latent diffusion
+  abstract: In neural decoding research, one of the most intriguing topics is the reconstruction of perceived
+    natural images based on fMRI signals. Previous studies have succeeded in re-creating different aspects
+    of the visuals, such as low-level properties (shape, texture, layout) or high-level features (category
+    of objects, descriptive semantics of scenes) but have typically failed to reconstruct these properties
+    together for complex scene images. Generative AI has recently made a leap forward with latent diffusion
+    models capable of generating high-complexity images. Here, we investigate how to take advantage of
+    this innovative technology for brain decoding. We present a two-stage scene reconstruction framework
+    called "Brain-Diffuser". In the first stage, starting from fMRI signals, we reconstruct images that
+    capture low-level properties and overall layout using a VDVAE (Very Deep Variational Autoencoder)
+    model. In the second stage, we use the image-to-image framework of a latent diffusion model (Versatile
+    Diffusion) conditioned on predicted multimodal (text and visual) features, to generate final reconstructed
+    images. On the publicly available Natural Scenes Dataset benchmark, our method outperforms previous
+    models both qualitatively and quantitatively. When applied to synthetic fMRI patterns generated from
+    individual ROI (region-of-interest) masks, our trained model creates compelling "ROI-optimal" scenes
+    consistent with neuroscientific knowledge. Thus, the proposed methodology can have an impact on both
+    applied (e.g. brain-computer interface) and fundamental neuroscience.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Reconstrução de imagens, não linguagem.
+- id: v4-3f-audit-14-neural-decoding-of-music-from-the-eeg
+  title: Neural decoding of music from the EEG
+  abstract: 'Neural decoding models can be used to decode neural representations of visual, acoustic,
+    or semantic information. Recent studies have demonstrated neural decoders that are able to decode
+    accoustic information from a variety of neural signal types including electrocortiography (ECoG) and
+    the electroencephalogram (EEG). In this study we explore how functional magnetic resonance imaging
+    (fMRI) can be combined with EEG to develop an accoustic decoder. Specifically, we first used a joint
+    EEG-fMRI paradigm to record brain activity while participants listened to music. We then used fMRI-informed
+    EEG source localisation and a bi-directional long-term short term deep learning network to first extract
+    neural information from the EEG related to music listening and then to decode and reconstruct the
+    individual pieces of music an individual was listening to. We further validated our decoding model
+    by evaluating its performance on a separate dataset of EEG-only recordings. We were able to reconstruct
+    music, via our fMRI-informed EEG source analysis approach, with a mean rank accuracy of 71.8% ([Formula:
+    see text], [Formula: see text]). Using only EEG data, without participant specific fMRI-informed source
+    analysis, we were able to identify the music a participant was listening to with a mean rank accuracy
+    of 59.2% ([Formula: see text], [Formula: see text]). This demonstrates that our decoding model may
+    use fMRI-informed source analysis to aid EEG based decoding and reconstruction of acoustic information
+    from brain activity and makes a step towards building EEG-based neural decoders for other complex
+    information domains such as other acoustic, visual, or semantic information.'
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Decodificação de música, não linguagem.
+- id: v4-3f-audit-15-neuroassist-enhancing-cognitive-computer-synergy-with-a
+  title: 'NeuroAssist: Enhancing Cognitive-Computer Synergy with Adaptive AI and Advanced Neural Decoding
+    for Efficient EEG Signal Classification'
+  abstract: Traditional methods of controlling prosthetics frequently encounter difficulties regarding
+    flexibility and responsiveness, which can substantially impact people with varying cognitive and physical
+    abilities. Advancements in computational neuroscience and machine learning (ML) have recently led
+    to the development of highly advanced brain-computer interface (BCI) systems that may be customized
+    to meet individual requirements. To address these issues, we propose NeuroAssist, a sophisticated
+    method for analyzing EEG data that merges state-of-the-art BCI technology with adaptable artificial
+    intelligence (AI) algorithms. NeuroAssist's hybrid neural network design efficiently overcomes the
+    constraints of conventional EEG data processing. Our methodology combines a Natural Language Processing
+    (NLP) BERT model to extract complex features from numerical EEG data and utilizes LSTM networks to
+    handle temporal dynamics. In addition, we integrate spiking neural networks (SNNs) and deep Q-networks
+    (DQN) to improve decision-making and flexibility. Our preprocessing method classifies motor imagery
+    (MI) one-versus-the-rest using a common spatial pattern (CSP) while preserving EEG temporal characteristics.
+    The hybrid architecture of NeuroAssist serves as the DQN's Q-network, enabling continuous feedback-based
+    improvement and adaptability. This enables it to acquire optimal actions through trial and error.
+    This experimental analysis has been conducted on the GigaScience and BCI-competition-IV-2a datasets,
+    which have shown exceptional effectiveness in categorizing MI-EEG signals, obtaining an impressive
+    classification accuracy of 99.17%. NeuroAssist offers a crucial approach to current assistive technology
+    by potentially enhancing the speed and versatility of BCI systems.
+  expected_priority: B-apoio
+  audit_status: revisao-manual
+  reason: BERT aplicado à classificação motora; provável B-apoio.
+- id: v4-3f-audit-16-rgb-d-cameras-and-braincomputer-interfaces-for-human-ac
+  title: 'RGB-D Cameras and Brain–Computer Interfaces for Human Activity Recognition: An Overview'
+  abstract: This paper provides a perspective on the use of RGB-D cameras and non-invasive brain-computer
+    interfaces (BCIs) for human activity recognition (HAR). Then, it explores the potential of integrating
+    both the technologies for active and assisted living. RGB-D cameras can offer monitoring of users
+    in their living environments, preserving their privacy in human activity recognition through depth
+    images and skeleton tracking. Concurrently, non-invasive BCIs can provide access to intent and control
+    of users by decoding neural signals. The synergy between these technologies may allow holistic understanding
+    of both physical context and cognitive state of users, to enhance personalized assistance inside smart
+    homes. The successful deployment in integrating the two technologies needs addressing critical technical
+    hurdles, including computational demands for real-time multi-modal data processing, and user acceptance
+    challenges related to data privacy, security, and BCI illiteracy. Continued interdisciplinary research
+    is essential to realize the full potential of RGB-D cameras and BCIs as AAL solutions, in order to
+    improve the quality of life for independent or impaired people.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Privacidade e segurança aparecem como desafios de implantação.
+- id: v4-3f-audit-17-visual-representations-insights-from-neural-decoding
+  title: 'Visual Representations: Insights from Neural Decoding'
+  abstract: Patterns of brain activity contain meaningful information about the perceived world. Recent
+    decades have welcomed a new era in neural analyses, with computational techniques from machine learning
+    applied to neural data to decode information represented in the brain. In this article, we review
+    how decoding approaches have advanced our understanding of visual representations and discuss efforts
+    to characterize both the complexity and the behavioral relevance of these representations. We outline
+    the current consensus regarding the spatiotemporal structure of visual representations and review
+    recent findings that suggest that visual representations are at once robust to perturbations, yet
+    sensitive to different mental states. Beyond representations of the physical world, recent decoding
+    work has shone a light on how the brain instantiates internally generated states, for example, during
+    imagery and prediction. Going forward, decoding has remarkable potential to assess the functional
+    relevance of visual representations for human behavior, reveal how representations change across development
+    and during aging, and uncover their presentation in various mental disorders.
+  expected_priority: B-apoio
+  audit_status: reclassificacao-clara
+  reason: Decodificação visual.
+- id: v4-3f-collateral-414-a-novel-combination-of-natural-language-processing-and-
+  title: A Novel Combination of Natural Language Processing and Brain Computer Interface in a Communication System
+  abstract: ''
+  expected_priority: A1-central-integracao-llm
+  audit_reason: Título explicita integração entre NLP, BCI e comunicação.
+- id: v4-3f-collateral-492-dynamic-time-window-mechanism-for-time-synchronous-vep-
+  title: Dynamic time window mechanism for time synchronous VEP-based BCIs—Performance evaluation with a dictionary-supported BCI speller employing SSVEP and c-VEP
+  abstract: Brain-Computer Interfaces (BCIs) based on visual evoked potentials (VEPs) allow high communication speeds and accuracies. The fastest speeds can be achieved if targets are identified in a synchronous way (i.e., after a pre-set time period the system will produce a command output). The duration a target needs to be fixated on until the system classifies an output command affects the overall system performance. Hence, extracting a data window dedicated for the classification is of critical importance for VEP-based BCIs. Secondly, unintentional fixation on a target could easily lead to its selection. For the practical usability of BCI applications it is desirable to distinguish between intentional and unintentional fixations. This can be achieved by using threshold-based target identification methods. The study explores personalized dynamic classification time windows for threshold-based time synchronous VEP BCIs. The proposed techniques were tested employing the SSVEP and the c-VEP
+    paradigm. Spelling performance was evaluated using an 8-target dictionary-supported BCI utilizing an n-gram word prediction model. The performance of twelve healthy participants was assessed with the information transfer rate (ITR) and accuracy. All participants completed sentence spelling tasks, reaching average accuracies of 94% and 96.3% for the c-VEP and the SSVEP paradigm, respectively. Average ITRs around 57 bpm were achieved for both paradigms.
+  expected_priority: A1-central-integracao-llm
+  audit_reason: Modelo de predição de palavras integrado operacionalmente ao BCI speller.
+- id: v4-3f-collateral-80-extending-brain-computer-interface-access-with-a-multil
+  title: Extending Brain-Computer Interface Access with a Multilingual Language Model in the P300 Speller
+  abstract: Brain-computer interfaces (BCI) such as the P300 speller have the potential to restore communication to advanced-stage neuromuscular disease patients. Research has improved typing speed and accuracy through innovations including the use of language models. While significant advances have been made, implementations have largely been restricted to a single language, primarily English. It is unclear whether these improvements would extend to other languages that present potential technical hurdles due to different alphabets and grammatical structures. Here, we adapt a language model-based classifier designed for English to two other languages, Spanish and Greek, to demonstrate the generalizability of these methods. Online experimental trials with 30 healthy native English, Spanish, and Greek speakers showed no significant difference between performances using the different versions of the system (66.20 vs. 61.97 vs. 60.89 bits/minute). Extending these methods across languages allows
+    for expanding access to BCI systems to other populations, particularly in the developing world.
+  expected_priority: A1-central-integracao-llm
+  audit_reason: Modelo de linguagem multilíngue integrado ao P300 speller.
+- id: v4-3f-collateral-11-language-model-assisted-eeg-based-brain-computer-interf
+  title: Language model assisted EEG-based brain computer interface for typing
+  abstract: ''
+  expected_priority: A1-central-integracao-llm
+  audit_reason: Título explicita modelo de linguagem assistindo BCI de digitação.
+- id: v4-3f-collateral-82-language-model-assisted-and-icon-based-communication-th
+  title: Language-Model Assisted and Icon-Based Communication Through a Brain–Computer Interface With Different Presentation Paradigms
+  abstract: Augmentative and alternative communication (AAC) is typically used by people with severe speech and physical disabilities and is one of the main application areas for the brain–computer interface (BCI) technology. The target population includes people with cerebral palsy, amyotrophic lateral sclerosis, and locked-in syndrome. Word-based AAC systems are mainly faster than letter-based counterparts and are usually supplemented by icons to aid the users. Those icon-based AAC systems that use binary signaling methods such as single click can convert into a single-input BCI system such as event-related potential (ERP) detection. Matrix speller paradigm is typically used to help users identify their target icon on the screen; however, it ties screen space to vocabulary size and navigation complexity, which may require users to make repetitive head, neck, or eye movements to visually locate their intended targets on the screen. Rapid serial visual presentation (RSVP) is an alternative
+    interface that minimizes required movement by displaying all icons at a fixed location, one at a time. IconMessenger is an icon-based BCI–AAC system that combines ERP signal detection with a unified framework for different presentation paradigms including RSVP, matrix speller row&column presentation, and matrix speller single character presentation. IconMessenger also takes advantage of a unique sem-gram language model, incorporated tightly in the inference engine. In this paper, we assess the ERP shape, classification accuracy, and typing performance of different presentation paradigms on 10 healthy participants.
+  expected_priority: A1-central-integracao-llm
+  audit_reason: Modelo de linguagem incorporado ao sistema de comunicação BCI.
+- id: v4-3f-collateral-510-noisy-neural-language-modeling-for-typing-prediction-in
+  title: Noisy Neural Language Modeling for Typing Prediction in BCI Communication
+  abstract: Language models have broad adoption in predictive typing tasks. When the typing history contains numerous errors, as in open-vocabulary predictive typing with brain-computer interface (BCI) systems, we observe significant performance degradation in both n-gram and recurrent neural network language models trained on clean text. In evaluations of ranking character predictions, training recurrent LMs on noisy text makes them much more robust to noisy histories, even when the error model is misspecified. We also propose an effective strategy for combining evidence from multiple ambiguous histories of BCI electroencephalogram measurements.
+  expected_priority: A1-central-integracao-llm
+  audit_reason: Modelos de linguagem usados para predição de digitação em BCI.
+- id: v4-3f-collateral-114-sequential-best-arm-identification-with-application-to-
+  title: Sequential Best-Arm Identification with Application to Brain-Computer Interface
+  abstract: A brain-computer interface (BCI) is a technology that enables direct communication between the brain and an external device or computer system. It allows individuals to interact with the device using only their thoughts, and holds immense potential for a wide range of applications in medicine, rehabilitation, and human augmentation. An electroencephalogram (EEG) and event-related potential (ERP)-based speller system is a type of BCI that allows users to spell words without using a physical keyboard, but instead by recording and interpreting brain signals under different stimulus presentation paradigms. Conventional non-adaptive paradigms treat each word selection independently, leading to a lengthy learning process. To improve the sampling efficiency, we cast the problem as a sequence of best-arm identification tasks in multi-armed bandits. Leveraging pre-trained large language models (LLMs), we utilize the prior knowledge learned from previous tasks to inform and facilitate
+    subsequent tasks. To do so in a coherent way, we propose a sequential top-two Thompson sampling (STTS) algorithm under the fixed-confidence setting and the fixed-budget setting. We study the theoretical property of the proposed algorithm, and demonstrate its substantial empirical improvement through both synthetic data analysis as well as a P300 BCI speller simulator example.
+  expected_priority: A1-central-integracao-llm
+  audit_reason: LLM pré-treinado usado operacionalmente em aplicação de P300 BCI.
+- id: v4-3f-collateral-416-brain-waves-to-text-neural-translation-using-deep-learn
+  title: Brain Waves-to-Text Neural Translation using Deep Learning and Natural Language Processing
+  abstract: 'Abstract:
+
+
+    Brain–Computer Interface (BCI) technology enables communication between the human brain and external computing devices without the use of traditional speech or physical interaction. One important application of this technology is converting brain signals into readable text, which can assist individuals who are unable to speak due to severe neurological disorders or physical disabilities.This research proposes a Brain Waves-to-Text neural translation system using deep learning and Natural Language Processing techniques. The system analyses Electroencephalography (EEG) signals captured from the brain and converts them into meaningful textual outputs. In the proposed approach, EEG signals are first preprocessed to remove noise and unwanted artifacts. A hybrid deep learning architecture combining Convolutional Neural Networks (CNN) and Long Short-Term Memory (LSTM) networks is used to extract spatial and temporal patterns from the brain signals. The CNN layers are used to learn spatial relationships
+    between EEG channels, while the LSTM network captures the sequential patterns present in neural signals. Experimental analysis demonstrates that the proposed framework can successfully classify brain activity patterns and convert them into understandable text representations.
+
+
+    Keywords: Brain–Computer Interface, EEG Signals, Deep Learning, CNN–LSTM, Natural Language Processing, Brain Waves to Text.'
+  expected_priority: A2-central-decoding-linguagem
+  audit_reason: Decodificação explícita de sinais EEG para texto.
+- id: v4-3f-collateral-162-unicorn-unified-cognitive-signal-reconstruction-bridgin
+  title: 'UniCoRN: Unified Cognitive Signal ReconstructioN bridging cognitive signals and human language'
+  abstract: 'Decoding text stimuli from cognitive signals (e.g. fMRI) enhances our understanding of the human language system, paving the way for building versatile Brain-Computer Interface. However, existing studies largely focus on decoding individual word-level fMRI volumes from a restricted vocabulary, which is far too idealized for real-world application. In this paper, we propose fMRI2text, the first open-vocabulary task aiming to bridge fMRI time series and human language. Furthermore, to explore the potential of this new task, we present a baseline solution, UniCoRN: the Unified Cognitive Signal ReconstructioN for Brain Decoding. By reconstructing both individual time points and time series, UniCoRN establishes a robust encoder for cognitive signals (fMRI & EEG). Leveraging a pre-trained language model as decoder, UniCoRN proves its efficacy in decoding coherent text from fMRI series across various split settings. Our model achieves a 34.77% BLEU score on fMRI2text, and a 37.04%
+    BLEU when generalized to EEG-to-text decoding, thereby surpassing the former baseline. Experimental results indicate the feasibility of decoding consecutive fMRI volumes, and the effectiveness of decoding different cognitive signals using a unified structure.'
+  expected_priority: A1-central-integracao-llm
+  audit_reason: Modelo de linguagem pré-treinado integrado como decoder de sinais cognitivos para texto.
+- id: v4-3f-collateral-155-p3t-a-transformer-model-for-enhancing-character-recogni
+  title: 'P3T: A Transformer Model for Enhancing Character Recognition Rates in P300 Speller Systems'
+  abstract: Transformer architectures have been recently widely used for natural language processing tasks, however, their application to processing of physiological signals, such as electroencephalography (EEG), has remained limited. In this paper, we introduce P300-Transformer (P3T), a new single-trial P300 detection model, designed to optimize the information transfer rate (ITR) in P300-BCI speller systems, while maintaining a high character recognition rate. Evaluating the performance of the proposed P3T model using the publicly-available P300 dataset from BCI Competition III, demonstrates an average character recognition rate of 97.50% and an ITR of 20.52 bits/min. Compared to the state-of-the-art models, our results suggest that the proposed transformer-based P3T model can significantly enhance the character recognition rate in P300 speller systems, eliminating the need for extensive feature extraction.
+  expected_priority: B-apoio
+  audit_reason: Transformer aplicado a EEG, sem integração operacional com modelo de linguagem.
+- id: v4-3f-collateral-172-neuronarrator-a-generalist-eeg-to-text-foundation-model
+  title: 'NeuroNarrator: A Generalist EEG-to-Text Foundation Model for Clinical Interpretation via Spectro-Spatial Grounding and Temporal State-Space Reasoning'
+  abstract: Electroencephalography (EEG) provides a non-invasive window into neural dynamics at high temporal resolution and plays a pivotal role in clinical neuroscience research. Despite this potential, prevailing computational approaches to EEG analysis remain largely confined to task-specific classification objectives or coarse-grained pattern recognition, offering limited support for clinically meaningful interpretation. To address these limitations, we introduce NeuroNarrator, the first generalist EEG-to-text foundation model designed to translate electrophysiological segments into precise clinical narratives. A cornerstone of this framework is the curation of NeuroCorpus-160K, the first harmonized largescale resource pairing over 160,000 EEG segments with structured, clinically grounded natural-language descriptions. Our architecture first aligns temporal EEG waveforms with spatial topographic maps via a rigorous contrastive objective, establishing spectro–spatially grounded representations.
+    Building on this grounding, we condition a Large Language Model through a state-space–inspired formulation that integrates historical temporal and spectral context to support coherent clinical narrative generation. This approach establishes a principled bridge between continuous signal dynamics and discrete clinical language, enabling interpretable narrative generation that facilitates expert interpretation and supports clinical reporting workflows. Extensive evaluations across diverse benchmarks and zero-shot transfer tasks highlight NeuroNarrator’s capacity to integrate temporal, spectral, and spatial dynamics, positioning it as a foundational framework for time–frequency–aware, open-ended clinical interpretation of electrophysiological data.
+  expected_priority: B-apoio
+  audit_reason: Geração de narrativa clínica sobre EEG, não decodificação de linguagem do usuário.

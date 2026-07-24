@@ -1,4 +1,4 @@
-schema_version: '1.5.1'
+schema_version: '1.6'
 project:
   name: Neuro Literature Mapper
   purpose: Taxonomia para classificação de literatura sobre integração BMI/BCI–LLM, decodificação neural de linguagem, interação humana, vieses, privacidade, segurança e governança.
@@ -44,6 +44,8 @@ classification:
   - neurotechnology
   - neuroengineering
   - interface
+  - spelling
+  - word prediction
   broad_neuro_terms:
   - neurotechnology
   - neuroengineering
@@ -273,6 +275,12 @@ classification:
   - speech neuroprosthesis
   - neural speech prosthesis
   - imagined handwriting
+  - brain waves-to-text
+  - brain waves to text
+  - brain signal-to-text
+  - brain signals-to-text
+  - brain signal to text
+  - brain signals to text
   strong_llm_terms:
   - large language model
   - large language models
@@ -306,6 +314,8 @@ classification:
   - word prediction
   - predictive text
   - context-driven word prediction
+  - language-model
+  - language-models
   integration_relation_terms:
   - use
   - uses
@@ -471,6 +481,147 @@ classification:
   - mental integrity
   - neural data ownership
 
+  ambiguous_language_model_terms:
+  - sign language model
+  - sign-language model
+
+  alignment_analysis_title_terms:
+  - align with the brain
+  - alignment with the brain
+  - brain alignment
+  - brain-like
+  - converge
+  - convergence
+  - mirror cognitive
+  - representational similarity
+
+  generic_decoding_terms:
+  - neural decoding
+  - brain decoding
+
+  explicit_language_decoding_terms:
+  - speech decoding
+  - semantic decoding
+  - language decoding
+  - brain-to-text
+  - brain to text
+  - eeg-to-text
+  - eeg to text
+  - eeg2text
+  - imagined speech
+  - speech imagery
+  - attempted speech
+  - covert speech
+  - silent speech
+  - language reconstruction
+  - semantic reconstruction
+  - speech reconstruction
+  - reconstructing speech
+  - reconstructed speech
+  - speech is reconstructed
+  - speech synthesis
+  - synthesize speech
+  - synthesizing speech
+  - speech neuroprosthesis
+  - neural speech prosthesis
+  - imagined handwriting
+  - brain waves-to-text
+  - brain waves to text
+  - brain signal-to-text
+  - brain signals-to-text
+  - brain signal to text
+  - brain signals to text
+
+  language_output_terms:
+  - speech
+  - spoken language
+  - language
+  - sign language
+  - word
+  - words
+  - sentence
+  - sentences
+  - spelling
+  - handwriting
+  - phoneme
+  - phonemes
+  - phonetic
+  - articulatory
+
+  communication_output_terms:
+  - brain-to-text
+  - brain to text
+  - eeg-to-text
+  - eeg to text
+  - eeg2text
+  - text generation
+  - word prediction
+  - predictive text
+  - context-driven word prediction
+  - speller
+  - spelling
+  - sentence composition
+  - assistive communication
+  - speech decoding
+  - language decoding
+  - speech neuroprosthesis
+  - neural speech prosthesis
+  - imagined speech
+  - attempted speech
+  - covert speech
+  - silent speech
+  - typing
+  - typing prediction
+  - communication system
+  - bci communication
+  - augmentative and alternative communication
+  - icon-based communication
+
+  broad_review_title_terms:
+  - systematic review
+  - scoping review
+  - literature review
+  - umbrella review
+  - introductory tutorial
+  - tutorial
+  - overview
+  - survey
+
+  security_application_terms:
+  - authentication
+  - user identification
+  - identity verification
+  - biometric
+  - biometrics
+  - access control
+  - personal device security
+  - lie detection
+  - fraud detection
+
+  risk_framing_title_terms:
+  - risk
+  - risks
+  - threat
+  - threats
+  - vulnerability
+  - vulnerabilities
+  - privacy
+  - neural privacy
+  - mental privacy
+  - attack
+  - attacks
+  - ethical
+  - ethics
+  - governance
+  - neurorights
+  - safety
+
+  nlp_architecture_transfer_terms:
+  - widely used for natural language processing tasks
+  - commonly used for natural language processing tasks
+  - originally developed for natural language processing
+  - developed for natural language processing tasks
+
   document_language_context_terms:
   - eeg report
   - eeg reports
@@ -481,6 +632,14 @@ classification:
   - report summarization
   - report summarisation
   - report classification
+  - clinical interpretation
+  - clinical narrative
+  - clinical narratives
+  - clinical reporting
+  - clinical report
+  - clinical reports
+  - clinical description
+  - clinical descriptions
 
   risk_governance_terms:
   - bias

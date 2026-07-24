@@ -325,6 +325,150 @@ DEFAULT_SPECIFIC_RISK_TITLE_TERMS = [
     "neural data ownership",
 ]
 
+DEFAULT_AMBIGUOUS_LANGUAGE_MODEL_TERMS = [
+    "sign language model",
+    "sign-language model",
+]
+
+DEFAULT_ALIGNMENT_ANALYSIS_TITLE_TERMS = [
+    "align with the brain",
+    "alignment with the brain",
+    "brain alignment",
+    "brain-like",
+    "converge",
+    "convergence",
+    "mirror cognitive",
+    "representational similarity",
+]
+
+DEFAULT_GENERIC_DECODING_TERMS = [
+    "neural decoding",
+    "brain decoding",
+]
+
+DEFAULT_EXPLICIT_LANGUAGE_DECODING_TERMS = [
+    "speech decoding",
+    "semantic decoding",
+    "language decoding",
+    "brain-to-text",
+    "brain to text",
+    "eeg-to-text",
+    "eeg to text",
+    "eeg2text",
+    "imagined speech",
+    "speech imagery",
+    "attempted speech",
+    "covert speech",
+    "silent speech",
+    "language reconstruction",
+    "semantic reconstruction",
+    "speech reconstruction",
+    "reconstructing speech",
+    "reconstructed speech",
+    "speech is reconstructed",
+    "speech synthesis",
+    "synthesize speech",
+    "synthesizing speech",
+    "speech neuroprosthesis",
+    "neural speech prosthesis",
+    "imagined handwriting",
+    "brain waves-to-text",
+    "brain waves to text",
+    "brain signal-to-text",
+    "brain signals-to-text",
+    "brain signal to text",
+    "brain signals to text",
+]
+
+DEFAULT_LANGUAGE_OUTPUT_TERMS = [
+    "speech",
+    "spoken language",
+    "language",
+    "sign language",
+    "word",
+    "words",
+    "sentence",
+    "sentences",
+    "spelling",
+    "handwriting",
+    "phoneme",
+    "phonemes",
+    "phonetic",
+    "articulatory",
+]
+
+DEFAULT_COMMUNICATION_OUTPUT_TERMS = [
+    "brain-to-text",
+    "brain to text",
+    "eeg-to-text",
+    "eeg to text",
+    "eeg2text",
+    "text generation",
+    "word prediction",
+    "predictive text",
+    "context-driven word prediction",
+    "speller",
+    "spelling",
+    "sentence composition",
+    "assistive communication",
+    "speech decoding",
+    "language decoding",
+    "speech neuroprosthesis",
+    "neural speech prosthesis",
+    "imagined speech",
+    "attempted speech",
+    "covert speech",
+    "silent speech",
+    "typing",
+    "typing prediction",
+    "communication system",
+    "bci communication",
+    "augmentative and alternative communication",
+    "icon-based communication",
+]
+
+DEFAULT_BROAD_REVIEW_TITLE_TERMS = [
+    "systematic review",
+    "scoping review",
+    "literature review",
+    "umbrella review",
+    "introductory tutorial",
+    "tutorial",
+    "overview",
+    "survey",
+]
+
+DEFAULT_SECURITY_APPLICATION_TERMS = [
+    "authentication",
+    "user identification",
+    "identity verification",
+    "biometric",
+    "biometrics",
+    "access control",
+    "personal device security",
+    "lie detection",
+    "fraud detection",
+]
+
+DEFAULT_RISK_FRAMING_TITLE_TERMS = [
+    "risk",
+    "risks",
+    "threat",
+    "threats",
+    "vulnerability",
+    "vulnerabilities",
+    "privacy",
+    "neural privacy",
+    "mental privacy",
+    "attack",
+    "attacks",
+    "ethical",
+    "ethics",
+    "governance",
+    "neurorights",
+    "safety",
+]
+
 DEFAULT_DOCUMENT_LANGUAGE_CONTEXT_TERMS = [
     "eeg report",
     "eeg reports",
@@ -335,6 +479,14 @@ DEFAULT_DOCUMENT_LANGUAGE_CONTEXT_TERMS = [
     "report summarization",
     "report summarisation",
     "report classification",
+    "clinical interpretation",
+    "clinical narrative",
+    "clinical narratives",
+    "clinical reporting",
+    "clinical report",
+    "clinical reports",
+    "clinical description",
+    "clinical descriptions",
 ]
 DEFAULT_INTERFACE_ABBREVIATIONS = ["bci", "bmi"]
 DEFAULT_INTERFACE_CONTEXT_TERMS = [
@@ -351,6 +503,8 @@ DEFAULT_INTERFACE_CONTEXT_TERMS = [
     "neurotechnology",
     "neuroengineering",
     "interface",
+    "spelling",
+    "word prediction",
 ]
 DEFAULT_BRAIN_CONTEXT_TERMS = [
     "brain",
@@ -398,6 +552,13 @@ DEFAULT_DECODING_TERMS = [
     "imagined handwriting",
 ]
 
+DEFAULT_NLP_ARCHITECTURE_TRANSFER_TERMS = [
+    "widely used for natural language processing tasks",
+    "commonly used for natural language processing tasks",
+    "originally developed for natural language processing",
+    "developed for natural language processing tasks",
+]
+
 DEFAULT_STRONG_LLM_TERMS = [
     "large language model",
     "large language models",
@@ -432,6 +593,8 @@ DEFAULT_A1_LANGUAGE_TECHNOLOGY_TERMS = [
     "word prediction",
     "predictive text",
     "context-driven word prediction",
+    "language-model",
+    "language-models",
 ]
 DEFAULT_HUMAN_TERMS = [
     "human-ai interaction",
@@ -714,6 +877,79 @@ def _has_integration_relation(
             sentence,
             technology_terms,
         ):
+            continue
+
+        if contains_any(
+            sentence,
+            weak_terms,
+        ):
+            continue
+
+        if contains_any(
+            sentence,
+            prior_work_terms,
+        ):
+            continue
+
+        if contains_any(
+            sentence,
+            relation_terms,
+        ):
+            return True
+
+    return False
+
+def _has_operational_cross_domain_integration(
+    text: str,
+    classification: dict,
+    technology_terms: Iterable[str],
+    neural_terms: Iterable[str],
+) -> bool:
+    """
+    Exige tecnologia linguística, domínio neural e uma relação
+    operacional na mesma sentença.
+
+    Comparações cérebro-modelo, analogias metodológicas e referências
+    a trabalhos anteriores não constituem integração BMI/BCI-LLM.
+    """
+
+    relation_terms = _config_terms(
+        classification,
+        "integration_relation_terms",
+        fallback=DEFAULT_INTEGRATION_RELATION_TERMS,
+    )
+
+    weak_terms = _config_terms(
+        classification,
+        "weak_integration_terms",
+        fallback=DEFAULT_WEAK_INTEGRATION_TERMS,
+    )
+
+    prior_work_terms = _config_terms(
+        classification,
+        "prior_work_terms",
+        fallback=DEFAULT_PRIOR_WORK_TERMS,
+    )
+
+    for sentence in _sentences(text):
+        if not contains_any(
+            sentence,
+            technology_terms,
+        ):
+            continue
+
+        neural_context = (
+            _has_explicit_interface(
+                sentence,
+                classification,
+            )
+            or contains_any(
+                sentence,
+                neural_terms,
+            )
+        )
+
+        if not neural_context:
             continue
 
         if contains_any(
@@ -1381,6 +1617,108 @@ def suggest_priority(
         document_language_context_terms,
     )
 
+    ambiguous_language_model_terms = _config_terms(
+        classification,
+        "ambiguous_language_model_terms",
+        fallback=DEFAULT_AMBIGUOUS_LANGUAGE_MODEL_TERMS,
+    )
+
+    alignment_analysis_title_terms = _config_terms(
+        classification,
+        "alignment_analysis_title_terms",
+        fallback=DEFAULT_ALIGNMENT_ANALYSIS_TITLE_TERMS,
+    )
+
+    ambiguous_language_model_context = contains_any(
+        semantic_text,
+        ambiguous_language_model_terms,
+    )
+
+    alignment_analysis_title = contains_any(
+        normalized_title,
+        alignment_analysis_title_terms,
+    )
+
+    generic_decoding_terms = _config_terms(
+        classification,
+        "generic_decoding_terms",
+        fallback=DEFAULT_GENERIC_DECODING_TERMS,
+    )
+
+    explicit_language_decoding_terms = _config_terms(
+        classification,
+        "explicit_language_decoding_terms",
+        fallback=DEFAULT_EXPLICIT_LANGUAGE_DECODING_TERMS,
+    )
+
+    language_output_terms = _config_terms(
+        classification,
+        "language_output_terms",
+        fallback=DEFAULT_LANGUAGE_OUTPUT_TERMS,
+    )
+
+    broad_review_title_terms = _config_terms(
+        classification,
+        "broad_review_title_terms",
+        fallback=DEFAULT_BROAD_REVIEW_TITLE_TERMS,
+    )
+
+    language_decoding_title = (
+        contains_any(
+            normalized_title,
+            explicit_language_decoding_terms,
+        )
+        or _same_sentence_has(
+            normalized_title,
+            generic_decoding_terms,
+            language_output_terms,
+        )
+    )
+
+    language_decoding_abstract = (
+        contains_any(
+            abstract,
+            explicit_language_decoding_terms,
+        )
+        or _same_sentence_has(
+            abstract,
+            generic_decoding_terms,
+            language_output_terms,
+        )
+    )
+
+    broad_review_title = contains_any(
+        normalized_title,
+        broad_review_title_terms,
+    )
+
+    security_application_terms = _config_terms(
+        classification,
+        "security_application_terms",
+        fallback=DEFAULT_SECURITY_APPLICATION_TERMS,
+    )
+
+    risk_framing_title_terms = _config_terms(
+        classification,
+        "risk_framing_title_terms",
+        fallback=DEFAULT_RISK_FRAMING_TITLE_TERMS,
+    )
+
+    security_application_title = contains_any(
+        normalized_title,
+        security_application_terms,
+    )
+
+    risk_framing_title = contains_any(
+        normalized_title,
+        risk_framing_title_terms,
+    )
+
+    security_application_only = (
+        security_application_title
+        and not risk_framing_title
+    )
+
     # Trabalhos cuja contribuição principal é ética e diretamente
     # relacionada a BCI ou neuropróteses de fala pertencem a A3.
     if (
@@ -1409,49 +1747,165 @@ def suggest_priority(
         or evidence.language_abstract
     )
 
-    # A1 — integração entre BMI/BCI, sinais neurais ou decodificação
-    # e modelos de linguagem.
-    if (
-        neural_domain_title
-        and technology_title
-        and not evidence.weak_integration_title
-        and not external_analysis_context
-        and not document_language_context
-    ):
-        return "A1-central-integracao-llm"
+    a1_strong_llm_terms = _config_terms(
+        classification,
+        "strong_llm_terms",
+        "llm_terms",
+        fallback=DEFAULT_STRONG_LLM_TERMS,
+    )
 
-    # O helper de integração já rejeita negação, comparação,
-    # inspiração e descrição de trabalhos anteriores por sentença.
-    if (
-        neural_domain_title
-        and technology_abstract
-        and evidence.integration_abstract
-        and not external_analysis_context
-        and not document_language_context
-    ):
-        return "A1-central-integracao-llm"
+    a1_generic_language_terms = _config_terms(
+        classification,
+        "a1_language_technology_terms",
+        fallback=DEFAULT_A1_LANGUAGE_TECHNOLOGY_TERMS,
+    )
 
-    if (
-        technology_title
-        and (
-            evidence.interface_abstract
-            or evidence.decoding_abstract
-            or evidence.neural_signal_abstract
+    communication_output_terms = _config_terms(
+        classification,
+        "communication_output_terms",
+        fallback=DEFAULT_COMMUNICATION_OUTPUT_TERMS,
+    )
+
+    nlp_architecture_transfer_terms = _config_terms(
+        classification,
+        "nlp_architecture_transfer_terms",
+        fallback=DEFAULT_NLP_ARCHITECTURE_TRANSFER_TERMS,
+    )
+
+    nlp_architecture_transfer_context = (
+        contains_any(
+            abstract,
+            nlp_architecture_transfer_terms,
         )
-        and evidence.integration_abstract
-        and not external_analysis_context
-        and not document_language_context
-    ):
-        return "A1-central-integracao-llm"
+        and not contains_any(
+            semantic_text,
+            [
+                "language model",
+                "language models",
+                "word prediction",
+                "predictive text",
+                "text generation",
+                "language generation",
+            ],
+        )
+    )
 
+    a1_neural_terms = _config_terms(
+        classification,
+        "neural_signal_terms",
+        fallback=DEFAULT_NEURAL_SIGNAL_TERMS,
+    )
+
+    a1_operational_integration = (
+        _has_operational_cross_domain_integration(
+            semantic_text,
+            classification,
+            [
+                *a1_strong_llm_terms,
+                *a1_generic_language_terms,
+            ],
+            [
+                *a1_neural_terms,
+                *generic_decoding_terms,
+                *explicit_language_decoding_terms,
+            ],
+        )
+    )
+
+    strong_llm_domain_context = (
+        evidence.interface_title
+        or evidence.interface_abstract
+        or evidence.neural_signal_title
+        or evidence.neural_signal_abstract
+        or language_decoding_title
+        or language_decoding_abstract
+    )
+
+    generic_language_domain_context = (
+        evidence.interface_title
+        or evidence.interface_abstract
+        or language_decoding_title
+        or language_decoding_abstract
+    )
+
+    communication_output_context = contains_any(
+        semantic_text,
+        communication_output_terms,
+    )
+
+    strong_llm_integration = (
+        (
+            evidence.llm_title
+            and (
+                evidence.interface_title
+                or language_decoding_title
+            )
+        )
+        or (
+            (
+                evidence.llm_title
+                or evidence.llm_abstract
+            )
+            and strong_llm_domain_context
+            and a1_operational_integration
+        )
+        or (
+            (
+                evidence.llm_title
+                or evidence.llm_abstract
+            )
+            and (
+                evidence.interface_title
+                or evidence.interface_abstract
+            )
+            and communication_output_context
+            and not broad_review_title
+        )
+    )
+
+    generic_language_title_integration = (
+        evidence.interface_title
+        and contains_any(
+            normalized_title,
+            a1_generic_language_terms,
+        )
+        and communication_output_context
+        and not broad_review_title
+    )
+
+    generic_language_operational_integration = (
+        contains_any(
+            semantic_text,
+            a1_generic_language_terms,
+        )
+        and generic_language_domain_context
+        and a1_operational_integration
+        and communication_output_context
+    )
+
+    generic_language_integration = (
+        generic_language_title_integration
+        or generic_language_operational_integration
+    )
+
+    alignment_only_context = (
+        alignment_analysis_title
+        and not evidence.interface_title
+        and not language_decoding_title
+    )
+
+    # A1 — integração operacional entre BMI/BCI ou decodificação
+    # neural de linguagem e LLMs/tecnologia linguística.
     if (
         (
-            evidence.interface_language_same_sentence
-            or evidence.decoding_language_same_sentence
+            strong_llm_integration
+            or generic_language_integration
         )
-        and evidence.integration_abstract
+        and not alignment_only_context
         and not external_analysis_context
         and not document_language_context
+        and not ambiguous_language_model_context
+        and not nlp_architecture_transfer_context
     ):
         return "A1-central-integracao-llm"
 
@@ -1498,25 +1952,36 @@ def suggest_priority(
     #
     # A presença de "brain-to-text" ou "neural decoding" não basta:
     # deve haver interface real ou evidência de sinais/registro neural.
+
     if (
-        evidence.decoding_title
+        language_decoding_title
         and (
             evidence.interface_title
             or evidence.interface_abstract
+            or evidence.brain_title
+            or evidence.brain_abstract
             or evidence.neural_signal_title
             or evidence.neural_signal_abstract
         )
+        and not document_language_context
     ):
         return "A2-central-decoding-linguagem"
 
     if (
-        evidence.interface_title
-        and evidence.decoding_abstract
+        not broad_review_title
+        and not document_language_context
+        and evidence.interface_title
+        and language_decoding_abstract
         and evidence.neural_signal_abstract
     ):
         return "A2-central-decoding-linguagem"
 
-    if evidence.neural_signal_decoding_same_sentence:
+    if (
+        not broad_review_title
+        and not document_language_context
+        and evidence.neural_signal_decoding_same_sentence
+        and language_decoding_abstract
+    ):
         return "A2-central-decoding-linguagem"
 
     # A3 — risco ou governança diretamente relacionado à BMI/BCI.
@@ -1527,6 +1992,7 @@ def suggest_priority(
     if (
         evidence.interface_title
         and evidence.strong_risk_title
+        and not security_application_only
         and not external_analysis_context
     ):
         return "A3-central-riscos-governanca"
@@ -1537,6 +2003,7 @@ def suggest_priority(
     if (
         specific_risk_title
         and evidence.interface_abstract
+        and not security_application_only
         and not external_analysis_context
     ):
         return "A3-central-riscos-governanca"
@@ -1547,6 +2014,8 @@ def suggest_priority(
             abstract,
             classification,
         )
+        and not broad_review_title
+        and not security_application_only
         and not external_analysis_context
     ):
         return "A3-central-riscos-governanca"
