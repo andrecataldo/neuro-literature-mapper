@@ -1,0 +1,838 @@
+# Fluxo de triagem — Neuro Literature Mapper
+
+## 1. Objetivo
+
+Este documento descreve o fluxo operacional de triagem por título e resumo dos estudos classificados como centrais pelo projeto `neuro-literature-mapper`.
+
+O processo tem como objetivos:
+
+- transformar o corpus adjudicado em uma matriz de triagem;
+- preservar a classificação automatizada e as adjudicações humanas;
+- registrar decisões de inclusão, exclusão ou incerteza;
+- identificar registros que exigem recuperação adicional de metadados;
+- controlar possíveis duplicatas;
+- preparar o conjunto de estudos para leitura integral;
+- manter rastreabilidade entre corpus, classificação e decisão humana.
+
+A triagem é uma etapa intermediária entre a classificação automática e a extração estruturada de evidências.
+
+```text
+Busca e consolidação
+    ↓
+Classificação automática
+    ↓
+Adjudicação da prioridade
+    ↓
+Triagem por título e resumo
+    ↓
+Recuperação de texto completo
+    ↓
+Triagem por texto completo
+    ↓
+Extração de evidências
+```
+
+## 2. Documentos relacionados
+
+Este fluxo deve ser interpretado em conjunto com:
+
+- `docs/protocolo_neuro.md`;
+- `docs/decisoes_conceituais.md`;
+- `docs/matriz_analitica_neuro.md`;
+- `docs/releases/v4.3f.md`;
+- `config/taxonomy_neuro.yaml`.
+
+## 3. Baseline utilizado
+
+A primeira matriz de triagem é derivada do corpus adjudicado da versão v4.3f.
+
+| Indicador | Quantidade |
+|---|---:|
+| Corpus total | 864 |
+| Corpus central automatizado | 255 |
+| Corpus central adjudicado | 254 |
+| A1 — Integração BMI/BCI e modelos de linguagem | 71 |
+| A2 — Decodificação neural de linguagem | 120 |
+| A3 — Riscos e governança | 63 |
+| B — Literatura de apoio | 564 |
+| D — Descartar | 46 |
+
+A matriz de triagem contém apenas os 254 registros classificados como A1, A2 ou A3 após adjudicação.
+
+Esses registros constituem candidatos à triagem. Eles não representam automaticamente os estudos finais incluídos na pesquisa.
+
+## 4. Arquivos do fluxo
+
+### 4.1 Entradas
+
+Corpus adjudicado:
+
+```text
+outputs/resultados_neuro_v4_3f_union_p5_p10_adjudicado.csv
+```
+
+Corpus automatizado anterior à adjudicação:
+
+```text
+outputs/resultados_neuro_v4_3f_union_p5_p10.csv
+```
+
+O corpus automatizado é utilizado para preservar a categoria originalmente atribuída pelo classificador.
+
+### 4.2 Script
+
+```text
+scripts/init_screening_matrix.py
+```
+
+### 4.3 Saída
+
+```text
+outputs/matriz_triagem_neuro_v4_3f.csv
+```
+
+O arquivo de saída contém resumos e decisões humanas. Ele deve permanecer fora do Git.
+
+### 4.4 Testes
+
+```text
+tests/test_screening_matrix.py
+```
+
+## 5. Inicialização da matriz
+
+A matriz é criada com:
+
+```bash
+python scripts/init_screening_matrix.py
+```
+
+A execução deve produzir:
+
+```text
+Central records:            254
+A1 records:                 71
+A3 records:                 63
+A2 records:                 120
+```
+
+A quantidade de registros sem resumo pode variar conforme a versão dos metadados. No baseline inicial da v4.3f foram identificados:
+
+```text
+40 registros sem resumo
+```
+
+## 6. Proteção contra sobrescrita
+
+Por padrão, o script não sobrescreve uma matriz existente.
+
+Quando o arquivo já existir, a execução será interrompida.
+
+```text
+ERROR: output already exists
+```
+
+O parâmetro `--force` somente deve ser utilizado antes do início da triagem manual ou após a criação de uma cópia de segurança.
+
+```bash
+python scripts/init_screening_matrix.py --force
+```
+
+Depois que decisões humanas forem registradas, a matriz não deve ser recriada diretamente.
+
+## 7. Cópia de segurança
+
+Antes de qualquer operação que possa substituir ou modificar o arquivo em massa, deve ser criada uma cópia.
+
+Exemplo:
+
+```bash
+cp \
+  outputs/matriz_triagem_neuro_v4_3f.csv \
+  "outputs/matriz_triagem_neuro_v4_3f_backup_$(date +%Y%m%d_%H%M%S).csv"
+```
+
+Conferência:
+
+```bash
+ls -lh outputs/matriz_triagem_neuro_v4_3f*
+```
+
+## 8. Estrutura da matriz
+
+A matriz inicial contém 22 campos.
+
+| Campo | Origem | Descrição |
+|---|---|---|
+| `record_id` | gerado ou recuperado | Identificador único utilizado na triagem |
+| `source_record_id` | corpus | Identificador original, quando disponível |
+| `duplicate_group` | gerado | Identificador compartilhado por candidatos a duplicata |
+| `title` | corpus | Título da publicação |
+| `authors` | corpus | Autores |
+| `year` | corpus | Ano de publicação |
+| `venue` | corpus | Periódico, conferência ou repositório |
+| `doi` | corpus | DOI normalizado |
+| `url` | corpus | Endereço da publicação |
+| `abstract` | corpus | Resumo utilizado na triagem |
+| `abstract_available` | gerado | Indica presença de resumo |
+| `suggested_priority` | classificação automática | Categoria atribuída antes da adjudicação |
+| `adjudicated_priority` | comparação | Categoria alterada por revisão humana |
+| `final_priority` | corpus adjudicado | Categoria utilizada na triagem |
+| `screening_decision` | pesquisador | Include, Exclude ou Uncertain |
+| `screening_reason_code` | pesquisador | Código da justificativa |
+| `screening_reason` | pesquisador | Justificativa complementar |
+| `screening_evidence` | pesquisador | Evidência que sustenta a decisão |
+| `screened_by` | pesquisador | Responsável pela triagem |
+| `screening_date` | pesquisador | Data da decisão |
+| `second_review_required` | gerado ou pesquisador | Indica necessidade de segunda revisão |
+| `screening_notes` | gerado ou pesquisador | Observações adicionais |
+
+## 9. Classificação preservada
+
+A matriz separa três conceitos.
+
+### 9.1 Prioridade sugerida
+
+```text
+suggested_priority
+```
+
+Representa a classificação produzida automaticamente.
+
+### 9.2 Prioridade adjudicada
+
+```text
+adjudicated_priority
+```
+
+É preenchida quando a classificação final difere da sugestão automática.
+
+### 9.3 Prioridade final
+
+```text
+final_priority
+```
+
+Representa a categoria utilizada para ordenar e iniciar a triagem.
+
+Regra:
+
+```text
+Sem adjudicação:
+final_priority = suggested_priority
+
+Com adjudicação:
+final_priority = adjudicated_priority
+```
+
+A decisão de triagem não deve sobrescrever esses campos.
+
+## 10. Categorias temáticas
+
+### A1 — Integração BMI/BCI e modelos de linguagem
+
+Estudos em que modelos de linguagem ou componentes linguísticos participam operacionalmente do sistema neural.
+
+Exemplos:
+
+- EEG-to-text com LLM;
+- modelo de linguagem utilizado como decoder;
+- predição de palavras em BCI;
+- geração textual condicionada por sinais neurais;
+- correção linguística em spellers;
+- recuperação semântica seguida de geração.
+
+### A2 — Decodificação neural de linguagem
+
+Estudos que transformam sinais neurais em saídas linguísticas ou comunicacionais sem uma integração operacional dominante de modelo de linguagem.
+
+Exemplos:
+
+- brain-to-text;
+- speech decoding;
+- imagined speech;
+- attempted speech;
+- silent speech;
+- soletração neural;
+- reconstrução de palavras ou sentenças;
+- neuropróteses de fala.
+
+### A3 — Riscos e governança
+
+Estudos cuja contribuição central aborda:
+
+- privacidade neural;
+- privacidade mental;
+- neuroética;
+- segurança de dados neurais;
+- autonomia;
+- consentimento;
+- responsabilidade;
+- direitos neurais;
+- governança;
+- modelos de ameaça;
+- uso indevido da neurotecnologia.
+
+## 11. Ordem da triagem
+
+A matriz é organizada nesta ordem:
+
+```text
+1. A1
+2. A3
+3. A2
+```
+
+Dentro de cada categoria:
+
+```text
+1. registros sem resumo;
+2. ano mais recente para o mais antigo;
+3. título em ordem alfabética.
+```
+
+A ordenação tem como finalidade:
+
+- começar pela interseção central BMI/BCI–modelo de linguagem;
+- identificar cedo os casos sem resumo;
+- revisar em seguida riscos e governança;
+- triagem posterior do conjunto mais amplo de decodificação neural.
+
+A ordem não representa grau de qualidade metodológica.
+
+## 12. Decisões de triagem
+
+O campo `screening_decision` aceita:
+
+```text
+Include
+Exclude
+Uncertain
+```
+
+### 12.1 Include
+
+Utilizar quando o título e o resumo apresentam evidência suficiente de aderência ao escopo.
+
+A decisão significa:
+
+```text
+Encaminhar para recuperação e leitura do texto completo
+```
+
+Não significa inclusão definitiva na síntese final.
+
+### 12.2 Exclude
+
+Utilizar quando o registro apresenta evidência suficiente de exclusão.
+
+A decisão deve incluir:
+
+- código;
+- justificativa;
+- evidência;
+- responsável;
+- data.
+
+### 12.3 Uncertain
+
+Utilizar quando título e resumo não permitem uma decisão segura.
+
+Exemplos:
+
+- resumo ausente;
+- resumo excessivamente curto;
+- ambiguidade sobre o papel do modelo de linguagem;
+- dúvida sobre existência de saída linguística;
+- risco ou governança apenas mencionados superficialmente;
+- possível duplicata;
+- diferença entre preprint e publicação final;
+- metadados conflitantes.
+
+Registros `Uncertain` devem ser encaminhados para segunda revisão ou recuperação do texto completo.
+
+## 13. Códigos de inclusão
+
+| Código | Descrição |
+|---|---|
+| `I01` | Integra operacionalmente BMI/BCI e modelo de linguagem |
+| `I02` | Realiza decodificação neural de fala, texto ou linguagem |
+| `I03` | Investiga riscos, privacidade, ética ou governança de BMI/BCI |
+| `I04` | Apresenta evidência técnica relevante para arquitetura integrada |
+| `I05` | Avalia aspectos humanos, confiança, autonomia ou supervisão |
+| `I06` | Propõe mecanismo de mitigação, segurança ou governança |
+| `I07` | Estudo fundacional necessário para compreender o domínio |
+| `I08` | Revisão central para uma das correntes investigadas |
+
+## 14. Códigos de exclusão
+
+| Código | Descrição |
+|---|---|
+| `E01` | Fora do escopo temático |
+| `E02` | Coincidência terminológica |
+| `E03` | BMI significa Body Mass Index |
+| `E04` | BCI possui outro significado |
+| `E05` | Decodificação neural sem relação com linguagem ou comunicação |
+| `E06` | Uso de IA ou LLM sem relação operacional com sinais neurais |
+| `E07` | Comparação cérebro–modelo sem integração operacional |
+| `E08` | Autenticação ou identificação sem contribuição de risco ou governança |
+| `E09` | Revisão ou tutorial excessivamente amplo |
+| `E10` | Registro duplicado |
+| `E11` | Versão substituída por publicação mais completa |
+| `E12` | Metadados insuficientes |
+| `E13` | Conteúdo editorial, errata, figura ou material suplementar |
+| `E14` | Texto completo indisponível após tentativas de recuperação |
+| `E15` | Tipo de publicação não elegível |
+| `E16` | Não apresenta contribuição utilizável para as questões de pesquisa |
+
+O código `E14` normalmente pertence à etapa de texto completo, e não à primeira triagem.
+
+## 15. Preenchimento da evidência
+
+O campo `screening_evidence` deve registrar de forma resumida a informação que sustenta a decisão.
+
+Exemplo de inclusão:
+
+```text
+O resumo descreve um pipeline EEG → extração semântica → LLM
+para produção de texto.
+```
+
+Exemplo de exclusão:
+
+```text
+O transformer é utilizado somente para classificar sinais EEG;
+não há fala, texto ou saída comunicacional.
+```
+
+Exemplo de incerteza:
+
+```text
+O título indica brain-to-text, mas o resumo não está disponível
+e não foi possível confirmar a contribuição técnica.
+```
+
+A evidência deve:
+
+- ser concisa;
+- indicar o elemento decisivo;
+- distinguir descrição dos autores de interpretação do pesquisador;
+- evitar copiar grandes trechos do resumo;
+- não inventar informações ausentes.
+
+## 16. Preenchimento da data e responsável
+
+O campo `screened_by` deve utilizar um identificador consistente.
+
+Exemplo:
+
+```text
+Andre Cataldo
+```
+
+O campo `screening_date` deve utilizar o padrão ISO:
+
+```text
+YYYY-MM-DD
+```
+
+Exemplo:
+
+```text
+2026-07-25
+```
+
+## 17. Segunda revisão
+
+O campo `second_review_required` deve ser marcado como `true` quando:
+
+- o resumo estiver ausente;
+- a decisão for `Uncertain`;
+- houver possível duplicata;
+- houver conflito entre título e resumo;
+- houver dúvida entre A1 e A2;
+- risco ou governança aparecerem de forma ambígua;
+- houver conflito entre versões da publicação;
+- a decisão depender de conhecimento não disponível no registro;
+- o pesquisador considerar necessária uma nova avaliação.
+
+Valores válidos:
+
+```text
+true
+false
+```
+
+A matriz inicial marca automaticamente como `true` os registros sem resumo e os candidatos a duplicata.
+
+## 18. Tratamento de possíveis duplicatas
+
+O script não remove automaticamente registros que compartilham o mesmo identificador.
+
+Esses registros recebem:
+
+- `record_id` exclusivo;
+- valor comum em `duplicate_group`;
+- `second_review_required = true`;
+- aviso em `screening_notes`.
+
+Baseline inicial:
+
+```text
+2 grupos candidatos a duplicata
+4 registros envolvidos
+```
+
+### 18.1 ChatBCI-Assist
+
+```text
+NLM-775CA1200FD1-01
+NLM-775CA1200FD1-02
+```
+
+Os títulos indicam uma publicação principal e uma possível versão editorial de edição especial.
+
+### 18.2 Miniaturized Brain-Machine Interface
+
+```text
+NLM-C1132BC60F49-01
+NLM-C1132BC60F49-02
+```
+
+Os títulos diferem principalmente pela presença de marcação HTML em `mm²`.
+
+### 18.3 Procedimento de decisão
+
+Para cada grupo:
+
+1. comparar título;
+2. comparar autores;
+3. comparar DOI;
+4. comparar venue;
+5. comparar ano;
+6. comparar resumo;
+7. localizar a versão publicada;
+8. identificar se existe publicação principal, versão editorial ou duplicata de metadados;
+9. preservar a versão canônica;
+10. marcar a outra como `Exclude`;
+11. utilizar o código `E10` ou `E11`;
+12. registrar a justificativa em `screening_reason`.
+
+Exemplo:
+
+```text
+screening_decision: Exclude
+screening_reason_code: E10
+screening_reason: Registro duplicado da publicação canônica NLM-...
+```
+
+A exclusão não deve ser feita somente pela semelhança do título.
+
+## 19. Registros sem resumo
+
+O baseline contém 40 registros com:
+
+```text
+abstract_available = false
+```
+
+Esses registros aparecem antes dos demais dentro de cada classe.
+
+Procedimento recomendado:
+
+1. verificar DOI;
+2. acessar a página da publicação;
+3. procurar resumo no venue;
+4. buscar a versão no repositório institucional;
+5. verificar preprint correspondente;
+6. procurar versão indexada em outra fonte;
+7. atualizar localmente o resumo quando encontrado;
+8. registrar a origem do resumo;
+9. realizar a triagem;
+10. manter `Uncertain` quando não houver evidência suficiente.
+
+A inclusão ou exclusão não deve ser decidida somente pelo título quando houver ambiguidade relevante.
+
+## 20. Atualização manual de resumos
+
+Quando um resumo ausente for recuperado, deve-se preservar sua origem.
+
+A versão atual da matriz não possui um campo específico para a fonte do resumo. Enquanto esse campo não for adicionado, utilizar:
+
+```text
+screening_notes
+```
+
+Exemplo:
+
+```text
+Abstract recovered from publisher page on 2026-07-25.
+```
+
+Após inserir o resumo:
+
+```text
+abstract_available = true
+```
+
+A alteração deve ser realizada somente no arquivo de triagem, não no corpus original da v4.3f.
+
+A correção permanente de metadados deverá ocorrer em um fluxo separado.
+
+## 21. Recomendações para edição
+
+A matriz pode ser editada em:
+
+- LibreOffice Calc;
+- Microsoft Excel;
+- editor de CSV;
+- aplicação específica de triagem;
+- futura interface do projeto.
+
+Cuidados:
+
+- manter codificação UTF-8;
+- não alterar os nomes das colunas;
+- não remover `record_id`;
+- não reordenar manualmente os identificadores;
+- não converter DOI em formato numérico;
+- não alterar valores A1, A2 e A3;
+- não usar vírgulas como separador interno de campos multivalorados;
+- utilizar `;` para múltiplos códigos;
+- salvar datas no padrão ISO;
+- criar backup antes de operações em massa.
+
+## 22. Validação da matriz
+
+A estrutura pode ser validada com:
+
+```bash
+python - <<'PY'
+import pandas as pd
+
+path = "outputs/matriz_triagem_neuro_v4_3f.csv"
+
+df = pd.read_csv(
+    path,
+    dtype=str,
+    keep_default_na=False,
+)
+
+required_columns = {
+    "record_id",
+    "source_record_id",
+    "duplicate_group",
+    "title",
+    "abstract",
+    "abstract_available",
+    "suggested_priority",
+    "adjudicated_priority",
+    "final_priority",
+    "screening_decision",
+    "screening_reason_code",
+    "screening_reason",
+    "screening_evidence",
+    "screened_by",
+    "screening_date",
+    "second_review_required",
+    "screening_notes",
+}
+
+missing_columns = required_columns - set(df.columns)
+
+if missing_columns:
+    raise SystemExit(
+        f"Missing columns: {sorted(missing_columns)}"
+    )
+
+if not df["record_id"].is_unique:
+    raise SystemExit("record_id is not unique")
+
+valid_decisions = {
+    "",
+    "Include",
+    "Exclude",
+    "Uncertain",
+}
+
+invalid_decisions = sorted(
+    set(df["screening_decision"]) - valid_decisions
+)
+
+if invalid_decisions:
+    raise SystemExit(
+        f"Invalid decisions: {invalid_decisions}"
+    )
+
+valid_booleans = {
+    "true",
+    "false",
+}
+
+invalid_abstract_values = sorted(
+    set(df["abstract_available"]) - valid_booleans
+)
+
+if invalid_abstract_values:
+    raise SystemExit(
+        "Invalid abstract_available values: "
+        f"{invalid_abstract_values}"
+    )
+
+invalid_second_review_values = sorted(
+    set(df["second_review_required"])
+    - valid_booleans
+)
+
+if invalid_second_review_values:
+    raise SystemExit(
+        "Invalid second_review_required values: "
+        f"{invalid_second_review_values}"
+    )
+
+print("Rows:", len(df))
+print("Unique IDs:", df["record_id"].is_unique)
+print()
+print("Screening decisions:")
+print(df["screening_decision"].value_counts())
+print()
+print("Second review required:")
+print(df["second_review_required"].value_counts())
+print()
+print("Validation completed successfully.")
+PY
+```
+
+## 23. Acompanhamento do progresso
+
+O progresso pode ser acompanhado com:
+
+```bash
+python - <<'PY'
+import pandas as pd
+
+path = "outputs/matriz_triagem_neuro_v4_3f.csv"
+
+df = pd.read_csv(
+    path,
+    dtype=str,
+    keep_default_na=False,
+)
+
+total = len(df)
+completed = (df["screening_decision"] != "").sum()
+remaining = total - completed
+
+print(f"Total: {total}")
+print(f"Triados: {completed}")
+print(f"Pendentes: {remaining}")
+print(f"Progresso: {(completed / total) * 100:.1f}%")
+print()
+
+print("Decisões:")
+print(
+    df["screening_decision"]
+    .replace("", "Pending")
+    .value_counts()
+)
+print()
+
+print("Por prioridade:")
+print(
+    pd.crosstab(
+        df["final_priority"],
+        df["screening_decision"].replace("", "Pending"),
+    )
+)
+PY
+```
+
+## 24. Critérios mínimos de completude
+
+Um registro com decisão diferente de vazio deve possuir:
+
+```text
+screening_decision
+screening_reason_code
+screening_reason
+screening_evidence
+screened_by
+screening_date
+second_review_required
+```
+
+Exceções devem ser justificadas em `screening_notes`.
+
+## 25. Encerramento da triagem
+
+A triagem por título e resumo será considerada concluída quando:
+
+- todos os 254 registros tiverem decisão;
+- todos os excluídos tiverem código e justificativa;
+- todos os registros sem resumo tiverem sido revisados;
+- todos os candidatos a duplicata tiverem decisão;
+- todos os registros `Uncertain` tiverem segunda revisão;
+- todos os registros incluídos estiverem preparados para recuperação do texto completo;
+- não houver IDs duplicados;
+- não houver valores inválidos nas colunas controladas;
+- uma cópia congelada da matriz tiver sido gerada.
+
+## 26. Artefatos esperados após a triagem
+
+```text
+outputs/matriz_triagem_neuro_v4_3f.csv
+outputs/matriz_triagem_neuro_v4_3f_concluida.csv
+outputs/estudos_incluidos_titulo_resumo_v4_3f.csv
+outputs/estudos_excluidos_titulo_resumo_v4_3f.csv
+outputs/estudos_incertos_titulo_resumo_v4_3f.csv
+outputs/estudos_para_texto_completo_v4_3f.csv
+```
+
+Esses arquivos serão gerados em etapa posterior por um script de consolidação.
+
+## 27. Testes automatizados
+
+Executar os testes específicos:
+
+```bash
+python -m unittest \
+  tests.test_screening_matrix \
+  -v
+```
+
+Executar a suíte completa:
+
+```bash
+python -m unittest discover \
+  -s tests \
+  -p "test_*.py" \
+  -v
+```
+
+## 28. Estado atual do workflow
+
+```text
+Versão do pipeline: v4.3f
+Versão da taxonomia: 1.6
+Versão do workflow: v4.4 inicial
+Registros centrais: 254
+Registros sem resumo: 40
+Grupos candidatos a duplicata: 2
+Registros candidatos a duplicata: 4
+Decisões iniciais preenchidas: 0
+```
+
+## 29. Próximas implementações
+
+O fluxo deverá evoluir com:
+
+1. validação automatizada da matriz editada;
+2. geração de resumo do progresso;
+3. exportação de incluídos, excluídos e incertos;
+4. controle de alterações humanas;
+5. suporte à recuperação de resumos;
+6. preparação da matriz de texto completo;
+7. interface de triagem;
+8. extração estruturada de evidências;
+9. métricas de concordância entre revisores;
+10. geração de diagrama de fluxo da seleção dos estudos.
