@@ -51,4 +51,7 @@ Thumbs.db
 data/raw/
 data/external/
 !data/.gitkeep
+
+# Generated release checksums
+outputs/*.sha256
 EOF

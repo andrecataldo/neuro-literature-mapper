@@ -296,7 +296,7 @@ Outros idiomas poderão ser considerados quando o título, o resumo ou uma tradu
 | CI7 | O estudo apresenta texto completo, resumo informativo ou metadados suficientes para triagem. |
 | CI8 | O estudo foi publicado em periódico, conferência, repositório acadêmico ou preprint relevante. |
 
-Um artigo não precisa atender a todos os critérios. A combinação entre critérios determinará sua prioridade.
+Um estudo não precisa atender a todos os critérios. A combinação entre eles orientará a classificação temática e a decisão de triagem, sem substituir a avaliação humana.
 
 ## 13. Critérios de exclusão
 
@@ -312,44 +312,204 @@ Um artigo não precisa atender a todos os critérios. A combinação entre crit�
 | CE8 | Uma versão preliminar foi substituída por publicação mais completa. |
 | CE9 | O conteúdo não possui natureza acadêmica ou técnica confiável. |
 
-## 14. Critérios de prioridade
+## 14. Taxonomia e critérios de classificação
 
-### Prioridade alta
+A classificação temática é utilizada como mecanismo de pré-triagem do
+corpus. Ela não representa automaticamente uma decisão final de inclusão
+na pesquisa.
 
-O estudo combina:
+A versão v4.3f utiliza a taxonomia 1.6.
 
-- BMI/BCI ou sinais neurais;
-- decodificação ou geração de linguagem;
-- LLM, NLP ou modelo de linguagem;
-- e pelo menos uma dimensão de risco, interação humana ou governança.
+### 14.1 Categorias
 
-### Prioridade média
+| Código | Categoria | Definição |
+|---|---|---|
+| A1 | Integração BMI/BCI e modelos de linguagem | Estudos em que um modelo de linguagem ou tecnologia linguística participa operacionalmente de um sistema neural |
+| A2 | Decodificação neural de linguagem | Estudos que transformam sinais neurais em fala, texto, palavras, sentenças ou outras saídas linguísticas |
+| A3 | Riscos e governança em BMI/BCI | Estudos cuja contribuição central aborda privacidade, segurança, ética, autonomia, direitos neurais ou governança |
+| B | Literatura de apoio | Estudos relevantes para o contexto, mas sem contribuição central aderente a A1, A2 ou A3 |
+| D | Descartar | Registros inválidos, duplicados, fora do escopo ou resultantes de coincidência terminológica |
 
-O estudo aborda:
+### 14.2 A1 — Integração BMI/BCI e modelos de linguagem
 
-- BMI/BCI e decodificação neural; ou
-- BMI/BCI e riscos; ou
-- modelos de linguagem e sinais neurais;
+A classificação A1 exige evidência de participação operacional de um
+modelo de linguagem ou componente linguístico no sistema.
 
-mas não cobre toda a integração.
+Exemplos de integração operacional:
 
-### Prioridade baixa
+- o modelo recebe sinais neurais ou representações derivadas desses sinais;
+- o modelo atua como decoder ou gerador;
+- o modelo completa, corrige ou prediz palavras;
+- o modelo recebe palavras-chave ou pistas semânticas extraídas de sinais neurais;
+- o modelo gera texto condicionado por uma representação neural;
+- o modelo participa da recuperação, reconstrução ou expansão de conteúdo linguístico;
+- o modelo integra uma interface de comunicação neural.
 
-O estudo:
+Não são suficientes para A1:
 
-- aborda apenas uma dimensão isolada;
-- é muito genérico;
-- possui relação apenas indireta;
-- pode servir como fundamento ou contexto.
+- simples menção a LLM;
+- citação de modelos de linguagem em trabalhos relacionados;
+- comparação entre representações cerebrais e representações de modelos;
+- uso isolado da palavra `transformer`;
+- uso de arquitetura originalmente desenvolvida para NLP;
+- indicação do modelo de linguagem apenas como possibilidade futura.
 
-### Descartar
+### 14.3 A2 — Decodificação neural de linguagem
 
-O estudo:
+A classificação A2 exige que a contribuição central transforme sinais
+neurais em uma saída linguística ou comunicacional.
 
-- é falso positivo;
-- está fora do escopo;
-- apresenta apenas coincidência terminológica;
-- não oferece contribuição útil ao problema investigado.
+Exemplos de saídas compatíveis:
+
+- fala;
+- texto;
+- palavras;
+- sentenças;
+- fonemas;
+- soletração;
+- escrita;
+- reconstrução semântica;
+- comunicação assistiva;
+- linguagem imaginada;
+- linguagem tentada.
+
+Exemplos de tarefas compatíveis:
+
+```text
+brain-to-text
+EEG-to-text
+speech decoding
+semantic decoding
+language decoding
+imagined speech
+attempted speech
+silent speech
+speech neuroprosthesis
+neural speech prosthesis
+```
+
+Decodificação de imagens, movimentos, música, emoções, identidade ou
+outras variáveis não linguísticas permanece em B, salvo quando existir
+uma saída textual ou comunicacional substantiva.
+
+Quando um modelo de linguagem participar operacionalmente da
+decodificação, A1 será utilizada como categoria principal.
+
+### 14.4 A3 — Riscos e governança em BMI/BCI
+
+A classificação A3 exige que risco, ética, privacidade, segurança ou
+governança constituam parte central da contribuição.
+
+Temas compatíveis incluem:
+
+- privacidade neural;
+- privacidade mental;
+- proteção de dados neurais;
+- consentimento;
+- autonomia;
+- agência;
+- direitos neurais;
+- neuroética;
+- responsabilidade;
+- governança;
+- modelos de ameaça;
+- uso indevido;
+- inferência não autorizada;
+- riscos sociais e sociotécnicos;
+- mecanismos de mitigação e supervisão.
+
+Aplicações convencionais de autenticação, identificação biométrica,
+controle de acesso ou segurança de dispositivos não são automaticamente
+classificadas como A3.
+
+### 14.5 B — Literatura de apoio
+
+A categoria B inclui estudos que:
+
+- oferecem fundamentação teórica ou técnica;
+- apresentam relação indireta com o tema;
+- comparam cérebro e modelos computacionais;
+- utilizam transformers sem função linguística;
+- tratam de decodificação neural não linguística;
+- apresentam revisões amplas ou tutoriais;
+- descrevem aplicações clínicas sem decodificar linguagem neural;
+- tratam de temas próximos, mas sem contribuição central para A1, A2 ou A3.
+
+A classificação B não significa que o estudo seja irrelevante. O registro
+pode ser utilizado como fundamento, contexto, referência metodológica ou
+apoio à discussão.
+
+### 14.6 D — Descartar
+
+A categoria D inclui registros que:
+
+- estão fora do escopo;
+- resultam de coincidência terminológica;
+- utilizam BMI apenas como Body Mass Index;
+- utilizam BCI com outro significado;
+- são duplicatas não canônicas;
+- correspondem a erratas, figuras ou materiais suplementares;
+- não possuem natureza acadêmica ou técnica adequada;
+- foram substituídos por uma versão mais completa;
+- não apresentam informações suficientes para utilização.
+
+### 14.7 Regras de precedência
+
+A interpretação conceitual segue a seguinte ordem:
+
+```text
+1. Registro inválido ou fora do escopo
+   → D
+
+2. Contribuição central sobre riscos, ética ou governança neural
+   → A3
+
+3. Modelo de linguagem operacionalmente integrado ao sistema neural
+   → A1
+
+4. Decodificação neural com saída linguística,
+   sem integração operacional de modelo de linguagem
+   → A2
+
+5. Relação indireta, comparativa, genérica ou contextual
+   → B
+```
+
+A implementação pode utilizar verificações técnicas adicionais para
+reduzir falsos positivos e resolver ambiguidades.
+
+### 14.8 Classificação automatizada e adjudicação
+
+A matriz deve preservar três valores distintos:
+
+```text
+suggested_priority
+adjudicated_priority
+final_priority
+```
+
+Regras:
+
+```text
+Sem adjudicação:
+final_priority = suggested_priority
+
+Com adjudicação:
+final_priority = adjudicated_priority
+```
+
+A adjudicação deve registrar:
+
+- classificação automatizada;
+- classificação final;
+- justificativa;
+- fonte consultada;
+- responsável;
+- data da decisão.
+
+A classificação automática constitui pré-triagem. A decisão final de
+inclusão depende da revisão de título, resumo e, quando necessário, texto
+completo.
 
 ## 15. Correntes analíticas
 
@@ -396,8 +556,12 @@ O estudo:
 | Resultados principais | Principais achados |
 | Limitações | Limitações reconhecidas pelos autores |
 | Relação com a pesquisa | Contribuição para o tema do projeto |
-| Prioridade | Alta, média, baixa ou descartar |
-| Decisão | Ler integralmente, citar, usar como apoio ou descartar |
+| Prioridade sugerida | A1, A2, A3, B ou D atribuída automaticamente |
+| Prioridade adjudicada | Categoria definida após revisão humana, quando aplicável |
+| Prioridade final | Categoria utilizada após classificação e eventual adjudicação |
+| Decisão de triagem | Include, Exclude ou Uncertain |
+| Motivo da decisão | Código e justificativa de inclusão ou exclusão |
+| Responsável e data | Pesquisador responsável e data da revisão |
 | Observações | Notas do pesquisador |
 
 ## 17. Riscos de falso positivo
@@ -445,19 +609,41 @@ transformer
 NLP
 ```
 
-## 18. Processo de triagem
+## 18. Processo de classificação e triagem
 
-A triagem será realizada em etapas:
+O processo será realizado em etapas rastreáveis:
 
 1. identificação dos registros;
-2. remoção de duplicatas;
-3. leitura de título;
-4. leitura de resumo;
-5. classificação temática;
-6. atribuição de prioridade;
-7. leitura integral dos estudos selecionados;
-8. extração dos campos analíticos;
-9. registro da decisão de inclusão ou exclusão.
+2. validação e higienização dos metadados;
+3. normalização de títulos, DOI e demais identificadores;
+4. remoção ou consolidação de duplicatas;
+5. classificação temática automatizada;
+6. auditoria das mudanças de prioridade;
+7. adjudicação humana dos casos ambíguos;
+8. triagem por título e resumo;
+9. registro da decisão como `Include`, `Exclude` ou `Uncertain`;
+10. recuperação do texto completo dos registros elegíveis;
+11. triagem por texto completo;
+12. extração estruturada das evidências;
+13. avaliação metodológica;
+14. decisão final de inclusão;
+15. síntese dos resultados e identificação de lacunas.
+
+A ordem recomendada para a triagem manual do corpus central da v4.3f é:
+
+```text
+1. A1 — Integração BMI/BCI e modelos de linguagem
+2. A3 — Riscos e governança
+3. A2 — Decodificação neural de linguagem
+```
+
+Essa ordem prioriza inicialmente a integração BMI/BCI–modelo de
+linguagem, seguida da dimensão de riscos e governança e, posteriormente,
+do conjunto mais amplo de decodificação neural de linguagem.
+
+A classificação automática não deve sobrescrever decisões humanas.
+Quando houver alteração manual da categoria, a adjudicação deverá ser
+registrada separadamente.
 
 ## 19. Registro das buscas
 
@@ -490,15 +676,22 @@ A estratégia deverá ser revisada considerando:
 
 ## 21. Limitações do protocolo
 
-- As APIs possuem coberturas diferentes.
+- As APIs acadêmicas possuem coberturas e critérios de indexação diferentes.
 - Alguns registros não apresentam resumo.
-- As siglas BMI e BCI produzem falsos positivos.
+- A qualidade da classificação depende da qualidade dos metadados recuperados.
+- As siglas BMI, BCI e LLM podem produzir falsos positivos.
 - A terminologia varia entre comunidades científicas.
 - Muitos trabalhos relevantes podem não utilizar explicitamente o termo LLM.
 - Trabalhos recentes podem existir apenas como preprints.
-- A classificação automática não substitui a avaliação humana.
-- A lista de venues não é exaustiva.
-- O protocolo poderá ser refinado após a busca piloto.
+- Títulos isolados podem produzir classificações ambíguas.
+- As categorias A1, A2 e A3 podem apresentar interseções conceituais.
+- A classificação automática constitui pré-triagem e não decisão acadêmica final.
+- A adjudicação humana pode alterar a distribuição das categorias.
+- A ausência de texto completo pode impedir a decisão final de inclusão.
+- A lista de venues e fontes não é exaustiva.
+- O corpus público pode não conter todos os campos utilizados na análise local.
+- O protocolo poderá ser refinado quando novos padrões de falso positivo ou falso negativo forem identificados.
+- Nesta etapa, o levantamento é exploratório e estruturado, não constituindo ainda uma revisão sistemática completa.
 
 ## 22. Produtos esperados
 
@@ -529,3 +722,43 @@ São preferíveis expressões como:
 - confiança excessiva na saída do sistema;
 - vulnerabilidades sociotécnicas;
 - riscos na interação entre sistema, usuário e contexto.
+
+## 24. Versionamento e baseline atual
+
+A aplicação do protocolo deve registrar conjuntamente:
+
+```text
+pipeline_version
+taxonomy_version
+corpus_version
+classification_version
+matrix_version
+search_date
+review_date
+reviewer
+```
+
+O baseline consolidado da v4.3f é:
+
+| Indicador | Valor |
+|---|---:|
+| Versão do pipeline | v4.3f |
+| Versão da taxonomia | 1.6 |
+| Corpus total | 864 |
+| Corpus central automatizado | 255 |
+| Corpus central adjudicado | 254 |
+| A1 | 71 |
+| A2 | 120 |
+| A3 | 63 |
+| B | 564 |
+| D | 46 |
+
+O corpus central adjudicado representa o conjunto candidato à triagem
+humana, e não o conjunto final de estudos incluídos.
+
+Documentos complementares:
+
+- `docs/decisoes_conceituais.md`;
+- `docs/matriz_analitica_neuro.md`;
+- `docs/releases/v4.3f.md`;
+- `config/taxonomy_neuro.yaml`.
