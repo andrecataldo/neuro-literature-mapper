@@ -809,7 +809,92 @@ python -m unittest discover \
   -v
 ```
 
-## 28. Estado atual do workflow
+## 28. Validação automatizada da matriz
+
+A matriz deve ser validada antes e depois de cada sessão de triagem.
+
+O validador está disponível em:
+
+```text
+scripts/validate_screening_matrix.py
+```
+
+Execução padrão:
+
+```bash
+python scripts/validate_screening_matrix.py
+```
+
+O validador verifica:
+
+- presença das 22 colunas obrigatórias;
+- identificadores vazios ou duplicados;
+- distribuição do baseline da v4.3f;
+- valores válidos de prioridade;
+- consistência entre prioridade sugerida, adjudicada e final;
+- consistência entre resumo e `abstract_available`;
+- valores booleanos;
+- completude das decisões humanas;
+- compatibilidade dos códigos de inclusão e exclusão;
+- datas no padrão ISO;
+- necessidade de segunda revisão;
+- grupos candidatos a duplicata;
+- preservação dos campos bibliográficos do corpus adjudicado;
+- alterações de resumo sem registro da fonte.
+
+Registros ainda não triados são considerados válidos. As regras de
+completude são aplicadas quando `screening_decision` recebe um valor.
+
+Execução sem comparação com o corpus original:
+
+```bash
+python scripts/validate_screening_matrix.py \
+  --skip-source-check
+```
+
+Esse modo deve ser utilizado somente em testes isolados.
+
+Relatório JSON:
+
+```bash
+python scripts/validate_screening_matrix.py \
+  --json-output outputs/validacao_triagem_v4_3f.json
+```
+
+O relatório JSON contém:
+
+```text
+record_count
+error_count
+warning_count
+issues
+```
+
+Modo estrito:
+
+```bash
+python scripts/validate_screening_matrix.py \
+  --strict
+```
+
+No modo padrão:
+
+```text
+erros → código de saída 1
+avisos → código de saída 0
+```
+
+No modo estrito:
+
+```text
+erros → código de saída 1
+avisos → código de saída 2
+sem problemas → código de saída 0
+```
+
+O modo estrito é recomendado para validações finais e automações de CI.
+
+## 29. Estado atual do workflow
 
 ```text
 Versão do pipeline: v4.3f
@@ -822,7 +907,7 @@ Registros candidatos a duplicata: 4
 Decisões iniciais preenchidas: 0
 ```
 
-## 29. Próximas implementações
+## 30. Próximas implementações
 
 O fluxo deverá evoluir com:
 
