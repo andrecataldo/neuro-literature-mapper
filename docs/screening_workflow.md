@@ -703,49 +703,226 @@ print("Validation completed successfully.")
 PY
 ```
 
-## 23. Acompanhamento do progresso
+## 23. Acompanhamento operacional do progresso
 
-O progresso pode ser acompanhado com:
+O acompanhamento da triagem é realizado por:
+
+```text
+scripts/screening_progress.py
+```
+
+O script é somente leitura. Ele não altera a matriz, não preenche
+decisões e não modifica prioridades.
+
+Antes de consultar o progresso, recomenda-se validar a matriz:
 
 ```bash
-python - <<'PY'
-import pandas as pd
-
-path = "outputs/matriz_triagem_neuro_v4_3f.csv"
-
-df = pd.read_csv(
-    path,
-    dtype=str,
-    keep_default_na=False,
-)
-
-total = len(df)
-completed = (df["screening_decision"] != "").sum()
-remaining = total - completed
-
-print(f"Total: {total}")
-print(f"Triados: {completed}")
-print(f"Pendentes: {remaining}")
-print(f"Progresso: {(completed / total) * 100:.1f}%")
-print()
-
-print("Decisões:")
-print(
-    df["screening_decision"]
-    .replace("", "Pending")
-    .value_counts()
-)
-print()
-
-print("Por prioridade:")
-print(
-    pd.crosstab(
-        df["final_priority"],
-        df["screening_decision"].replace("", "Pending"),
-    )
-)
-PY
+python scripts/validate_screening_matrix.py
+python scripts/screening_progress.py
 ```
+
+A execução padrão é:
+
+```bash
+python scripts/screening_progress.py
+```
+
+O relatório apresenta:
+
+- total de registros;
+- registros triados e pendentes;
+- percentual de conclusão;
+- distribuição entre `Include`, `Exclude`, `Uncertain` e `Pending`;
+- progresso por A1, A3 e A2;
+- cobertura de resumos;
+- estado dos grupos candidatos a duplicata;
+- registros marcados para segunda revisão.
+
+No baseline inicial da v4.3f, a saída esperada é:
+
+```text
+Total:      254
+Completed:  0
+Pending:    254
+Progress:   0.0%
+
+A1: 71 registros
+A3: 63 registros
+A2: 120 registros
+
+Available abstracts: 214
+Missing abstracts: 40
+
+Potential duplicate groups: 2
+Potential duplicate records: 4
+
+Second-review flags: 44
+```
+
+### 23.1 Definição de registro triado
+
+Um registro é contabilizado como triado quando
+`screening_decision` contém um dos valores:
+
+```text
+Include
+Exclude
+Uncertain
+```
+
+Um registro `Uncertain` conta como concluído na primeira triagem,
+mas permanece sujeito a recuperação de informações ou segunda revisão.
+
+Registros com `screening_decision` vazio são contabilizados como
+`Pending`.
+
+### 23.2 Progresso por prioridade
+
+O relatório preserva a ordem operacional da matriz:
+
+```text
+A1 → A3 → A2
+```
+
+Para cada prioridade são apresentados:
+
+```text
+total
+completed
+pending
+include
+exclude
+uncertain
+progress_percent
+```
+
+Esse detalhamento permite acompanhar se a triagem está avançando na
+ordem definida pelo protocolo.
+
+### 23.3 Cobertura de resumos
+
+O relatório distingue:
+
+```text
+available_total
+missing_total
+missing_pending
+missing_screened
+missing_uncertain
+```
+
+A recuperação de um resumo deve ser registrada conforme a seção 20
+deste documento.
+
+### 23.4 Grupos candidatos a duplicata
+
+Para os registros com `duplicate_group`, o relatório apresenta:
+
+```text
+groups_total
+records_total
+groups_pending
+groups_resolved
+groups_ambiguous
+records_pending
+```
+
+Um grupo é considerado resolvido pelo relatório quando:
+
+```text
+não há registros pendentes
+e
+existe exatamente um registro marcado como Include
+```
+
+Grupos com decisões completas, mas sem exatamente uma inclusão, são
+apresentados como ambíguos. A validação metodológica da decisão continua
+sendo responsabilidade de `validate_screening_matrix.py`.
+
+### 23.5 Segunda revisão
+
+O relatório apresenta:
+
+```text
+flagged_total
+awaiting_initial_screening
+screened_but_still_flagged
+uncertain_flagged
+```
+
+A matriz atual possui o campo:
+
+```text
+second_review_required
+```
+
+mas ainda não possui:
+
+```text
+second_review_completed
+```
+
+Por esse motivo, o relatório não afirma que uma segunda revisão foi
+concluída. Ele apenas informa que o registro continua marcado para essa
+etapa.
+
+### 23.6 Listagem de pendências
+
+Para exibir os primeiros registros pendentes na ordem da matriz:
+
+```bash
+python scripts/screening_progress.py \
+  --pending-limit 10
+```
+
+Cada linha apresenta:
+
+```text
+record_id | prioridade | ano | título
+```
+
+O parâmetro deve receber zero ou um número inteiro positivo.
+
+### 23.7 Relatórios estruturados
+
+Relatório JSON:
+
+```bash
+python scripts/screening_progress.py \
+  --json-output outputs/progresso_triagem_v4_3f.json
+```
+
+Relatório CSV em formato longo:
+
+```bash
+python scripts/screening_progress.py \
+  --csv-output outputs/progresso_triagem_v4_3f.csv
+```
+
+Os dois formatos podem ser gerados na mesma execução:
+
+```bash
+python scripts/screening_progress.py \
+  --json-output outputs/progresso_triagem_v4_3f.json \
+  --csv-output outputs/progresso_triagem_v4_3f.csv
+```
+
+Esses arquivos são derivados da matriz e permanecem fora do Git.
+
+### 23.8 Uso após cada sessão
+
+Ao final de cada sessão de triagem, executar:
+
+```bash
+python scripts/validate_screening_matrix.py
+
+python scripts/screening_progress.py \
+  --json-output outputs/progresso_triagem_v4_3f.json \
+  --csv-output outputs/progresso_triagem_v4_3f.csv
+```
+
+O primeiro comando verifica integridade. O segundo registra o estado
+operacional da triagem.
 
 ## 24. Critérios mínimos de completude
 
@@ -792,7 +969,7 @@ Esses arquivos serão gerados em etapa posterior por um script de consolidação
 
 ## 27. Testes automatizados
 
-Executar os testes específicos:
+Executar os testes da inicialização da matriz:
 
 ```bash
 python -m unittest \
@@ -800,13 +977,48 @@ python -m unittest \
   -v
 ```
 
-Executar a suíte completa:
+Executar os testes do validador:
+
+```bash
+python -m unittest \
+  tests.test_validate_screening_matrix \
+  -v
+```
+
+Executar os testes do relatório de progresso:
+
+```bash
+python -m unittest \
+  tests.test_screening_progress \
+  -v
+```
+
+Executar todos os testes relacionados ao workflow:
+
+```bash
+python -m unittest \
+  tests.test_screening_matrix \
+  tests.test_validate_screening_matrix \
+  tests.test_screening_progress \
+  -v
+```
+
+Executar a suíte completa do projeto:
 
 ```bash
 python -m unittest discover \
   -s tests \
   -p "test_*.py" \
   -v
+```
+
+Após a introdução do acompanhamento operacional, o baseline esperado da
+suíte é:
+
+```text
+Ran 49 tests
+
+OK
 ```
 
 ## 28. Validação automatizada da matriz
@@ -899,25 +1111,74 @@ O modo estrito é recomendado para validações finais e automações de CI.
 ```text
 Versão do pipeline: v4.3f
 Versão da taxonomia: 1.6
-Versão do workflow: v4.4 inicial
+Versão do workflow: v4.4 — acompanhamento operacional
+
 Registros centrais: 254
+A1: 71
+A3: 63
+A2: 120
+
+Registros com resumo: 214
 Registros sem resumo: 40
+
 Grupos candidatos a duplicata: 2
 Registros candidatos a duplicata: 4
+
+Registros marcados para segunda revisão: 44
 Decisões iniciais preenchidas: 0
+Progresso inicial: 0.0%
+```
+
+Componentes implementados:
+
+```text
+scripts/init_screening_matrix.py
+scripts/validate_screening_matrix.py
+scripts/screening_progress.py
+```
+
+Testes correspondentes:
+
+```text
+tests/test_screening_matrix.py
+tests/test_validate_screening_matrix.py
+tests/test_screening_progress.py
+```
+
+Responsabilidades:
+
+```text
+init_screening_matrix.py
+    cria a matriz inicial
+
+validate_screening_matrix.py
+    verifica integridade estrutural e metodológica
+
+screening_progress.py
+    apresenta o estado operacional da triagem
 ```
 
 ## 30. Próximas implementações
 
-O fluxo deverá evoluir com:
+Etapas concluídas na v4.4:
 
-1. validação automatizada da matriz editada;
-2. geração de resumo do progresso;
-3. exportação de incluídos, excluídos e incertos;
-4. controle de alterações humanas;
-5. suporte à recuperação de resumos;
-6. preparação da matriz de texto completo;
-7. interface de triagem;
-8. extração estruturada de evidências;
-9. métricas de concordância entre revisores;
-10. geração de diagrama de fluxo da seleção dos estudos.
+```text
+1. inicialização reproduzível da matriz;
+2. validação automatizada da matriz;
+3. acompanhamento operacional do progresso.
+```
+
+Próximas etapas previstas:
+
+1. exportação de incluídos, excluídos e incertos;
+2. preparação do conjunto para texto completo;
+3. controle de alterações humanas;
+4. suporte à recuperação de resumos;
+5. resolução dos candidatos a duplicata;
+6. triagem piloto de A1;
+7. triagem completa na ordem A1, A3 e A2;
+8. preparação da matriz de texto completo;
+9. extração estruturada de evidências;
+10. métricas de concordância entre revisores;
+11. geração do diagrama de fluxo da seleção dos estudos;
+12. interface de triagem.
