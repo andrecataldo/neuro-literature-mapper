@@ -1626,29 +1626,297 @@ Por esse motivo, somente o modo `--dry-run` foi executado no corpus real.
 Os testes de escrita utilizaram exclusivamente matrizes sintéticas em
 diretórios temporários.
 
-## 31. Próximas implementações
+## 31. Roadmap
 
-Etapas concluídas na v4.4:
+O roadmap separa a infraestrutura técnica da execução metodológica da
+triagem, da avaliação por texto completo e da síntese das evidências.
+
+### 31.1 v4.3f — Baseline bibliográfico e classificação
+
+Status:
 
 ```text
-1. inicialização reproduzível da matriz;
-2. validação automatizada da matriz;
-3. acompanhamento operacional do progresso;
-4. exportação e consolidação dos resultados.
+Concluído
 ```
 
-Próximas etapas previstas:
+Entregas:
 
-1. controle de alterações humanas e snapshots de sessões;
-2. suporte à recuperação de resumos;
-3. resolução dos candidatos a duplicata;
-4. triagem piloto de A1;
-5. revisão dos critérios após o piloto;
-6. triagem completa na ordem A1, A3 e A2;
-7. segunda revisão dos registros sinalizados;
-8. preparação da matriz de texto completo;
-9. triagem por texto completo;
-10. extração estruturada de evidências;
-11. métricas de concordância entre revisores;
-12. geração do diagrama de fluxo da seleção dos estudos;
-13. interface de triagem.
+- consolidação de 864 registros;
+- limpeza e deduplicação;
+- taxonomia 1.6;
+- classificação A1, A2, A3, B e D;
+- adjudicação manual;
+- corpus central com 254 registros;
+- documentação metodológica;
+- release reproduzível.
+
+Baseline final:
+
+```text
+A1: 71
+A2: 120
+A3: 63
+B: 564
+D: 46
+```
+
+### 31.2 v4.4 — Infraestrutura da triagem
+
+Status:
+
+```text
+Concluído
+```
+
+Entregas:
+
+- inicialização reproduzível da matriz;
+- preservação das classificações automática e adjudicada;
+- identificação de registros sem resumo;
+- identificação de candidatos a duplicata;
+- validação estrutural e metodológica;
+- acompanhamento operacional do progresso;
+- exportação de Include, Exclude, Uncertain e Pending;
+- preparação conservadora de candidatos ao texto completo;
+- manifestos e checksums;
+- 69 testes automatizados.
+
+Componentes:
+
+```text
+scripts/init_screening_matrix.py
+scripts/validate_screening_matrix.py
+scripts/screening_progress.py
+scripts/export_screening_results.py
+```
+
+Estado operacional inicial:
+
+```text
+Registros: 254
+Triados: 0
+Pendentes: 254
+Sem resumo: 40
+Candidatos a duplicata: 4
+Marcados para segunda revisão: 44
+```
+
+### 31.3 v4.5 — Operação e rastreabilidade da triagem
+
+Status:
+
+```text
+Próximo ciclo
+```
+
+#### 31.3.1 Controle de alterações humanas e snapshots
+
+Componentes planejados:
+
+```text
+scripts/snapshot_screening_session.py
+tests/test_snapshot_screening_session.py
+docs/screening_sessions.md
+```
+
+Objetivos:
+
+- congelar o estado da matriz após cada sessão;
+- registrar o checksum da matriz;
+- comparar a sessão atual com o snapshot anterior;
+- identificar registros e campos alterados;
+- registrar responsável, data e identificador da sessão;
+- produzir histórico auditável;
+- impedir sobrescrita silenciosa;
+- não modificar a matriz de trabalho.
+
+Artefatos previstos:
+
+```text
+outputs/screening_sessions/
+└── SESSION_ID/
+    ├── matriz_triagem.csv
+    ├── alteracoes.csv
+    └── manifesto.json
+```
+
+Tipos iniciais de alteração:
+
+```text
+decision_added
+decision_changed
+reason_code_changed
+reason_changed
+evidence_changed
+review_flag_changed
+notes_changed
+abstract_recovered
+abstract_changed
+bibliographic_field_changed
+```
+
+#### 31.3.2 Recuperação de resumos
+
+Objetivos:
+
+- preparar o inventário dos 40 registros sem resumo;
+- registrar fontes consultadas;
+- identificar resumos recuperados;
+- preservar a origem e a data da recuperação;
+- manter rastreabilidade das alterações;
+- separar ausência confirmada de busca ainda não realizada.
+
+Componente provisório:
+
+```text
+scripts/prepare_abstract_recovery.py
+```
+
+#### 31.3.3 Resolução de candidatos a duplicata
+
+Objetivos:
+
+- comparar DOI, título, autores, ano e venue;
+- identificar a versão canônica;
+- distinguir duplicata, preprint e publicação final;
+- registrar E10 ou E11;
+- preservar as decisões no histórico.
+
+Baseline:
+
+```text
+2 grupos
+4 registros
+```
+
+#### 31.3.4 Piloto de triagem A1
+
+Escopo inicial:
+
+```text
+10 a 15 registros A1
+```
+
+O piloto deverá avaliar:
+
+- clareza dos critérios;
+- adequação dos códigos I, E e U;
+- qualidade das evidências;
+- tempo médio por registro;
+- frequência de incerteza;
+- dúvidas entre A1 e A2;
+- necessidade de novos códigos;
+- regras de segunda revisão.
+
+#### 31.3.5 Revisão do protocolo
+
+Após o piloto:
+
+- consolidar dificuldades;
+- ajustar instruções;
+- versionar mudanças nos critérios;
+- revisar exemplos;
+- congelar o protocolo para a triagem completa.
+
+#### 31.3.6 Triagem completa
+
+Ordem:
+
+```text
+A1 → A3 → A2
+```
+
+Etapas:
+
+1. concluir A1;
+2. revisar os casos incertos de A1;
+3. concluir A3;
+4. revisar os casos incertos de A3;
+5. concluir A2;
+6. revisar os casos incertos de A2;
+7. resolver os candidatos a duplicata;
+8. revisar os registros sem resumo;
+9. executar segunda revisão;
+10. consolidar os resultados.
+
+#### 31.3.7 Encerramento da primeira triagem
+
+Critérios:
+
+```text
+pending = 0
+decisões completas
+duplicatas resolvidas
+registros sinalizados tratados
+validação estrita concluída
+snapshot final congelado
+exportação executada com --require-complete
+```
+
+### 31.4 v4.6 — Triagem por texto completo
+
+Objetivos:
+
+- preparar a matriz de texto completo;
+- controlar disponibilidade e origem dos documentos;
+- aplicar critérios de elegibilidade;
+- registrar motivos de exclusão;
+- executar segunda revisão;
+- acompanhar o progresso;
+- consolidar o corpus final;
+- gerar contagens do fluxo de seleção.
+
+Componentes previstos:
+
+```text
+scripts/init_full_text_matrix.py
+scripts/validate_full_text_matrix.py
+scripts/full_text_progress.py
+scripts/export_full_text_results.py
+```
+
+### 31.5 v4.7 — Extração estruturada de evidências
+
+Objetivos:
+
+- definir o esquema de extração;
+- caracterizar tecnologia neural e modalidade de sinal;
+- registrar tarefa e saída linguística;
+- identificar o papel dos modelos de linguagem;
+- caracterizar arquiteturas de integração;
+- registrar participantes, métodos e métricas;
+- extrair resultados e limitações;
+- codificar riscos, privacidade e governança;
+- registrar confiança, autonomia e supervisão;
+- avaliar qualidade metodológica;
+- preservar rastreabilidade entre evidência e fonte.
+
+### 31.6 v4.8 — Análise e mapeamento
+
+Análises previstas:
+
+- evolução temporal;
+- distribuição por venues;
+- distribuição por A1, A2 e A3;
+- modalidades neurais;
+- tipos de saída linguística;
+- papel dos modelos de linguagem;
+- arquiteturas de integração;
+- populações estudadas;
+- métricas;
+- riscos e mecanismos de mitigação;
+- lacunas técnicas, humanas e de governança.
+
+### 31.7 v5.0 — Síntese e publicação
+
+Entregas previstas:
+
+- corpus final congelado;
+- síntese narrativa e temática;
+- mapas de evidências;
+- tabelas e figuras;
+- fluxo de seleção dos estudos;
+- pacote reproduzível;
+- release pública compatível com direitos de redistribuição;
+- material para artigo e dissertação;
+- documentação das limitações.
