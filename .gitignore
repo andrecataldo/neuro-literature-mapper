@@ -54,4 +54,6 @@ data/external/
 
 # Generated release checksums
 outputs/*.sha256
-EOF
+
+# Screening session snapshots
+outputs/screening_sessions/
