@@ -1471,33 +1471,42 @@ python -m unittest \
   -v
 ```
 
-Os testes do controle de sessões utilizam matrizes sintéticas e
-diretórios temporários. Nenhum snapshot de teste é criado em
-`outputs/screening_sessions/`.
+Executar os testes da preparação da recuperação de resumos:
+
+```bash
+python -m unittest \
+  tests.test_prepare_abstract_recovery \
+  -v
+```
+
+Os testes da recuperação de resumos utilizam matrizes sintéticas e
+diretórios temporários. Eles não consultam APIs, não acessam serviços
+externos e não modificam a matriz real de triagem.
 
 A cobertura específica inclui:
 
-- validação do identificador da sessão;
-- validação do responsável;
-- validação mínima da matriz;
-- criação de snapshot baseline;
+- validação do rótulo dos artefatos;
+- reconhecimento de marcadores de resumo ausente;
+- normalização de marcadores com e sem acentos;
+- presença das 22 colunas obrigatórias;
+- identificadores vazios ou duplicados;
+- valores booleanos inválidos;
+- consistência entre `abstract` e `abstract_available`;
+- exigência de segunda revisão para registros sem resumo;
+- verificação da quantidade esperada de registros;
+- seleção dos registros sem resumo;
+- preservação da ordem da matriz;
+- registro da posição original de cada registro;
+- inicialização da fila com status `Pending`;
+- distribuição por prioridade;
+- identificação de candidatos a duplicata;
+- estrutura das colunas da fila;
+- manifesto JSON;
+- checksums SHA-256;
 - modo `--dry-run`;
-- vínculo explícito com a sessão anterior;
-- decisão adicionada;
-- decisão alterada ou apagada;
-- justificativa e evidência alteradas;
-- recuperação, alteração ou remoção de resumo;
-- mudança bibliográfica sinalizada;
-- mudança de prioridade sinalizada;
-- registros adicionados e removidos;
-- mudança da ordem das linhas;
-- colunas adicionadas ou removidas;
-- contagens por tipo, campo e severidade;
-- checksums dos artefatos;
-- caminhos definitivos registrados no manifesto;
-- preservação da matriz de entrada;
 - proteção contra sobrescrita;
-- rejeição de snapshot anterior adulterado.
+- uso deliberado de `--force`;
+- preservação da matriz de entrada.
 
 Executar todos os testes do workflow de triagem:
 
@@ -1508,6 +1517,7 @@ python -m unittest \
   tests.test_screening_progress \
   tests.test_export_screening_results \
   tests.test_snapshot_screening_session \
+  tests.test_prepare_abstract_recovery \
   -v
 ```
 
@@ -1520,11 +1530,11 @@ python -m unittest discover \
   -v
 ```
 
-Após a introdução do controle de sessões e snapshots, o baseline
+Após a introdução da preparação da recuperação de resumos, o baseline
 confirmado é:
 
 ```text
-Ran 91 tests
+Ran 118 tests
 
 OK
 ```
@@ -1619,7 +1629,7 @@ O modo estrito é recomendado para validações finais e automações de CI.
 ```text
 Versão do pipeline: v4.3f
 Versão da taxonomia: 1.6
-Versão do workflow: v4.5 — rastreabilidade das sessões
+Versão do workflow: v4.5 — recuperação estruturada de resumos
 
 Registros centrais: 254
 A1: 71
@@ -1645,6 +1655,7 @@ scripts/validate_screening_matrix.py
 scripts/screening_progress.py
 scripts/export_screening_results.py
 scripts/snapshot_screening_session.py
+scripts/prepare_abstract_recovery.py
 ```
 
 Testes correspondentes:
@@ -1655,6 +1666,7 @@ tests/test_validate_screening_matrix.py
 tests/test_screening_progress.py
 tests/test_export_screening_results.py
 tests/test_snapshot_screening_session.py
+tests/test_prepare_abstract_recovery.py
 ```
 
 Documentação operacional:
@@ -1662,51 +1674,75 @@ Documentação operacional:
 ```text
 docs/screening_workflow.md
 docs/screening_sessions.md
+docs/abstract_recovery.md
 ```
 
-Responsabilidades:
+A fase v4.5.2a foi concluída.
+
+A fila oficial foi gerada em:
 
 ```text
-init_screening_matrix.py
-    cria a matriz inicial
-
-validate_screening_matrix.py
-    verifica integridade estrutural e metodológica
-
-screening_progress.py
-    apresenta o estado operacional da triagem
-
-export_screening_results.py
-    gera subconjuntos, snapshot concluído e manifesto
-
-snapshot_screening_session.py
-    congela sessões e registra alterações humanas
+outputs/matriz_recuperacao_resumos_v4_3f.csv
 ```
 
-O snapshot baseline foi criado em:
+O manifesto auditado está em:
+
+```text
+outputs/manifesto_preparacao_recuperacao_resumos_v4_3f.json
+```
+
+Estado confirmado:
+
+```text
+Registros: 40
+Pending: 40
+Recovered: 0
+Not found: 0
+
+A1-central-integracao-llm: 10
+A2-central-decoding-linguagem: 16
+A3-central-riscos-governanca: 14
+
+Candidatos a duplicata: 0
+```
+
+Integridade da matriz:
+
+```text
+SHA-256:
+adff6ac701110eaafc5afb02b97100cc4853cfb5bc4060e0311d6588a7edefab
+```
+
+Integridade da fila:
+
+```text
+SHA-256:
+7cf2a855997c8eab0edec65f9d340b5fc0d63b667e0e0c73741ad12774fb3ad5
+```
+
+Validação automatizada:
+
+```text
+Testes específicos: 27 aprovados
+Suíte completa: 118 aprovados
+Falhas: 0
+Erros: 0
+```
+
+Os artefatos derivados permanecem fora do Git por meio das regras:
+
+```text
+outputs/*.csv
+outputs/*.json
+```
+
+O snapshot baseline da triagem permanece em:
 
 ```text
 outputs/screening_sessions/baseline_v4_3f/
 ```
 
-Artefatos:
-
-```text
-matriz_triagem.csv
-alteracoes.csv
-manifesto.json
-```
-
-A matriz original e o snapshot baseline possuem o mesmo SHA-256:
-
-```text
-adff6ac701110eaafc5afb02b97100cc4853cfb5bc4060e0311d6588a7edefab
-```
-
-Isso confirma que o snapshot preservou integralmente a matriz de
-trabalho no estado anterior ao início da triagem manual.
-
-No estado atual:
+Estado atual das decisões:
 
 ```text
 Include: 0
@@ -1715,20 +1751,12 @@ Uncertain: 0
 Pending: 254
 ```
 
-Os snapshots permanecem fora do Git por meio da regra:
+Próxima etapa:
 
 ```text
-outputs/screening_sessions/
+v4.5.2b — validação e aplicação dos resumos recuperados
 ```
 
-Os testes de escrita utilizam exclusivamente matrizes sintéticas e
-diretórios temporários.
-
-Baseline automatizado atual:
-
-```text
-91 testes
-```
 
 ## 31. Roadmap
 
@@ -1894,23 +1922,145 @@ Seu checksum de matriz é idêntico ao da matriz de trabalho.
 Status:
 
 ```text
-Próxima implementação
+v4.5.2a concluída
+v4.5.2b próxima fase
+```
+
+Componentes concluídos:
+
+```text
+scripts/prepare_abstract_recovery.py
+tests/test_prepare_abstract_recovery.py
+docs/abstract_recovery.md
+```
+
+A implementação foi separada em:
+
+```text
+v4.5.2a — preparação e controle da fila
+v4.5.2b — validação e aplicação dos resumos recuperados
+```
+
+##### v4.5.2a — Preparação e controle da fila
+
+Status:
+
+```text
+Concluído
+```
+
+Entregas:
+
+- seleção por `abstract_available = false`;
+- validação dos marcadores de ausência;
+- normalização de marcadores com e sem acentos;
+- confirmação dos 40 registros esperados;
+- preservação da ordem da matriz;
+- registro da linha original;
+- preservação dos identificadores;
+- preservação dos dados bibliográficos;
+- preservação do estado da triagem;
+- preservação da exigência de segunda revisão;
+- campos estruturados para a recuperação;
+- inicialização da fila como `Pending`;
+- manifesto com contagens e checksums;
+- modo `--dry-run`;
+- proteção contra sobrescrita;
+- preservação do checksum da matriz;
+- documentação operacional;
+- 27 testes específicos;
+- 118 testes na suíte completa;
+- auditoria integral do manifesto.
+
+Artefatos:
+
+```text
+outputs/matriz_recuperacao_resumos_v4_3f.csv
+outputs/manifesto_preparacao_recuperacao_resumos_v4_3f.json
+```
+
+Baseline confirmado:
+
+```text
+Total sem resumo: 40
+
+A1-central-integracao-llm: 10
+A2-central-decoding-linguagem: 16
+A3-central-riscos-governanca: 14
+
+Candidatos a duplicata: 0
+Status inicial: Pending
+```
+
+Checksums:
+
+```text
+Matriz:
+adff6ac701110eaafc5afb02b97100cc4853cfb5bc4060e0311d6588a7edefab
+
+Fila:
+7cf2a855997c8eab0edec65f9d340b5fc0d63b667e0e0c73741ad12774fb3ad5
+```
+
+##### v4.5.2b — Validação e aplicação
+
+Status:
+
+```text
+Próxima fase
 ```
 
 Objetivos:
 
-- preparar o inventário dos 40 registros sem resumo;
-- registrar fontes consultadas;
-- identificar resumos recuperados;
-- preservar a origem e a data da recuperação;
-- manter rastreabilidade das alterações;
-- separar ausência confirmada de busca ainda não realizada.
+- validar a estrutura da fila preenchida;
+- verificar a preservação dos campos de contexto;
+- validar os valores de `recovery_status`;
+- exigir os campos correspondentes a cada status;
+- validar datas e responsável;
+- validar a fonte de cada resumo recuperado;
+- rejeitar registros desconhecidos ou duplicados;
+- rejeitar resumo vazio com status `Recovered`;
+- rejeitar conteúdo preenchido com status `Not found`;
+- comparar a fila com a matriz;
+- produzir relatório antes da escrita;
+- oferecer modo `--dry-run`;
+- aplicar alterações atomicamente;
+- preservar uma cópia da matriz anterior;
+- gerar manifesto da aplicação;
+- integrar o resultado ao fluxo de snapshots.
 
-Componente provisório:
+Campos que poderão ser alterados:
 
 ```text
-scripts/prepare_abstract_recovery.py
+abstract
+abstract_available
+screening_notes
 ```
+
+Campos que não deverão ser modificados automaticamente:
+
+```text
+screening_decision
+screening_reason_code
+screening_reason
+screening_evidence
+screened_by
+screening_date
+second_review_required
+suggested_priority
+adjudicated_priority
+final_priority
+title
+authors
+year
+venue
+doi
+url
+```
+
+A recuperação de um resumo não remove automaticamente a exigência de
+segunda revisão.
+
 
 #### 31.3.3 Resolução de candidatos a duplicata
 
