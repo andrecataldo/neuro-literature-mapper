@@ -911,7 +911,8 @@ Esses arquivos são derivados da matriz e permanecem fora do Git.
 
 ### 23.8 Uso após cada sessão
 
-Ao final de cada sessão de triagem, executar:
+Ao final de cada sessão de triagem, executar primeiro a validação e o
+relatório de progresso:
 
 ```bash
 python scripts/validate_screening_matrix.py
@@ -921,8 +922,55 @@ python scripts/screening_progress.py \
   --csv-output outputs/progresso_triagem_v4_3f.csv
 ```
 
-O primeiro comando verifica integridade. O segundo registra o estado
-operacional da triagem.
+O primeiro comando verifica a integridade estrutural e metodológica. O
+segundo registra o estado operacional agregado da triagem.
+
+Em seguida, simular o snapshot da sessão:
+
+```bash
+python scripts/snapshot_screening_session.py \
+  --session-id SESSION_ID \
+  --reviewer "Andre Cataldo" \
+  --previous PREVIOUS_SESSION_DIRECTORY \
+  --note "Descrição da sessão." \
+  --dry-run
+```
+
+A simulação apresenta:
+
+- contagens atuais de decisão;
+- quantidade de campos alterados;
+- quantidade de registros alterados;
+- alterações informativas;
+- alterações classificadas como `warning`;
+- mudanças de estrutura ou ordem.
+
+Depois de revisar a simulação, criar o snapshot imutável:
+
+```bash
+python scripts/snapshot_screening_session.py \
+  --session-id SESSION_ID \
+  --reviewer "Andre Cataldo" \
+  --previous PREVIOUS_SESSION_DIRECTORY \
+  --note "Descrição da sessão."
+```
+
+Cada snapshot contém:
+
+```text
+matriz_triagem.csv
+alteracoes.csv
+manifesto.json
+```
+
+O procedimento completo está documentado em:
+
+```text
+docs/screening_sessions.md
+```
+
+O relatório de progresso mostra o estado atual. O snapshot registra a
+transição entre o estado anterior e o atual.
 
 ## 24. Critérios mínimos de completude
 
@@ -1415,31 +1463,41 @@ python -m unittest \
   -v
 ```
 
-O exportador possui testes com matrizes sintéticas completas e
-incompletas. Os arquivos são criados em diretórios temporários e
-removidos automaticamente.
+Executar os testes de sessões e snapshots:
 
-Os testes cobrem:
+```bash
+python -m unittest \
+  tests.test_snapshot_screening_session \
+  -v
+```
 
-- validação do rótulo;
-- colunas obrigatórias;
-- IDs vazios ou duplicados;
-- decisões inválidas;
-- decisões preenchidas de forma incompleta;
-- valores booleanos;
-- separação dos subconjuntos;
-- regra `Include + Uncertain`;
-- exportação parcial;
-- consolidação sem pendências;
-- proteção contra sobrescrita;
-- uso de `--force`;
-- geração do snapshot concluído;
-- manifesto JSON;
-- contagens;
-- checksums;
-- preservação da matriz de entrada;
+Os testes do controle de sessões utilizam matrizes sintéticas e
+diretórios temporários. Nenhum snapshot de teste é criado em
+`outputs/screening_sessions/`.
+
+A cobertura específica inclui:
+
+- validação do identificador da sessão;
+- validação do responsável;
+- validação mínima da matriz;
+- criação de snapshot baseline;
 - modo `--dry-run`;
-- proteção `--require-complete`.
+- vínculo explícito com a sessão anterior;
+- decisão adicionada;
+- decisão alterada ou apagada;
+- justificativa e evidência alteradas;
+- recuperação, alteração ou remoção de resumo;
+- mudança bibliográfica sinalizada;
+- mudança de prioridade sinalizada;
+- registros adicionados e removidos;
+- mudança da ordem das linhas;
+- colunas adicionadas ou removidas;
+- contagens por tipo, campo e severidade;
+- checksums dos artefatos;
+- caminhos definitivos registrados no manifesto;
+- preservação da matriz de entrada;
+- proteção contra sobrescrita;
+- rejeição de snapshot anterior adulterado.
 
 Executar todos os testes do workflow de triagem:
 
@@ -1449,6 +1507,7 @@ python -m unittest \
   tests.test_validate_screening_matrix \
   tests.test_screening_progress \
   tests.test_export_screening_results \
+  tests.test_snapshot_screening_session \
   -v
 ```
 
@@ -1461,10 +1520,11 @@ python -m unittest discover \
   -v
 ```
 
-Após a introdução do exportador, o baseline esperado é:
+Após a introdução do controle de sessões e snapshots, o baseline
+confirmado é:
 
 ```text
-Ran 69 tests
+Ran 91 tests
 
 OK
 ```
@@ -1559,7 +1619,7 @@ O modo estrito é recomendado para validações finais e automações de CI.
 ```text
 Versão do pipeline: v4.3f
 Versão da taxonomia: 1.6
-Versão do workflow: v4.4 — exportação e consolidação
+Versão do workflow: v4.5 — rastreabilidade das sessões
 
 Registros centrais: 254
 A1: 71
@@ -1584,6 +1644,7 @@ scripts/init_screening_matrix.py
 scripts/validate_screening_matrix.py
 scripts/screening_progress.py
 scripts/export_screening_results.py
+scripts/snapshot_screening_session.py
 ```
 
 Testes correspondentes:
@@ -1593,6 +1654,14 @@ tests/test_screening_matrix.py
 tests/test_validate_screening_matrix.py
 tests/test_screening_progress.py
 tests/test_export_screening_results.py
+tests/test_snapshot_screening_session.py
+```
+
+Documentação operacional:
+
+```text
+docs/screening_workflow.md
+docs/screening_sessions.md
 ```
 
 Responsabilidades:
@@ -1609,9 +1678,33 @@ screening_progress.py
 
 export_screening_results.py
     gera subconjuntos, snapshot concluído e manifesto
+
+snapshot_screening_session.py
+    congela sessões e registra alterações humanas
 ```
 
-O corpus real ainda não foi triado.
+O snapshot baseline foi criado em:
+
+```text
+outputs/screening_sessions/baseline_v4_3f/
+```
+
+Artefatos:
+
+```text
+matriz_triagem.csv
+alteracoes.csv
+manifesto.json
+```
+
+A matriz original e o snapshot baseline possuem o mesmo SHA-256:
+
+```text
+adff6ac701110eaafc5afb02b97100cc4853cfb5bc4060e0311d6588a7edefab
+```
+
+Isso confirma que o snapshot preservou integralmente a matriz de
+trabalho no estado anterior ao início da triagem manual.
 
 No estado atual:
 
@@ -1622,9 +1715,20 @@ Uncertain: 0
 Pending: 254
 ```
 
-Por esse motivo, somente o modo `--dry-run` foi executado no corpus real.
-Os testes de escrita utilizaram exclusivamente matrizes sintéticas em
+Os snapshots permanecem fora do Git por meio da regra:
+
+```text
+outputs/screening_sessions/
+```
+
+Os testes de escrita utilizam exclusivamente matrizes sintéticas e
 diretórios temporários.
+
+Baseline automatizado atual:
+
+```text
+91 testes
+```
 
 ## 31. Roadmap
 
@@ -1706,12 +1810,18 @@ Marcados para segunda revisão: 44
 Status:
 
 ```text
-Próximo ciclo
+Em andamento
 ```
 
 #### 31.3.1 Controle de alterações humanas e snapshots
 
-Componentes planejados:
+Status:
+
+```text
+Concluído
+```
+
+Componentes implementados:
 
 ```text
 scripts/snapshot_screening_session.py
@@ -1719,18 +1829,25 @@ tests/test_snapshot_screening_session.py
 docs/screening_sessions.md
 ```
 
-Objetivos:
+Entregas:
 
-- congelar o estado da matriz após cada sessão;
-- registrar o checksum da matriz;
-- comparar a sessão atual com o snapshot anterior;
-- identificar registros e campos alterados;
-- registrar responsável, data e identificador da sessão;
-- produzir histórico auditável;
-- impedir sobrescrita silenciosa;
-- não modificar a matriz de trabalho.
+- congelamento imutável do estado da matriz;
+- comparação por `record_id` com uma sessão anterior;
+- identificação de alterações no nível de campo;
+- classificação das alterações por tipo e severidade;
+- detecção de registros adicionados ou removidos;
+- detecção de mudança na ordem das linhas;
+- detecção de colunas adicionadas ou removidas;
+- registro de responsável, data e identificador da sessão;
+- escrita atômica do diretório da sessão;
+- proteção contra sobrescrita;
+- validação do checksum da matriz anterior;
+- preservação do checksum da matriz de trabalho;
+- manifesto JSON com contagens e checksums;
+- documentação operacional;
+- 22 testes automatizados.
 
-Artefatos previstos:
+Artefatos:
 
 ```text
 outputs/screening_sessions/
@@ -1740,22 +1857,45 @@ outputs/screening_sessions/
     └── manifesto.json
 ```
 
-Tipos iniciais de alteração:
+Tipos de alteração implementados:
 
 ```text
 decision_added
 decision_changed
+decision_cleared
 reason_code_changed
 reason_changed
 evidence_changed
+reviewer_changed
+screening_date_changed
 review_flag_changed
 notes_changed
 abstract_recovered
 abstract_changed
+abstract_removed
+abstract_availability_changed
 bibliographic_field_changed
+priority_changed
+duplicate_group_changed
+record_added
+record_removed
 ```
 
+O snapshot baseline real foi criado em:
+
+```text
+outputs/screening_sessions/baseline_v4_3f/
+```
+
+Seu checksum de matriz é idêntico ao da matriz de trabalho.
+
 #### 31.3.2 Recuperação de resumos
+
+Status:
+
+```text
+Próxima implementação
+```
 
 Objetivos:
 
