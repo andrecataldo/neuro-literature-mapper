@@ -954,20 +954,434 @@ A triagem por título e resumo será considerada concluída quando:
 - não houver valores inválidos nas colunas controladas;
 - uma cópia congelada da matriz tiver sido gerada.
 
-## 26. Artefatos esperados após a triagem
+## 26. Artefatos de exportação
+
+A matriz de triagem permanece como fonte de verdade:
 
 ```text
 outputs/matriz_triagem_neuro_v4_3f.csv
-outputs/matriz_triagem_neuro_v4_3f_concluida.csv
+```
+
+O exportador gera conjuntos derivados conforme o valor de
+`screening_decision`.
+
+Os nomes utilizam um rótulo configurável:
+
+```text
+{label}
+```
+
+Com o rótulo padrão `v4_3f`, os artefatos são:
+
+```text
 outputs/estudos_incluidos_titulo_resumo_v4_3f.csv
 outputs/estudos_excluidos_titulo_resumo_v4_3f.csv
 outputs/estudos_incertos_titulo_resumo_v4_3f.csv
+outputs/estudos_pendentes_titulo_resumo_v4_3f.csv
 outputs/estudos_para_texto_completo_v4_3f.csv
+outputs/manifesto_exportacao_triagem_v4_3f.json
 ```
 
-Esses arquivos serão gerados em etapa posterior por um script de consolidação.
+Quando não existem registros pendentes, também é gerado:
 
-## 27. Testes automatizados
+```text
+outputs/matriz_triagem_neuro_v4_3f_concluida.csv
+```
+
+O snapshot concluído não é criado durante uma exportação parcial.
+
+Todos esses arquivos são derivados da matriz e permanecem fora do Git.
+
+## 27. Exportação e consolidação dos resultados
+
+A exportação é realizada por:
+
+```text
+scripts/export_screening_results.py
+```
+
+O script:
+
+- lê a matriz sem modificá-la;
+- verifica a estrutura mínima necessária;
+- separa os registros por decisão;
+- preserva todas as colunas e a ordem original;
+- calcula contagens;
+- gera arquivos CSV com escrita atômica;
+- calcula checksums SHA-256;
+- gera um manifesto de auditoria;
+- protege arquivos existentes contra sobrescrita;
+- verifica se o checksum da matriz permaneceu inalterado.
+
+### 27.1 Conjuntos exportados
+
+As regras de separação são:
+
+```text
+Include
+    screening_decision = Include
+
+Exclude
+    screening_decision = Exclude
+
+Uncertain
+    screening_decision = Uncertain
+
+Pending
+    screening_decision vazio
+
+Full text
+    screening_decision = Include ou Uncertain
+```
+
+O conjunto para texto completo utiliza uma regra conservadora:
+
+```text
+Include + Uncertain
+```
+
+Registros `Uncertain` não são tratados como inclusões definitivas. Eles
+são preservados para recuperação de informação, segunda revisão ou
+leitura do texto completo.
+
+### 27.2 Simulação segura
+
+Para validar contagens e nomes de arquivos sem escrever artefatos:
+
+```bash
+python scripts/export_screening_results.py \
+  --dry-run
+```
+
+No baseline inicial da v4.3f, a saída esperada é:
+
+```text
+Total:       254
+Completed:   0
+Include:     0
+Exclude:     0
+Uncertain:   0
+Pending:     254
+Full text:   0
+
+Complete:    no
+Completed matrix snapshot: not generated
+```
+
+Durante a triagem em andamento, esse é o modo padrão recomendado para
+consultar o comportamento do exportador.
+
+### 27.3 Exportação parcial
+
+Uma exportação parcial ocorre quando ainda existem registros com:
+
+```text
+screening_decision vazio
+```
+
+Ela pode ser utilizada para:
+
+- revisar o trabalho já realizado;
+- compartilhar um snapshot operacional;
+- analisar provisoriamente as decisões;
+- preparar uma sessão de segunda revisão;
+- verificar os registros ainda pendentes.
+
+Na exportação parcial:
+
+```text
+pending > 0
+screening_complete = false
+```
+
+São gerados:
+
+```text
+Include
+Exclude
+Uncertain
+Pending
+Full text
+Manifesto
+```
+
+Não é gerado:
+
+```text
+completed_matrix
+```
+
+Uma exportação parcial não representa:
+
+- encerramento da triagem;
+- corpus final incluído;
+- consolidação metodológica;
+- conjunto congelado para síntese;
+- resultado final da seleção.
+
+Para evitar que um snapshot parcial seja confundido com a consolidação
+oficial, utilizar um rótulo explícito:
+
+```bash
+PARTIAL_LABEL="v4_3f_partial_$(date +%Y%m%d_%H%M%S)"
+
+python scripts/export_screening_results.py \
+  --label "$PARTIAL_LABEL"
+```
+
+Exemplo de arquivo resultante:
+
+```text
+estudos_incluidos_titulo_resumo_v4_3f_partial_20260804_210000.csv
+```
+
+### 27.4 Consolidação final
+
+A consolidação final deve ser executada somente depois do encerramento
+metodológico descrito na seção 25.
+
+Fluxo recomendado:
+
+```bash
+python scripts/validate_screening_matrix.py \
+  --strict
+
+python scripts/screening_progress.py
+
+python scripts/export_screening_results.py \
+  --require-complete \
+  --label v4_3f
+```
+
+O parâmetro:
+
+```text
+--require-complete
+```
+
+interrompe a execução quando ainda existem registros pendentes.
+
+Exemplo:
+
+```text
+ERROR: The matrix is incomplete:
+254 pending records remain.
+```
+
+A consolidação com ausência de pendências produz:
+
+```text
+pending = 0
+screening_complete = true
+completed_matrix gerada
+```
+
+A ausência de registros pendentes representa completude operacional da
+primeira decisão para todos os registros.
+
+Ela não substitui a verificação metodológica de:
+
+- justificativas e evidências;
+- candidatos a duplicata;
+- resumos ausentes;
+- registros `Uncertain`;
+- necessidade de segunda revisão;
+- critérios de encerramento da seção 25.
+
+O campo `screening_complete` do manifesto significa especificamente:
+
+```text
+não existem decisões vazias
+```
+
+Ele não deve ser interpretado isoladamente como confirmação de que todas
+as etapas de revisão humana foram encerradas.
+
+### 27.5 Snapshot da matriz concluída
+
+O arquivo:
+
+```text
+matriz_triagem_neuro_{label}_concluida.csv
+```
+
+é gerado apenas quando:
+
+```text
+pending = 0
+```
+
+O snapshot:
+
+- preserva todas as 22 colunas;
+- preserva a ordem dos registros;
+- registra o estado da matriz no momento da exportação;
+- não substitui a matriz de trabalho;
+- deve ser tratado como artefato congelado da etapa.
+
+### 27.6 Manifesto de auditoria
+
+Cada exportação escrita em disco gera:
+
+```text
+manifesto_exportacao_triagem_{label}.json
+```
+
+O manifesto registra:
+
+```text
+schema_version
+generated_at
+input.path
+input.sha256
+input.rows
+screening_complete
+counts
+full_text_rule
+outputs
+```
+
+Para cada CSV exportado, o manifesto contém:
+
+```text
+path
+rows
+sha256
+```
+
+As contagens incluem:
+
+```text
+total
+completed
+include
+exclude
+uncertain
+pending
+full_text
+```
+
+O manifesto permite verificar:
+
+- qual matriz originou os arquivos;
+- quantos registros foram exportados;
+- quais arquivos foram produzidos;
+- se os arquivos continuam íntegros;
+- se a exportação foi parcial ou operacionalmente completa.
+
+O manifesto não inclui o próprio checksum, pois ele é criado depois dos
+demais arquivos exportados.
+
+### 27.7 Proteção contra sobrescrita
+
+Por padrão, o exportador não substitui arquivos existentes.
+
+Quando qualquer destino planejado já existe:
+
+```text
+ERROR: Output files already exist.
+Use --force to overwrite.
+```
+
+A opção:
+
+```text
+--force
+```
+
+somente deve ser utilizada quando:
+
+- os arquivos anteriores já foram preservados;
+- o rótulo utilizado está correto;
+- a nova exportação deve substituir deliberadamente a anterior.
+
+Preferir um novo rótulo para snapshots intermediários.
+
+Exemplo:
+
+```bash
+python scripts/export_screening_results.py \
+  --label v4_3f_partial_session_02
+```
+
+### 27.8 Rótulo dos arquivos
+
+O parâmetro:
+
+```text
+--label
+```
+
+aceita apenas:
+
+```text
+letras
+números
+ponto
+sublinhado
+hífen
+```
+
+Exemplo válido:
+
+```text
+v4_3f-partial.1
+```
+
+Valores com espaços, barras ou caminhos relativos são rejeitados.
+
+### 27.9 Diretório de saída
+
+O diretório padrão é:
+
+```text
+outputs/
+```
+
+Um diretório alternativo pode ser informado:
+
+```bash
+python scripts/export_screening_results.py \
+  --output-dir outputs/snapshots \
+  --label v4_3f_partial_session_01
+```
+
+### 27.10 Sequência operacional recomendada
+
+Durante a triagem:
+
+```bash
+python scripts/validate_screening_matrix.py
+
+python scripts/screening_progress.py
+
+python scripts/export_screening_results.py \
+  --dry-run
+```
+
+Para um snapshot parcial deliberado:
+
+```bash
+PARTIAL_LABEL="v4_3f_partial_$(date +%Y%m%d_%H%M%S)"
+
+python scripts/export_screening_results.py \
+  --label "$PARTIAL_LABEL"
+```
+
+Para a consolidação final:
+
+```bash
+python scripts/validate_screening_matrix.py \
+  --strict
+
+python scripts/screening_progress.py
+
+python scripts/export_screening_results.py \
+  --require-complete \
+  --label v4_3f
+```
+
+## 28. Testes automatizados
 
 Executar os testes da inicialização da matriz:
 
@@ -993,13 +1407,48 @@ python -m unittest \
   -v
 ```
 
-Executar todos os testes relacionados ao workflow:
+Executar os testes do exportador:
+
+```bash
+python -m unittest \
+  tests.test_export_screening_results \
+  -v
+```
+
+O exportador possui testes com matrizes sintéticas completas e
+incompletas. Os arquivos são criados em diretórios temporários e
+removidos automaticamente.
+
+Os testes cobrem:
+
+- validação do rótulo;
+- colunas obrigatórias;
+- IDs vazios ou duplicados;
+- decisões inválidas;
+- decisões preenchidas de forma incompleta;
+- valores booleanos;
+- separação dos subconjuntos;
+- regra `Include + Uncertain`;
+- exportação parcial;
+- consolidação sem pendências;
+- proteção contra sobrescrita;
+- uso de `--force`;
+- geração do snapshot concluído;
+- manifesto JSON;
+- contagens;
+- checksums;
+- preservação da matriz de entrada;
+- modo `--dry-run`;
+- proteção `--require-complete`.
+
+Executar todos os testes do workflow de triagem:
 
 ```bash
 python -m unittest \
   tests.test_screening_matrix \
   tests.test_validate_screening_matrix \
   tests.test_screening_progress \
+  tests.test_export_screening_results \
   -v
 ```
 
@@ -1012,16 +1461,15 @@ python -m unittest discover \
   -v
 ```
 
-Após a introdução do acompanhamento operacional, o baseline esperado da
-suíte é:
+Após a introdução do exportador, o baseline esperado é:
 
 ```text
-Ran 49 tests
+Ran 69 tests
 
 OK
 ```
 
-## 28. Validação automatizada da matriz
+## 29. Validação automatizada da matriz
 
 A matriz deve ser validada antes e depois de cada sessão de triagem.
 
@@ -1106,12 +1554,12 @@ sem problemas → código de saída 0
 
 O modo estrito é recomendado para validações finais e automações de CI.
 
-## 29. Estado atual do workflow
+## 30. Estado atual do workflow
 
 ```text
 Versão do pipeline: v4.3f
 Versão da taxonomia: 1.6
-Versão do workflow: v4.4 — acompanhamento operacional
+Versão do workflow: v4.4 — exportação e consolidação
 
 Registros centrais: 254
 A1: 71
@@ -1135,6 +1583,7 @@ Componentes implementados:
 scripts/init_screening_matrix.py
 scripts/validate_screening_matrix.py
 scripts/screening_progress.py
+scripts/export_screening_results.py
 ```
 
 Testes correspondentes:
@@ -1143,6 +1592,7 @@ Testes correspondentes:
 tests/test_screening_matrix.py
 tests/test_validate_screening_matrix.py
 tests/test_screening_progress.py
+tests/test_export_screening_results.py
 ```
 
 Responsabilidades:
@@ -1156,29 +1606,49 @@ validate_screening_matrix.py
 
 screening_progress.py
     apresenta o estado operacional da triagem
+
+export_screening_results.py
+    gera subconjuntos, snapshot concluído e manifesto
 ```
 
-## 30. Próximas implementações
+O corpus real ainda não foi triado.
+
+No estado atual:
+
+```text
+Include: 0
+Exclude: 0
+Uncertain: 0
+Pending: 254
+```
+
+Por esse motivo, somente o modo `--dry-run` foi executado no corpus real.
+Os testes de escrita utilizaram exclusivamente matrizes sintéticas em
+diretórios temporários.
+
+## 31. Próximas implementações
 
 Etapas concluídas na v4.4:
 
 ```text
 1. inicialização reproduzível da matriz;
 2. validação automatizada da matriz;
-3. acompanhamento operacional do progresso.
+3. acompanhamento operacional do progresso;
+4. exportação e consolidação dos resultados.
 ```
 
 Próximas etapas previstas:
 
-1. exportação de incluídos, excluídos e incertos;
-2. preparação do conjunto para texto completo;
-3. controle de alterações humanas;
-4. suporte à recuperação de resumos;
-5. resolução dos candidatos a duplicata;
-6. triagem piloto de A1;
-7. triagem completa na ordem A1, A3 e A2;
+1. controle de alterações humanas e snapshots de sessões;
+2. suporte à recuperação de resumos;
+3. resolução dos candidatos a duplicata;
+4. triagem piloto de A1;
+5. revisão dos critérios após o piloto;
+6. triagem completa na ordem A1, A3 e A2;
+7. segunda revisão dos registros sinalizados;
 8. preparação da matriz de texto completo;
-9. extração estruturada de evidências;
-10. métricas de concordância entre revisores;
-11. geração do diagrama de fluxo da seleção dos estudos;
-12. interface de triagem.
+9. triagem por texto completo;
+10. extração estruturada de evidências;
+11. métricas de concordância entre revisores;
+12. geração do diagrama de fluxo da seleção dos estudos;
+13. interface de triagem.
